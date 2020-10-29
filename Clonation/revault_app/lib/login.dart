@@ -8,6 +8,7 @@ class Login extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text("Login"),
       ),
       body: LoginForm()
@@ -38,6 +39,7 @@ class LoginFormState extends State<LoginForm> {
     endIndent: 0,
   );
 
+  // 2020-09-22 djkim: Navigation Refactor
   _letsSignUp(context) {
     Navigator.push(
       context,
@@ -110,12 +112,11 @@ class LoginFormState extends State<LoginForm> {
                             padding: EdgeInsets.all(8.0),
                             splashColor: Colors.greenAccent,
                             onPressed: () {
-                              // Validate returns true if the form is valid, or false
-                              // otherwise.
                               if (_formKey.currentState.validate()) {
-                                // If the form is valid, display a Snackbar.
-                                Scaffold.of(context)
-                                    .showSnackBar(SnackBar(content: Text('Login process under construction')));
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(content: Text('Login Success')));
+                                //_moveTo(context, AuctionList());
+                                Navigator.pushReplacementNamed(context, '/auctionlist');
                               }
                             },
                             child: Text(
@@ -160,7 +161,7 @@ class LoginFormState extends State<LoginForm> {
                   splashColor: Colors.blueAccent,
                   onPressed: () {
                     // TODO: Implement Facebook Login Attempt
-                    Scaffold.of(context)
+                    ScaffoldMessenger.of(context)
                           .showSnackBar(SnackBar(content: Text('Facebook Login Unimplemented')));
                   },
                   child: Text(

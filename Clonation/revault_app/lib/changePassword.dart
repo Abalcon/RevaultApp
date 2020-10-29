@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
 
-// Reset Password - After Verification
-class ResetPassword extends StatelessWidget {
+// Change Password - After Verification
+class ChangePassword extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("비밀번호 재설정"),
+        title: Text("비밀번호 변경"),
       ),
-      body: ResetPasswordForm()
+      body: ChangePasswordForm()
     );
   }
 }
 
-class ResetPasswordForm extends StatefulWidget {
+class ChangePasswordForm extends StatefulWidget {
   @override
-  ResetPasswordFormState createState() {
-    return ResetPasswordFormState();
+  ChangePasswordFormState createState() {
+    return ChangePasswordFormState();
   }
 }
 
-class ResetPasswordFormState extends State<ResetPasswordForm> {
+class ChangePasswordFormState extends State<ChangePasswordForm> {
   final _formKey1 = GlobalKey<FormState>();
 
   final divider = Divider(
@@ -63,22 +63,39 @@ class ResetPasswordFormState extends State<ResetPasswordForm> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              // Start of password reset
+              // Start of password Change
               Form(
                 key: _formKey1,
                   child: Column(
                     children: <Widget>[
                       TextFormField(
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.lock),
+                          hintText: 'Enter your current password',
+                          labelText: 'Current Password'
+                        ),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter your currenct password';
+                          }
+                          else if (value != _passController.text) {
+                            return 'Password is incorrect';
+                          }
+                          return null;
+                        },
+                      ),
+                      TextFormField(
                         controller: _passController,
                         obscureText: true,
                         decoration: InputDecoration(
                           icon: Icon(Icons.lock),
-                          hintText: 'Enter your password',
-                          labelText: 'Password'
+                          hintText: 'Enter your new password',
+                          labelText: 'New Password'
                         ),
                         validator: (value) {
                           if (value.isEmpty) {
-                            return 'Please enter your password';
+                            return 'Please enter your new password';
                           }
                           else if (!passwordValidation(value)) {
                             return 'Invalid password: 영소문자/영대문자/숫자/특수문자 중에\n3종류 이상을 포함하여 8글자 이상';
@@ -90,12 +107,12 @@ class ResetPasswordFormState extends State<ResetPasswordForm> {
                         obscureText: true,
                         decoration: InputDecoration(
                           icon: Icon(Icons.lock),
-                          hintText: 'Enter your password again',
+                          hintText: 'Enter your new password again',
                           labelText: 'Password Confirm'
                         ),
                         validator: (value) {
                           if (value.isEmpty) {
-                            return 'Please enter your password';
+                            return 'Please enter your new password';
                           }
                           else if (value != _passController.text) {
                             return 'Password is not matching';
@@ -116,13 +133,12 @@ class ResetPasswordFormState extends State<ResetPasswordForm> {
                             splashColor: Colors.greenAccent,
                             onPressed: () {
                               if (_formKey1.currentState.validate()) {
-                                // If the form is valid, display a Snackbar.
                                 ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(content: Text('Ready to reset password!')));
+                                    .showSnackBar(SnackBar(content: Text('Ready to Change password!')));
                               }
                             },
                             child: Text(
-                              "Reset Password",
+                              "Change Password",
                               style: TextStyle(fontSize: 20.0),
                             ),
                           ),
@@ -131,7 +147,7 @@ class ResetPasswordFormState extends State<ResetPasswordForm> {
                     ]
                 )
               ),
-              // End of password reset
+              // End of password Change
             ],
           ),
         )

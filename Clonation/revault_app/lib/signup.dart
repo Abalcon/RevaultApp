@@ -47,14 +47,7 @@ class SignUpForm extends StatefulWidget {
   }
 }
 
-// Define a corresponding State class.
-// This class holds data related to the form.
 class SignUpFormState extends State<SignUpForm> {
-  // Create a global key that uniquely identifies the Form widget
-  // and allows validation of the form.
-  //
-  // Note: This is a `GlobalKey<FormState>`,
-  // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -174,11 +167,8 @@ class SignUpFormState extends State<SignUpForm> {
                   padding: EdgeInsets.all(8.0),
                   splashColor: Colors.greenAccent,
                   onPressed: () {
-                    // Validate returns true if the form is valid, or false
-                    // otherwise.
                     if (_formKey.currentState.validate()) {
-                      // If the form is valid, display a Snackbar.
-                      Scaffold.of(context)
+                      ScaffoldMessenger.of(context)
                           .showSnackBar(SnackBar(content: Text('Processing Data')));
                     }
                   },

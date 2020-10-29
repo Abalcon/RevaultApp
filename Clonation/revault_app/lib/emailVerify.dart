@@ -7,6 +7,7 @@ class EmailVerify extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text("E-mail Verification"),
       ),
       body: EmailVerifyForm()
@@ -22,11 +23,6 @@ class EmailVerifyForm extends StatefulWidget {
 }
 
 class EmailVerifyFormState extends State<EmailVerifyForm> {
-  // Create a global key that uniquely identifies the Form widget
-  // and allows validation of the form.
-  //
-  // Note: This is a `GlobalKey<FormState>`,
-  // not a GlobalKey<MyCustomFormState>.
   final _formKey1 = GlobalKey<FormState>();
   final _formKey2 = GlobalKey<FormState>();
   bool isCodeEnabled = false;
@@ -47,7 +43,7 @@ class EmailVerifyFormState extends State<EmailVerifyForm> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: ((BuildContext context) => ResetPassword()), // ...to here.
+        builder: ((BuildContext context) => ResetPassword()),
       ),
     );
   }
@@ -94,7 +90,7 @@ class EmailVerifyFormState extends State<EmailVerifyForm> {
                             onPressed: () {
                               if (_formKey1.currentState.validate()) {
                                 _enableCode();
-                                Scaffold.of(context)
+                                ScaffoldMessenger.of(context)
                                     .showSnackBar(SnackBar(content: Text('Flying Confirmation Code')));
                               }
                             },
