@@ -52,9 +52,8 @@ class MyApp extends StatelessWidget {
         ),
         home: MyHomePage(title: 'REVAULT Start Page'),
         routes: {
-          // TODO: Common - Glossary 정보 등을 저장할 파일이 필요
-          '/login': (context) => Login(),
-          '/signup': (context) => SignUp(),
+          '/login' : (context) => Login(),
+          '/signup' : (context) => SignUp(),
           '/verifyemail': (context) => EmailVerify(),
           '/passwordreset': (context) => ResetPassword(),
           '/auctionlist': (context) => AuctionList(),
@@ -72,7 +71,15 @@ class MyApp extends StatelessWidget {
           '/changeaddress': (context) => ChangeAddress(),
           '/changepassword': (context) => ChangePassword(),
           '/languageselect': (context) => LanguageSelect()
-        }
+        },
+        // TODO: Error 처리용 페이지
+        onUnknownRoute: (RouteSettings settings) {
+          return MaterialPageRoute<void>(
+            settings: settings,
+            builder: (BuildContext context) =>
+                Scaffold(body: Center(child: Text('Not Found'))),
+          );
+        },
       )
     );
   }

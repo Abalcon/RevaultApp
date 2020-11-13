@@ -10,4 +10,10 @@ class Comment {
     @required this.date,
     @required this.content,
   });
+
+  // factory Comment.fromJson(Map<String, dynamic> json) {
+  //   return Comment(
+
+  //   );
+  // }
 }

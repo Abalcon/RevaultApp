@@ -4,47 +4,51 @@ import 'auctionGood.dart';
 class MyProceedings extends StatelessWidget {
   final List<AuctionGood> items = [
     AuctionGood(
+      auctionID: 1,
       seller: 'KIDMILLE',
       condition: 'B',
       size: 'S',
-      startDate: '2020-10-12',
-      endDate: '2020-10-16',
+      startDate: DateTime.fromMillisecondsSinceEpoch(1603285200000),
+      endDate: DateTime.fromMillisecondsSinceEpoch(1603612800000),
       brand: 'NIKE ACG',
       goodName: 'Black Hoodie',
-      price: '230000원',
+      price: 230000,
       sellState: '배송중'
     ),
     AuctionGood(
+      auctionID: 2,
       seller: 'KIDMILLE',
       condition: 'A',
       size: 'M',
-      startDate: '2020-10-12',
-      endDate: '2020-10-16',
+      startDate: DateTime.fromMillisecondsSinceEpoch(1603285200000),
+      endDate: DateTime.fromMillisecondsSinceEpoch(1603612800000),
       brand: 'NIKE ACG',
       goodName: 'Jacket With Gloves',
-      price: '200000원',
+      price: 200000,
       sellState: '배송준비'
     ),
     AuctionGood(
+      auctionID: 3,
       seller: 'KIDMILLE',
       condition: 'S',
       size: 'L',
-      startDate: '2020-10-12',
-      endDate: '2020-10-16',
+      startDate: DateTime.fromMillisecondsSinceEpoch(1603285200000),
+      endDate: DateTime.fromMillisecondsSinceEpoch(1603612800000),
       brand: 'NIKE ACG',
       goodName: 'Black Hoodie',
-      price: '230000원',
+      price: 230000,
       sellState: '입금대기'
     ),
     AuctionGood(
+      auctionID: 4,
       seller: 'KIDMILLE',
       condition: 'NEW',
       size: 'XL',
-      startDate: '2020-10-12',
-      endDate: '2020-10-16',
+      startDate: DateTime.fromMillisecondsSinceEpoch(1603285200000),
+      endDate: DateTime.fromMillisecondsSinceEpoch(1603612800000),
       brand: 'NIKE ACG',
       goodName: 'Jacket With Gloves',
-      price: '200000원',
+      price: 200000,
       sellState: '배송완료'
     ),
   ];
@@ -107,7 +111,7 @@ class MyProceedings extends StatelessWidget {
                                     fontSize: 14,
                                   )
                                 ),
-                                Text('${items[i].price}',
+                                Text('${items[i].price}원',
                                   style: TextStyle(
                                     fontSize: 14,
                                   )

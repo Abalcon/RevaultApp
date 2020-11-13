@@ -113,9 +113,7 @@ class LoginFormState extends State<LoginForm> {
                             splashColor: Colors.greenAccent,
                             onPressed: () {
                               if (_formKey.currentState.validate()) {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(content: Text('Login Success')));
-                                //_moveTo(context, AuctionList());
+                                // TODO: 로그인 성공하면 Access Token 받기
                                 Navigator.pushReplacementNamed(context, '/auctionlist');
                               }
                             },
