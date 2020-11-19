@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import "package:http/http.dart" as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class MyPage extends StatelessWidget {
   @override
@@ -372,8 +374,27 @@ class MyPage extends StatelessWidget {
                   disabledTextColor: Colors.white,
                   padding: EdgeInsets.symmetric(vertical: 12.0,),
                   splashColor: Colors.black,
-                  onPressed: () => {
-                    // TODO: 로그아웃 절차 진행, 로그인 화면으로 돌리기
+                  onPressed: () async {
+                    final storage = new FlutterSecureStorage();
+                    String currSession = await storage.read(key: "session");
+                    http.Response response = await http.get(
+                      'https://ibsoft.site/revault/whoami',
+                      headers: <String, String>{
+                        'Cookie': currSession,
+                      },
+                    );
+
+                    if (response.statusCode == 200 && response.body != null && response.body != "") {
+                      await storage.delete(
+                        key: "session",
+                      );
+                      // 로그아웃하여 로그인 화면으로
+                      Navigator.pushReplacementNamed(context, '/login');
+                    }
+                    else {
+                      ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text('오류가 발생했습니다. 다시 시도해주세요')));
+                    }
                   },
                   child: Text(
                     "LOGOUT",

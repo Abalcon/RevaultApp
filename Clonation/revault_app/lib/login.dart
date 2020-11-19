@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
 import 'package:revault_app/signup.dart';
 import 'emailVerify.dart';
 
@@ -24,11 +26,6 @@ class LoginForm extends StatefulWidget {
 }
 
 class LoginFormState extends State<LoginForm> {
-  // Create a global key that uniquely identifies the Form widget
-  // and allows validation of the form.
-  //
-  // Note: This is a `GlobalKey<FormState>`,
-  // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
 
   final divider = Divider(
@@ -38,6 +35,29 @@ class LoginFormState extends State<LoginForm> {
     indent: 0,
     endIndent: 0,
   );
+
+  static final storage = new FlutterSecureStorage();
+  String currSession = "";
+  String loginResult = "-1";
+
+  Future<http.Response> tryLogin(String id, String pw) async {
+    var map = new Map<String, dynamic>();
+    map['user_id'] = id;
+    map['passwd'] = pw;
+    
+    http.Response response = await http.post(
+      'https://ibsoft.site/revault/login',
+      body: map,
+    );
+
+    if (response.statusCode == 200) {
+      print(response.headers); // set-cookie: JSESSIONID=blahblah
+      print(response.body); // string: "1" or "-1"
+      return response;
+    } else {
+      throw Exception('오류가 발생했습니다. 다시 시도해주세요');
+    }
+  }
 
   // 2020-09-22 djkim: Navigation Refactor
   _letsSignUp(context) {
@@ -60,6 +80,8 @@ class LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController _idController = new TextEditingController();
+    TextEditingController _pwController = new TextEditingController();
     return Center(
       child: SingleChildScrollView(
         child: Padding(
@@ -73,6 +95,7 @@ class LoginFormState extends State<LoginForm> {
                   child: Column(
                     children: <Widget>[
                       TextFormField(
+                        controller: _idController,
                         decoration: InputDecoration(
                           icon: Icon(Icons.person),
                           hintText: 'Enter your username',
@@ -86,6 +109,7 @@ class LoginFormState extends State<LoginForm> {
                         },
                       ),
                       TextFormField(
+                        controller: _pwController,
                         obscureText: true,
                         decoration: InputDecoration(
                           icon: Icon(Icons.lock),
@@ -96,7 +120,6 @@ class LoginFormState extends State<LoginForm> {
                           if (value.isEmpty) {
                             return 'Please enter your password';
                           }
-                          // TODO: Password validation with back-end
                           return null;
                         },
                       ),
@@ -111,9 +134,23 @@ class LoginFormState extends State<LoginForm> {
                             disabledTextColor: Colors.black,
                             padding: EdgeInsets.all(8.0),
                             splashColor: Colors.greenAccent,
-                            onPressed: () {
+                            onPressed: () async {
                               if (_formKey.currentState.validate()) {
-                                // TODO: 로그인 성공하면 Access Token 받기
+                                var loginResponse = await tryLogin(_idController.text, _pwController.text);
+                                setState(() {
+                                  loginResult = loginResponse.body;
+                                });
+                                if(loginResult == "-1") {
+                                  ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(content: Text('아이디 또는 비밀번호가 일치하지 않습니다')));
+                                  return;
+                                }
+
+                                await storage.write(
+                                  key: "session",
+                                  value: loginResponse.headers['set-cookie'].split(';')[0]
+                                );
+
                                 Navigator.pushReplacementNamed(context, '/auctionlist');
                               }
                             },

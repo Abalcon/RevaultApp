@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
 
 usernameValidation(String value) {
   RegExp regexp = RegExp(r"[^A-Za-z0-9.-_]");
@@ -50,15 +54,46 @@ class SignUpForm extends StatefulWidget {
 class SignUpFormState extends State<SignUpForm> {
   final _formKey = GlobalKey<FormState>();
 
+  static final storage = new FlutterSecureStorage();
+  String currSession = "";
+  String signupResult = "-1";
+
+  Future<http.Response> trySignUp(String id, String pw, String email) async {
+    http.Response response = await http.post(
+      'https://ibsoft.site/revault/addUser',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String> {
+        'user_id': id,
+        'passwd': pw,
+        'email': email
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      print(response.headers); // set-cookie: JSESSIONID=blahblah
+      print(response.body); // string: "1" or "-1"
+      return response;
+    } else {
+      print(response.headers);
+      print(response.body);
+      throw Exception('오류가 발생했습니다. 다시 시도해주세요');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    TextEditingController _idController = new TextEditingController();
     TextEditingController _passController = new TextEditingController();
+    TextEditingController _mailController = new TextEditingController();
     return Form(
       key: _formKey,
       child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             TextFormField(
+              controller: _mailController,
               decoration: InputDecoration(
                 icon: Icon(Icons.mail),
                 hintText: 'Enter your E-mail address',
@@ -75,6 +110,7 @@ class SignUpFormState extends State<SignUpForm> {
               },
             ),
             TextFormField(
+              controller: _idController,
               decoration: InputDecoration(
                 icon: Icon(Icons.person),
                 hintText: 'Enter your username',
@@ -166,10 +202,27 @@ class SignUpFormState extends State<SignUpForm> {
                   disabledTextColor: Colors.black,
                   padding: EdgeInsets.all(8.0),
                   splashColor: Colors.greenAccent,
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState.validate()) {
+                      var signupResponse = await trySignUp(
+                        _idController.text, _passController.text, _mailController.text);
+                      setState(() {
+                        signupResult = signupResponse.body;
+                      });
+                      if (signupResult == "-1") {
+                        ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text('회원가입에 실패했습니다. 아이디가 이미 등록되어있습니다')));
+                        return;
+                      }
+                      
                       ScaffoldMessenger.of(context)
-                          .showSnackBar(SnackBar(content: Text('Processing Data')));
+                        .showSnackBar(SnackBar(content: Text('회원가입에 성공했습니다. REVAULT에 오신 것을 환영합니다!')));
+                      await storage.write(
+                        key: "session",
+                        value: signupResponse.headers['set-cookie'].split(';')[0]
+                      );
+
+                      Navigator.pushReplacementNamed(context, '/auctionlist');
                     }
                   },
                   child: Text(

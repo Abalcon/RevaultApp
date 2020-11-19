@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'comment.dart';
 
 class AuctionGood {
   int auctionID;
@@ -43,11 +42,15 @@ class AuctionGood {
 
   factory AuctionGood.fromJson(Map<String, dynamic> json) {
     var biddingsPart = json['bid_log_list'] as List;
-    List<Bidding> bidList = biddingsPart.map<Bidding>((json) => Bidding.fromJson(json)).toList();
+    List<Bidding> bidList = (biddingsPart == null) ?
+      [] : biddingsPart.map<Bidding>((json) => Bidding.fromJson(json)).toList();
+    var commentsPart = json['comment_list'] as List;
+    List<Comment> comList = (biddingsPart == null) ?
+      [] : commentsPart.map<Comment>((json) => Comment.fromJson(json)).toList();
 
     return AuctionGood(
       auctionID: json['auction_id'],
-      seller: 'KIDMILLE', // TODO: temporal name
+      seller: json['seller_id'] != null ? json['seller_id'].toString() : 'Unknown',
       condition: json['grade'],
       size: json['size'],
       addedDate: DateTime.fromMillisecondsSinceEpoch(json['add_time']),
@@ -57,10 +60,12 @@ class AuctionGood {
       goodName: json['title'],
       price: json['price'],
       initPrice: json['start_price'],
-      sellState: json['status'],
+      sellState: json['status'].toString(),
       winner: json['winner_id'],
-      commentList: [], // TODO: parse comment_list to List<Comment>
+      commentList: comList,
       biddingList: bidList,
+      // 2020-11-17 추가분
+      // auction_id_arr, auction_id_list, isBid, isWin, isLose
     );
   }
 }
@@ -79,8 +84,28 @@ class Bidding {
   factory Bidding.fromJson(Map<String, dynamic> json) {
     return Bidding(
       username: json['user_id'],
-      date: json['add_time'],
+      date: DateTime.fromMillisecondsSinceEpoch(json['add_time']),
       price: json['price']
+    );
+  }
+}
+
+class Comment {
+  String username;
+  DateTime date;
+  String content;
+
+  Comment({
+    @required this.username,
+    @required this.date,
+    @required this.content,
+  });
+
+  factory Comment.fromJson(Map<String, dynamic> json) {
+    return Comment(
+      username: json['user_id'],
+      date: DateTime.fromMillisecondsSinceEpoch(json['add_time']),
+      content: json['content']
     );
   }
 }

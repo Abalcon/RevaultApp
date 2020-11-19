@@ -1,4 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
+
+Future<String> isLogged() async {
+  final storage = new FlutterSecureStorage();
+  String currSession = await storage.read(key: "session");
+
+  if (currSession == null) {
+    print("Not Logged In");
+    return null;
+  }
+  
+  http.Response response = await http.get(
+    'https://ibsoft.site/revault/whoami',
+    headers: <String, String>{
+      'Cookie': currSession,
+    },
+  );
+
+  if (response.statusCode == 200 && response.body != null && response.body != "") {
+    print("Logged In: ${response.body}");
+    return currSession;
+  }
+  // 사용자 정보가 만료
+  print("Session Expired");
+  await storage.delete(key: "session",);
+  return null;
+}
 
 // Duration remainingTime(DateTime deadline) {
 //   DateTime now = DateTime.now();

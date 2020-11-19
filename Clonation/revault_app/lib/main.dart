@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
 import 'package:revault_app/auctionList.dart';
 import 'package:revault_app/changeAddress.dart';
 import 'package:revault_app/changePassword.dart';
@@ -7,6 +9,7 @@ import 'package:revault_app/helpdesk.dart';
 import 'package:revault_app/languageSelect.dart';
 import 'package:revault_app/models/cart.dart';
 import 'package:revault_app/models/catalog.dart';
+import 'package:revault_app/models/user.dart';
 import 'package:revault_app/myBillings.dart';
 import 'package:revault_app/myDonations.dart';
 import 'package:revault_app/myParticipations.dart';
@@ -42,6 +45,7 @@ class MyApp extends StatelessWidget {
             return cart;
           }
         ),
+        ChangeNotifierProvider(create: (context) => UserModel()),
       ],
       child: MaterialApp(
         title: 'Welcome to REVAULT',
@@ -49,11 +53,12 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.green,
           visualDensity: VisualDensity.adaptivePlatformDensity,
           textTheme: Typography.blackMountainView,
+          //tabBarTheme: TabBarTheme(labelColor: Colors.white),
         ),
         home: MyHomePage(title: 'REVAULT Start Page'),
         routes: {
-          '/login' : (context) => Login(),
-          '/signup' : (context) => SignUp(),
+          '/login': (context) => Login(),
+          '/signup': (context) => SignUp(),
           '/verifyemail': (context) => EmailVerify(),
           '/passwordreset': (context) => ResetPassword(),
           '/auctionlist': (context) => AuctionList(),
@@ -72,6 +77,18 @@ class MyApp extends StatelessWidget {
           '/changepassword': (context) => ChangePassword(),
           '/languageselect': (context) => LanguageSelect()
         },
+        // onGenerateRoute: (settings) {
+        //   if (settings.name == '/auctiongooddetail') {
+        //     final AuctionGoodArguments args = settings.arguments;
+
+        //     return MaterialPageRoute(
+        //       builder: (context) => AuctionGoodDetail(args.goodID)
+        //     );
+        //   }
+
+        //   assert(false, 'Need to implement ${settings.name}');
+        //   return null;
+        // },
         // TODO: Error 처리용 페이지
         onUnknownRoute: (RouteSettings settings) {
           return MaterialPageRoute<void>(
@@ -95,14 +112,42 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  static final storage = new FlutterSecureStorage();
+  String currSession = "";
+
+  _checkLogged() async {
+    currSession = await storage.read(key: "session");
+    print(currSession);
+
+    if (currSession != null) {
+      http.Response response = await http.get(
+        'https://ibsoft.site/revault/whoami',
+        headers: <String, String>{
+          'Cookie': currSession,
+        },
+      );
+
+      if (response.statusCode == 200 && response.body != null && response.body != "") {
+        print(response.body);
+        // 로그인 상태이므로 상품 리스트 화면으로
+        Navigator.pushReplacementNamed(context, '/auctionlist');
+      }
+      else {
+        // 사용자 정보가 만료되었으므로 로그인 화면으로
+        print("Session Expired");
+        await storage.delete(key: "session",);
+        Navigator.pushReplacementNamed(context, '/login');
+      }
+    }
+    else
+      Navigator.pushReplacementNamed(context, '/login');
+  }
+
   @override
   void initState() {
-    // TODO: 로그인 여부 확인하여 로그인 화면 또는 경매 리스트 화면으로 이동
     super.initState();
     WidgetsBinding.instance
-      .addPostFrameCallback((_) =>
-        Future.delayed(Duration(seconds: 5), () => Navigator.pushReplacementNamed(context, '/login'))
-      );
+      .addPostFrameCallback((_) => _checkLogged());
   }
 
   @override
@@ -133,3 +178,9 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+// class AuctionGoodArguments {
+//   final int goodID;
+
+//   AuctionGoodArguments(this.goodID);
+// }

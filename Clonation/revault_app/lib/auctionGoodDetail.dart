@@ -3,26 +3,43 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:revault_app/comment.dart';
+import 'package:revault_app/auctionGood.dart';
 import 'package:revault_app/common/aux.dart';
 import 'package:video_player/video_player.dart';
-import 'auctionGood.dart';
 import 'package:http/http.dart' as http;
+
+AuctionGood parseGood(String responseBody) {
+  return AuctionGood.fromJson(jsonDecode(responseBody));
+}
+
+Future<AuctionGood> fetchGood(int id) async {
+  final response = await http.get('https://ibsoft.site/revault/getAuctionInfo?auction_id=$id');
+  if (response.statusCode == 200) {
+    return compute(parseGood, response.body);
+  }
+  else {
+    throw Exception('상품 정보를 불러오지 못했습니다');
+  }
+}
 
 class AuctionGoodDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final int goodID = ModalRoute.of(context).settings.arguments; // 2020-11-17 djkim: 상품 ID 가져오기
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text("REVAULT"),
       ),
-      body: AuctionGoodDetailWithVideo()
+      body: AuctionGoodDetailWithVideo(goodID: goodID,)
     );
   }
 }
 
 class AuctionGoodDetailWithVideo extends StatefulWidget{
+  final int goodID;
+  AuctionGoodDetailWithVideo({Key key, @required this.goodID}) : super(key: key);
+
   @override
   _AGDWithVideoState createState() => _AGDWithVideoState();
 }
@@ -57,7 +74,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                     children: [
                       Icon(Icons.account_balance_wallet, size: 16),
                       Text(
-                        '현재 입찰가 $currPrice\$원',
+                        '현재 입찰가: $currPrice' + '원',
                         style: TextStyle(
                           fontSize: 16, 
                           fontWeight: FontWeight.bold
@@ -69,7 +86,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                     indent: 50,
                     endIndent: 50,
                   ),
-                  BiddingForm(price: currPrice),
+                  BiddingForm(goodID: widget.goodID, price: currPrice, session: currSession, parent: this),
                   Divider(),
                   Text(
                     '안내사항',
@@ -199,129 +216,78 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
     );
   }
 
-  List<Comment> comments = [
-    Comment(
-      username: 'USER2020',
-      date: DateTime(2020, 10, 27, 10, 31),
-      content: '이 상품은 제가 꼭 낙찰받고 싶네요!'
-    ),
-    Comment(
-      username: 'USER2020',
-      date: DateTime(2020, 10, 27, 10, 32),
-      content: '이 상품은 제가 꼭 낙찰받고 싶네요!'
-    ),
-    Comment(
-      username: 'USER2020',
-      date: DateTime(2020, 10, 27, 10, 33),
-      content: '이 상품은 제가 꼭 낙찰받고 싶네요!'
-    ),
-    Comment(
-      username: 'USER2020',
-      date: DateTime(2020, 10, 27, 10, 34),
-      content: '이 상품은 제가 꼭 낙찰받고 싶네요!'
-    ),
-    Comment(
-      username: 'USER2020',
-      date: DateTime(2020, 10, 27, 10, 35),
-      content: '이 상품은 제가 꼭 낙찰받고 싶네요!'
-    ),
-    Comment(
-      username: 'USER2020',
-      date: DateTime(2020, 10, 27, 10, 36),
-      content: '이 상품은 제가 꼭 낙찰받고 싶네요!'
-    ),
-    Comment(
-      username: 'USER2020',
-      date: DateTime(2020, 10, 27, 10, 37),
-      content: '이 상품은 제가 꼭 낙찰받고 싶네요!'
-    ),
-    Comment(
-      username: 'USER2020',
-      date: DateTime(2020, 10, 27, 10, 38),
-      content: '이 상품은 제가 꼭 낙찰받고 싶네요!'
-    ),
-    Comment(
-      username: 'USER2020',
-      date: DateTime(2020, 10, 27, 10, 39),
-      content: '이 상품은 제가 꼭 낙찰받고 싶네요!'
-    ),
-    Comment(
-      username: 'USER2020',
-      date: DateTime(2020, 10, 27, 10, 40),
-      content: '이 상품은 제가 꼭 낙찰받고 싶네요!'
-    ),
-  ];
-
-  Future<void> _showCommentsDialog() async {
+  Future<void> _showCommentsDialog(List<Comment> comments) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
           contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-          content: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SingleChildScrollView(
-                child: Container(
-                  height: 400.0,
-                  width: 300.0,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-                    itemCount: comments.length,
-                    itemBuilder: (BuildContext _context, int i) {
-                      return Column(
-                        children: [
-                          Row(
-                            children: [
-                              CircleAvatar(
-                                radius: 20.0,
-                                backgroundImage:
-                                  NetworkImage(
-                                    'https://www.go4thetop.net/assets/images/Staff_Ryunan.jpg'
-                                  ),
-                                backgroundColor: Colors.transparent,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                        '${comments[i].username}',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14,
-                                        )
-                                      ),
-                                      VerticalDivider(),
-                                      Text('${comments[i].date}',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey,
-                                        )
-                                      ),
-                                    ]
-                                  ),
-                                  Text('${comments[i].content}',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                    )
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          Divider()
-                        ]
-                      );
-                    }
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SingleChildScrollView(
+                  child: Container(
+                    height: 400.0,
+                    width: 300.0,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                      itemCount: comments.length,
+                      itemBuilder: (BuildContext _context, int i) {
+                        return Column(
+                          children: [
+                            Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 20.0,
+                                  backgroundImage:
+                                    NetworkImage(
+                                      'https://www.go4thetop.net/assets/images/Staff_Ryunan.jpg'
+                                    ),
+                                  backgroundColor: Colors.transparent,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          '${comments[i].username}',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                          )
+                                        ),
+                                        VerticalDivider(),
+                                        Text('${comments[i].date}',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.grey,
+                                          )
+                                        ),
+                                      ]
+                                    ),
+                                    Text('${comments[i].content}',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                      )
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            Divider()
+                          ]
+                        );
+                      }
+                    ),
                   ),
                 ),
-              ),
-              CommentForm(),
-            ],
+                CommentForm(goodID: widget.goodID, session: currSession, parent: this),
+              ],
+            )
           )
         );
       } 
@@ -332,19 +298,10 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
   Future<void> _initializeVideoPlayerFuture;
   List<Widget> sliderItems;
   Future<AuctionGood> currentGood;
-
-  AuctionGood parseGood(String responseBody) {
-    return AuctionGood.fromJson(jsonDecode(responseBody));
-  }
-
-  Future<AuctionGood> fetchGood() async {
-    final response = await http.get('https://ibsoft.site/revault/getAuctionInfo?auction_id=1');
-    if (response.statusCode == 200) {
-      return compute(parseGood, response.body);
-    }
-    else {
-      throw Exception('상품 정보를 불러오지 못했습니다');
-    }
+  String currSession;
+  _asyncMethod() async {
+    currSession = await isLogged();
+    print(currSession);
   }
 
   @override
@@ -393,7 +350,10 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
       )
     );
 
-    currentGood = fetchGood();    
+    currentGood = fetchGood(widget.goodID);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _asyncMethod();
+    });
 
     super.initState();
   }
@@ -464,7 +424,11 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                       fontSize: 20
                     )
                   ),
-                  Text('${snapshot.data.biddingList[0].username} 님께서 최근 입찰하셨습니다.'),
+                  Text(
+                    snapshot.data.biddingList.length > 0 ?
+                    '${snapshot.data.biddingList[0].username} 님께서 최근 입찰하셨습니다.'
+                    : '아직 입찰한 사람이 없습니다. 지금 입찰해보세요!'
+                  ),
                   RaisedButton(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18.0),
@@ -477,7 +441,6 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                     padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 80.0),
                     splashColor: Colors.greenAccent,
                     onPressed: () => {
-                      // TODO: 입찰 등록 POST
                       _showAddmissionDialog(snapshot.data.price)
                     },
                     child: Text(
@@ -523,7 +486,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                       disabledTextColor: Colors.white,
                       child: Icon(Icons.keyboard_arrow_up),
                       onPressed: () => {
-                        _showCommentsDialog()
+                        _showCommentsDialog(snapshot.data.commentList)
                       },
                     ),
                   ),
@@ -540,29 +503,33 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          snapshot.data.commentList.length > 0 ?
                           Row(
                             children: [
                               Text(
-                                '${comments[9].username}', // 여기에 items.length - 1을 넣고 싶은데 어떻게 해야할까?
+                                '${snapshot.data.commentList[0].username}', // 여기에 items.length - 1을 넣고 싶은데 어떻게 해야할까?
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
                                 )
                               ),
                               VerticalDivider(),
-                              Text('${comments[9].date}',
+                              Text('${snapshot.data.commentList[0].date}',
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.grey,
                                 )
                               ),
                             ]
-                          ),
-                          Text('${comments[9].content}',
+                          )
+                          : Text('이 상품에 대한 반응이 아직 없습니다'),
+                          snapshot.data.commentList.length > 0 ?
+                          Text('${snapshot.data.commentList[0].content}',
                             style: TextStyle(
                               fontSize: 14,
                             )
-                          ),
+                          )
+                          : Text('첫 반응을 작성하세요!'),
                         ],
                       ),
                     ],
@@ -585,8 +552,12 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
 
 class BiddingForm extends StatefulWidget {
   final int price;
+  final int goodID;
+  final String session;
+  _AGDWithVideoState parent;
 
-  BiddingForm({Key key, @required this.price}) : super(key: key);
+  BiddingForm({Key key, @required this.goodID, @required this.price,
+    @required this.session, @required this.parent}) : super(key: key);
 
   @override
   BiddingFormState createState() {
@@ -597,26 +568,22 @@ class BiddingForm extends StatefulWidget {
 class BiddingFormState extends State<BiddingForm> {
   
   final _formKey = GlobalKey<FormState>();
+  // String currSession;
 
-  Future<http.Response> addBidding(int price) async {
+  Future<http.Response> addBidding(int id, int price) async {
     //final http.Response response = await
+
+    var map = new Map<String, dynamic>();
+    map['auction_id'] = id.toString();
+    map['price'] = price.toString();
+
     return http.post(
       'https://ibsoft.site/revault/addBidLog',
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        // TODO: jsession이 여기에 들어가야한다 - jsession 저장 기능 구현 필요
+        'Cookie': widget.session,
       },
-      body: jsonEncode(<String, int>{
-        'price': price,
-      }),
+      body: map,
     );
-
-    // TODO: 새로운 입찰가 및 사용자 이름을 반영하여 다시 build
-    // if (response.statusCode == 201) {
-    //   return Album.fromJson(jsonDecode(response.body));
-    // } else {
-    //   throw Exception('입찰가 신청에 실패했습니다. 다시 시도해주세요');
-    // }
   } 
 
   @override
@@ -655,9 +622,23 @@ class BiddingFormState extends State<BiddingForm> {
               disabledTextColor: Colors.black,
               padding: EdgeInsets.all(8.0),
               splashColor: Colors.transparent,
-              onPressed: () {
+              onPressed: () async {
                 if (_formKey.currentState.validate()) {
-                  addBidding(int.parse(_passController.text));
+                  http.Response response = await addBidding(widget.goodID, int.parse(_passController.text));
+                  print(response.statusCode);
+                  print(response.body);
+                  if (response.statusCode == 200) {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text('입찰가 제출에 성공했습니다')));
+                    this.widget.parent.setState(() {
+                      this.widget.parent.currentGood = fetchGood(widget.goodID);
+                    });
+                    Navigator.pop(context);
+                  }
+                  else {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text('오류가 발생했습니다. 다시 시도해주세요')));
+                  }
                 }
               },
               child: Text(
@@ -673,6 +654,13 @@ class BiddingFormState extends State<BiddingForm> {
 }
 
 class CommentForm extends StatefulWidget {
+  final int goodID;
+  final String session;
+  _AGDWithVideoState parent;
+
+  CommentForm({Key key, @required this.goodID,
+    @required this.session, @required this.parent}) : super(key: key);
+
   @override
   CommentFormState createState() {
     return CommentFormState();
@@ -683,16 +671,18 @@ class CommentFormState extends State<CommentForm> {
   
   final _formKey = GlobalKey<FormState>();
 
-  Future<http.Response> addComment(String comment) {
+  Future<http.Response> addComment(int id, String comment) {
+
+    var map = new Map<String, dynamic>();
+    map['auction_id'] = id.toString();
+    map['content'] = comment;
+
     return http.post(
-      'https://ibsoft.site/revault/addComment',
+      'https://ibsoft.site/revault/addAuctionComment',
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        // TODO: jsession이 여기에 들어가야한다 - jsession 저장 기능 구현 필요
+        'Cookie': widget.session,
       },
-      body: jsonEncode(<String, String>{
-        'content': comment,
-      }),
+      body: map,
     );
   }
 
@@ -725,9 +715,23 @@ class CommentFormState extends State<CommentForm> {
             disabledTextColor: Colors.black,
             padding: EdgeInsets.all(8.0),
             splashColor: Colors.transparent,
-            onPressed: () {
+            onPressed: () async {
               if (_formKey.currentState.validate()) {
-                addComment(_passController.text);
+                http.Response response = await addComment(widget.goodID, _passController.text);
+                print(response.statusCode);
+                print(response.body);
+                if (response.statusCode == 200 || response.statusCode == 201) {
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text('댓글 작성에 성공했습니다')));
+                  this.widget.parent.setState(() {
+                    this.widget.parent.currentGood = fetchGood(widget.goodID);
+                  });
+                  Navigator.pop(context);
+                }
+                else {
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text('오류가 발생했습니다. 다시 시도해주세요')));
+                }
               }
             },
             child: Text(
