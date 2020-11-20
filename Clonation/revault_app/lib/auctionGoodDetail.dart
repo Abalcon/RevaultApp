@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:revault_app/auctionGood.dart';
@@ -47,7 +49,7 @@ class AuctionGoodDetailWithVideo extends StatefulWidget{
 class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
 
   // 입찰가 입력창: 경매 참가 신청 삭제 -> 바로 입찰 가능하게 변경
-  Future<void> _showAddmissionDialog(int currPrice) async {
+  Future<void> _showBiddingDialog(int currPrice, int unitPrice) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: true,
@@ -74,7 +76,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                     children: [
                       Icon(Icons.account_balance_wallet, size: 16),
                       Text(
-                        '현재 입찰가: $currPrice' + '원',
+                        ' 현재 입찰가: $currPrice' + '원',
                         style: TextStyle(
                           fontSize: 16, 
                           fontWeight: FontWeight.bold
@@ -82,11 +84,18 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                       )
                     ],
                   ),
+                  Text(
+                    '입찰가는 $unitPrice' + '원 단위로 올릴 수 있습니다',
+                    style: TextStyle(
+                      fontSize: 16, 
+                      fontWeight: FontWeight.bold
+                    )
+                  ),
                   Divider(
                     indent: 50,
                     endIndent: 50,
                   ),
-                  BiddingForm(goodID: widget.goodID, price: currPrice, session: currSession, parent: this),
+                  BiddingForm(goodID: widget.goodID, price: currPrice, unit: unitPrice, session: currSession, parent: this),
                   Divider(),
                   Text(
                     '안내사항',
@@ -120,6 +129,18 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
               ),
             )
           ),
+        );
+      }
+    );
+  }
+
+  Future<void> _showAutoBiddingDialog(int currPrice, int unitPrice) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: AutoBiddingForm(goodID: widget.goodID, price: currPrice, unit: unitPrice, session: currSession, parent: this)
         );
       }
     );
@@ -261,7 +282,8 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                                           )
                                         ),
                                         VerticalDivider(),
-                                        Text('${comments[i].date}',
+                                        Text(
+                                          commentTimeTextFromDate(comments[i].date),
                                           style: TextStyle(
                                             fontSize: 12,
                                             color: Colors.grey,
@@ -441,7 +463,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                     padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 80.0),
                     splashColor: Colors.greenAccent,
                     onPressed: () => {
-                      _showAddmissionDialog(snapshot.data.price)
+                      _showBiddingDialog(snapshot.data.price, snapshot.data.unitPrice)
                     },
                     child: Text(
                       "BID UP",
@@ -471,6 +493,19 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold
                       ),
+                    ),
+                  ),
+                  RichText(
+                    text: TextSpan(
+                      text: '자동입찰 설정하기',
+                      style: TextStyle(
+                        color: Colors.black,
+                        decoration: TextDecoration.underline
+                      ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () => {
+                          _showAutoBiddingDialog(snapshot.data.price, snapshot.data.unitPrice)
+                        }
                     ),
                   ),
                   Container(
@@ -514,7 +549,8 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                                 )
                               ),
                               VerticalDivider(),
-                              Text('${snapshot.data.commentList[0].date}',
+                              Text(
+                                commentTimeTextFromDate(snapshot.data.commentList[0].date),
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.grey,
@@ -552,11 +588,12 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
 
 class BiddingForm extends StatefulWidget {
   final int price;
+  final int unit;
   final int goodID;
   final String session;
   _AGDWithVideoState parent;
 
-  BiddingForm({Key key, @required this.goodID, @required this.price,
+  BiddingForm({Key key, @required this.goodID, @required this.price, @required this.unit,
     @required this.session, @required this.parent}) : super(key: key);
 
   @override
@@ -568,7 +605,7 @@ class BiddingForm extends StatefulWidget {
 class BiddingFormState extends State<BiddingForm> {
   
   final _formKey = GlobalKey<FormState>();
-  // String currSession;
+  int selectedPrice;
 
   Future<http.Response> addBidding(int id, int price) async {
     //final http.Response response = await
@@ -586,30 +623,89 @@ class BiddingFormState extends State<BiddingForm> {
     );
   } 
 
+  @override void initState() {
+    selectedPrice = widget.price + widget.unit;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    TextEditingController _passController = new TextEditingController();
     return Form(
       key: _formKey,
       child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            TextFormField(
-              controller: _passController,
-              decoration: InputDecoration(
-                hintText: '새로운 입찰가를 입력하세요',
-                labelText: '새로운 입찰가를 입력하세요'
-              ),
-              keyboardType: TextInputType.number,
-              validator: (value) {
-                if (value.isEmpty) {
-                  return '원하시는 입찰가를 입력하세요';
-                }
-                else if (int.parse(value) <= widget.price) {
-                  return '현재 입찰가보다 더 높은 가격을 입력하세요';
-                }
-                return null;
-              },
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      '희망 입찰가',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                    Text(
+                      selectedPrice.toString(),
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                  ]
+                ),
+                VerticalDivider(),
+                Column(
+                  children: [
+                    RaisedButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        side: BorderSide(color: Colors.green)
+                      ),
+                      color: Colors.green,
+                      textColor: Colors.white,
+                      disabledColor: Colors.grey,
+                      disabledTextColor: Colors.black,
+                      padding: EdgeInsets.all(8.0),
+                      splashColor: Colors.transparent,
+                      onPressed: () {
+                        // (selectedPrice == widget.price + widget.unit)
+                        setState(() {
+                          selectedPrice += widget.unit;
+                        });
+                      },
+                      child: Text(
+                        '+${widget.unit}원',
+                        style: TextStyle(fontSize: 16.0)
+                      ),
+                    ),
+                    RaisedButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        side: BorderSide(color: Colors.green)
+                      ),
+                      color: Colors.green,
+                      textColor: Colors.white,
+                      disabledColor: Colors.grey,
+                      disabledTextColor: Colors.black,
+                      padding: EdgeInsets.all(8.0),
+                      splashColor: Colors.transparent,
+                      onPressed: (selectedPrice == widget.price + widget.unit) ? null
+                        : () {
+                        setState(() {
+                          selectedPrice -= widget.unit;
+                        });
+                      },
+                      child: Text(
+                        '-${widget.unit}원',
+                        style: TextStyle(fontSize: 16.0)
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
             RaisedButton(
               shape: RoundedRectangleBorder(
@@ -624,7 +720,7 @@ class BiddingFormState extends State<BiddingForm> {
               splashColor: Colors.transparent,
               onPressed: () async {
                 if (_formKey.currentState.validate()) {
-                  http.Response response = await addBidding(widget.goodID, int.parse(_passController.text));
+                  http.Response response = await addBidding(widget.goodID, selectedPrice);
                   print(response.statusCode);
                   print(response.body);
                   if (response.statusCode == 200) {
@@ -645,6 +741,267 @@ class BiddingFormState extends State<BiddingForm> {
                 '입찰가 제출',
                 style: TextStyle(fontSize: 16.0)
               ),
+            ),
+          ]
+      )
+      )
+    );
+  }
+}
+
+class AutoBiddingForm extends StatefulWidget {
+  final int price;
+  final int unit;
+  final int goodID;
+  final String session;
+  _AGDWithVideoState parent;
+  AutoBiddingForm({Key key, @required this.goodID, @required this.price, @required this.unit,
+    @required this.session, @required this.parent}) : super(key: key);
+
+  @override
+  AutoBiddingFormState createState() {
+    return AutoBiddingFormState();
+  }
+}
+
+class AutoBiddingFormState extends State<AutoBiddingForm> {
+
+  final _formKey = GlobalKey<FormState>();
+  int selectedPrice;
+
+  // TODO: Auto Bidding API 호출
+  // Future<http.Response> addAutoBidding(int id, int price) async {
+  //   //final http.Response response = await
+
+  //   var map = new Map<String, dynamic>();
+  //   map['auction_id'] = id.toString();
+  //   map['price'] = price.toString();
+
+  //   return http.post(
+  //     'https://ibsoft.site/revault/addBidLog',
+  //     headers: <String, String>{
+  //       'Cookie': widget.session,
+  //     },
+  //     body: map,
+  //   );
+  // }
+
+  @override void initState() {
+    selectedPrice = widget.price + widget.unit;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Text(
+              '자동입찰 가격 설정',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Divider(
+              indent: 50,
+              endIndent: 50,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.account_balance_wallet, size: 16),
+                Text(
+                  ' 현재 입찰가: ${widget.price}원',
+                  style: TextStyle(
+                    fontSize: 16, 
+                    fontWeight: FontWeight.bold
+                  )
+                )
+              ],
+            ),
+            Text(
+              '입찰가는 ${widget.unit}원 단위로 올릴 수 있습니다',
+              style: TextStyle(
+                fontSize: 16, 
+                fontWeight: FontWeight.bold
+              )
+            ),
+            Divider(
+              indent: 50,
+              endIndent: 50,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      '희망 입찰가',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                    Text(
+                      selectedPrice.toString(),
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                  ]
+                ),
+                VerticalDivider(),
+                Column(
+                  children: [
+                    RaisedButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        side: BorderSide(color: Colors.green)
+                      ),
+                      color: Colors.green,
+                      textColor: Colors.white,
+                      disabledColor: Colors.grey,
+                      disabledTextColor: Colors.black,
+                      padding: EdgeInsets.all(8.0),
+                      splashColor: Colors.transparent,
+                      onPressed: () {
+                        setState(() {
+                          selectedPrice += 10 * widget.unit;
+                        });
+                      },
+                      child: Transform.rotate(
+                        angle: 270 * pi / 180,
+                        child: Icon(
+                            Icons.fast_forward,
+                            color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    RaisedButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        side: BorderSide(color: Colors.green)
+                      ),
+                      color: Colors.green,
+                      textColor: Colors.white,
+                      disabledColor: Colors.grey,
+                      disabledTextColor: Colors.black,
+                      padding: EdgeInsets.all(8.0),
+                      splashColor: Colors.transparent,
+                      onPressed: () {
+                        setState(() {
+                          selectedPrice += widget.unit;
+                        });
+                      },
+                      child: Transform.rotate(
+                        angle: 270 * pi / 180,
+                        child: Icon(
+                          Icons.play_arrow,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    RaisedButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        side: BorderSide(color: Colors.green)
+                      ),
+                      color: Colors.green,
+                      textColor: Colors.white,
+                      disabledColor: Colors.grey,
+                      disabledTextColor: Colors.black,
+                      padding: EdgeInsets.all(8.0),
+                      splashColor: Colors.transparent,
+                      onPressed: (selectedPrice == widget.price + widget.unit) ? null
+                        : () {
+                        setState(() {
+                          selectedPrice -= widget.unit;
+                        });
+                      },
+                      child: Transform.rotate(
+                        angle: 90 * pi / 180,
+                        child: Icon(
+                          Icons.play_arrow,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    RaisedButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        side: BorderSide(color: Colors.green)
+                      ),
+                      color: Colors.green,
+                      textColor: Colors.white,
+                      disabledColor: Colors.grey,
+                      disabledTextColor: Colors.black,
+                      padding: EdgeInsets.all(8.0),
+                      splashColor: Colors.transparent,
+                      onPressed: (selectedPrice >= widget.price + 10 * widget.unit)
+                        ? () {
+                          setState(() {
+                            selectedPrice -= 10 * widget.unit;
+                          });
+                        }
+                      : null,
+                      child: Transform.rotate(
+                        angle: 90 * pi / 180,
+                        child: Icon(
+                          Icons.fast_forward,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                RaisedButton(
+                  color: Colors.green,
+                  textColor: Colors.white,
+                  disabledColor: Colors.transparent,
+                  disabledTextColor: Colors.grey,
+                  padding: EdgeInsets.all(8.0),
+                  splashColor: Colors.transparent,
+                  onPressed: () {
+                    ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text('자동입찰 설정 취소')));
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    '취소',
+                    style: TextStyle(fontSize: 16.0)
+                  ),
+                ),
+                VerticalDivider(),
+                RaisedButton(
+                  color: Colors.green,
+                  textColor: Colors.white,
+                  disabledColor: Colors.transparent,
+                  disabledTextColor: Colors.grey,
+                  padding: EdgeInsets.all(8.0),
+                  splashColor: Colors.transparent,
+                  onPressed: () {
+                    if (_formKey.currentState.validate()) {
+                      // TODO: API 호출 및 처리
+                      ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text('자동입찰 설정 진행중')));
+                    }
+                  },
+                  child: Text(
+                    '완료',
+                    style: TextStyle(fontSize: 16.0)
+                  ),
+                ),
+              ],
             ),
           ]
       )

@@ -210,7 +210,7 @@ class _AuctionGoodsState extends State<AuctionGoods> {
                       size: 18
                     ),
                     Text(
-                      remainingTimeTextFromDate(good.endDate) + ' 남음',
+                      remainingTimeTextFromDate(good.endDate),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 14

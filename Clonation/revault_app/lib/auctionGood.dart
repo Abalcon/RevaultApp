@@ -14,6 +14,7 @@ class AuctionGood {
   String goodName;
   int price;
   int initPrice;
+  int unitPrice;
 
   String sellState;
   String winner;
@@ -34,6 +35,7 @@ class AuctionGood {
     @required this.goodName,
     @required this.price,
     this.initPrice,
+    this.unitPrice,
     @required this.sellState,
     this.winner,
     this.commentList,
@@ -60,6 +62,7 @@ class AuctionGood {
       goodName: json['title'],
       price: json['price'],
       initPrice: json['start_price'],
+      unitPrice: json['unit_price'],
       sellState: json['status'].toString(),
       winner: json['winner_id'],
       commentList: comList,
