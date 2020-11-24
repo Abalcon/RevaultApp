@@ -13,7 +13,7 @@ class MyProceedings extends StatelessWidget {
       brand: 'NIKE ACG',
       goodName: 'Black Hoodie',
       price: 230000,
-      sellState: '배송중'
+      aucState: '배송중'
     ),
     AuctionGood(
       auctionID: 2,
@@ -25,7 +25,7 @@ class MyProceedings extends StatelessWidget {
       brand: 'NIKE ACG',
       goodName: 'Jacket With Gloves',
       price: 200000,
-      sellState: '배송준비'
+      aucState: '배송준비'
     ),
     AuctionGood(
       auctionID: 3,
@@ -37,7 +37,7 @@ class MyProceedings extends StatelessWidget {
       brand: 'NIKE ACG',
       goodName: 'Black Hoodie',
       price: 230000,
-      sellState: '입금대기'
+      aucState: '입금대기'
     ),
     AuctionGood(
       auctionID: 4,
@@ -49,7 +49,7 @@ class MyProceedings extends StatelessWidget {
       brand: 'NIKE ACG',
       goodName: 'Jacket With Gloves',
       price: 200000,
-      sellState: '배송완료'
+      aucState: '배송완료'
     ),
   ];
 
@@ -81,7 +81,7 @@ class MyProceedings extends StatelessWidget {
                 padding: const EdgeInsets.all(10),
                 itemCount: items.length,
                 itemBuilder: (BuildContext _context, int i) {
-                  bool isPayingEnabled = (items[i].sellState != '배송완료');
+                  bool isPayingEnabled = (items[i].aucState != '배송완료');
 
                   return Column(
                     children: [
@@ -116,7 +116,7 @@ class MyProceedings extends StatelessWidget {
                                     fontSize: 14,
                                   )
                                 ),
-                                Text('${items[i].sellState}',
+                                Text('${items[i].aucState}',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 14,

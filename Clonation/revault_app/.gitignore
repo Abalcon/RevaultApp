@@ -39,3 +39,7 @@ app.*.symbols
 
 # Obfuscation related
 app.*.map.json
+
+# FCM
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist

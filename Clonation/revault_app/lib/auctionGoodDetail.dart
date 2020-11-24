@@ -1,16 +1,21 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:intl/intl.dart';
 import 'package:revault_app/auctionGood.dart';
 import 'package:revault_app/common/aux.dart';
 import 'package:video_player/video_player.dart';
 import 'package:http/http.dart' as http;
+import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 AuctionGood parseGood(String responseBody) {
+  //print(responseBody);
   return AuctionGood.fromJson(jsonDecode(responseBody));
 }
 
@@ -33,14 +38,19 @@ class AuctionGoodDetail extends StatelessWidget {
         centerTitle: true,
         title: Text("REVAULT"),
       ),
-      body: AuctionGoodDetailWithVideo(goodID: goodID,)
+      body: AuctionGoodDetailWithVideo(
+        goodID: goodID,
+        //channel: IOWebSocketChannel.connect('wss://ibsoft.site/ws/chat'),
+      ),
     );
   }
 }
 
 class AuctionGoodDetailWithVideo extends StatefulWidget{
   final int goodID;
-  AuctionGoodDetailWithVideo({Key key, @required this.goodID}) : super(key: key);
+  //final WebSocketChannel channel;
+  AuctionGoodDetailWithVideo({Key key,
+    @required this.goodID, /*@required this.channel*/}) : super(key: key);
 
   @override
   _AGDWithVideoState createState() => _AGDWithVideoState();
@@ -95,7 +105,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                     indent: 50,
                     endIndent: 50,
                   ),
-                  BiddingForm(goodID: widget.goodID, price: currPrice, unit: unitPrice, session: currSession, parent: this),
+                  BiddingForm(goodID: widget.goodID, price: currPrice, unit: unitPrice, session: currUser.getSession(), parent: this),
                   Divider(),
                   Text(
                     '안내사항',
@@ -140,14 +150,14 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
       barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
-          content: AutoBiddingForm(goodID: widget.goodID, price: currPrice, unit: unitPrice, session: currSession, parent: this)
+          content: AutoBiddingForm(goodID: widget.goodID, price: currPrice, unit: unitPrice, session: currUser.getSession(), parent: this)
         );
       }
     );
   }
 
   // 경매 결과 알림창
-  Future<void> _showResultDialog() async {
+  Future<void> _showResultDialog(AuctionGood good) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: true,
@@ -173,7 +183,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                     backgroundColor: Colors.transparent
                   ),
                   Text(
-                    'noname님 축하드립니다.',
+                    '${good.biddingList[0].username}님 축하드립니다.',
                     style: TextStyle(
                       fontSize: 16, 
                       fontWeight: FontWeight.bold
@@ -209,6 +219,15 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                         )
                       ],
                     ),
+                  ),
+                  Text(
+                    // 임시
+                    good.winner == null ? '아직 낙찰자가 나오지 않았습니다'
+                    : '${good.winner}님께서 ${good.price}원에 낙찰되셨습니다',
+                    style: TextStyle(
+                      fontSize: 18, 
+                      fontWeight: FontWeight.bold
+                    )
                   ),
                   RaisedButton(
                     color: Colors.black,
@@ -307,7 +326,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                     ),
                   ),
                 ),
-                CommentForm(goodID: widget.goodID, session: currSession, parent: this),
+                CommentForm(goodID: widget.goodID, session: currUser.getSession(), parent: this),
               ],
             )
           )
@@ -316,14 +335,236 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
     );
   }
 
+  Widget biddingSection(AuctionGood good) {
+    return StreamBuilder(
+      stream: channel.stream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData && snapshot.data != "connected") {
+          print(snapshot.data);
+          // setState(() {
+          //   currentPrice = int.tryParse(snapshot.data);
+          // });
+        }
+
+        return Column(
+          children: [
+            Text(
+              (snapshot.hasData && snapshot.data != "connected")
+              ? max(int.parse(snapshot.data), good.price).toString()
+              : good.price.toString(),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20
+              )
+            ),
+            // Text(
+            //   snapshot.hasData ? "Received from WebSocket" : "Received from DataBase",
+            //   style: TextStyle(
+            //     fontWeight: FontWeight.bold,
+            //     fontSize: 20
+            //   )
+            // ),
+            // Text(
+            //   good.price.toString(),
+            //   style: TextStyle(
+            //     fontWeight: FontWeight.bold,
+            //     fontSize: 20
+            //   )
+            // ),
+            Text(
+              good.biddingList.length > 0 ?
+              '${good.biddingList[0].username} 님께서 최근 입찰하셨습니다.'
+              : '아직 입찰한 사람이 없습니다. 지금 입찰해보세요!'
+            ),
+            RaisedButton(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18.0),
+                side: BorderSide(color: Colors.green)
+              ),
+              color: Colors.green,
+              textColor: Colors.white,
+              disabledColor: Colors.grey,
+              disabledTextColor: Colors.black,
+              padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 80.0),
+              splashColor: Colors.greenAccent,
+              onPressed: () {
+                if (currentPrice > 0)
+                  _showBiddingDialog(currentPrice, good.unitPrice);
+                else
+                  _showBiddingDialog(good.price, good.unitPrice);
+              },
+              child: Text(
+                "BID UP",
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold
+                ),
+              ),
+            ),
+            RaisedButton(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18.0),
+                side: BorderSide(color: Colors.green)
+              ),
+              color: Colors.green,
+              textColor: Colors.white,
+              disabledColor: Colors.grey,
+              disabledTextColor: Colors.black,
+              padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 80.0),
+              splashColor: Colors.greenAccent,
+              onPressed: () => {
+                _showResultDialog(good)
+              },
+              child: Text(
+                "경매 결과창 테스트",
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold
+                ),
+              ),
+            ),
+            currUser.getName() == good.autoUser ?
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.cached,
+                  color: Colors.green,
+                ),
+                Text(
+                  "${good.autoPrice}원 까지 자동입찰 중",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
+              ]
+            )
+            : RichText(
+              text: TextSpan(
+                text: '자동입찰 설정하기',
+                style: TextStyle(
+                  color: Colors.black,
+                  decoration: TextDecoration.underline
+                ),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () => {
+                    _showAutoBiddingDialog(good.price, good.unitPrice)
+                  }
+              ),
+            ),
+          ],
+        );
+      }
+    );
+  }
+
+  Widget recordSection(List<Bidding> bidRecord) {
+    return Column(
+      children: [
+        Container(
+          color: Colors.black,
+          padding: EdgeInsets.symmetric(vertical: 15),
+          alignment: Alignment.center,
+          child: Text(
+            '입찰기록',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        SingleChildScrollView(
+          child: Container(
+            height: 280.0,
+            child: ListView.builder(
+              shrinkWrap: true,
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+              itemCount: bidRecord.length,
+              itemBuilder: (BuildContext _context, int i) {
+                return Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                              radius: 20.0,
+                              backgroundImage:
+                                NetworkImage(
+                                  'https://www.go4thetop.net/assets/images/Staff_Ryunan.jpg'
+                                ),
+                              backgroundColor: Colors.transparent,
+                              ),
+                              VerticalDivider(),
+                              Text(
+                                '${bidRecord[i].username}',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                )
+                              ),
+                              VerticalDivider(),
+                              Text(
+                                DateFormat('yyyy.MM.dd HH:mm').format(bidRecord[i].date),
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey,
+                                )
+                              ),
+                            ]
+                          ),
+                        ),
+                        Text(
+                          '${bidRecord[i].price}',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          )
+                        ),
+                      ],
+                    ),
+                    Divider()
+                  ]
+                );
+              }
+            ),
+          ),
+        ),
+      ]
+    );
+  }
+
   VideoPlayerController sampleVideoController;
   Future<void> _initializeVideoPlayerFuture;
   List<Widget> sliderItems;
   Future<AuctionGood> currentGood;
-  String currSession;
+  SessionNamePair currUser;
+  WebSocketChannel channel;
+  int currentPrice = -1;
   _asyncMethod() async {
-    currSession = await isLogged();
-    print(currSession);
+    currUser = await isLogged();
+    print(currUser);
+    if (currUser.getName() == null) {
+      // TODO: 회원만 상세 정보를 조회할 수 있어야할까?
+    }
+    print("Connecting to WebSocket Server...");
+    WebSocket.connect('wss://ibsoft.site/revault/ws/chat').then((ws) {
+      channel = IOWebSocketChannel(ws);
+      print("WebSocket Connected!");
+      print(channel.protocol);
+      print(widget.goodID);
+      channel.sink.add('${widget.goodID}');
+      // channel.stream.listen((message) {
+      //   print("Receiving message from WebSocket server: $message");
+      //   if (message.runtimeType == int) {
+      //     setState(() {
+      //       isUpdatedFromOthers = true;
+      //       updatedPrice = message;
+      //     });
+      //   }
+      // });
+    });
   }
 
   @override
@@ -382,8 +623,8 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
 
   @override
   void dispose() {
-    // Ensure disposing of the VideoPlayerController to free up resources.
     sampleVideoController.dispose();
+    channel.sink.close();
 
     super.dispose();
   }
@@ -439,18 +680,10 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                     ),
                     items: sliderItems,
                   ),
-                  Text(
-                    snapshot.data.price.toString(),
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20
-                    )
-                  ),
-                  Text(
-                    snapshot.data.biddingList.length > 0 ?
-                    '${snapshot.data.biddingList[0].username} 님께서 최근 입찰하셨습니다.'
-                    : '아직 입찰한 사람이 없습니다. 지금 입찰해보세요!'
-                  ),
+                  // TODO: aucState가 2일 경우 입찰 기록을 대신 표시
+                  snapshot.data.aucState == "1"
+                  ? biddingSection(snapshot.data)
+                  : recordSection(snapshot.data.biddingList),
                   RaisedButton(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18.0),
@@ -462,50 +695,17 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                     disabledTextColor: Colors.black,
                     padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 80.0),
                     splashColor: Colors.greenAccent,
-                    onPressed: () => {
-                      _showBiddingDialog(snapshot.data.price, snapshot.data.unitPrice)
+                    onPressed: () {
+                      print(widget.goodID);
+                      channel.sink.add(1);
+                      //channel.sink.add(widget.goodID);
                     },
                     child: Text(
-                      "BID UP",
+                      "웹소켓으로 경매 번호 보내기",
                       style: TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold
                       ),
-                    ),
-                  ),
-                  RaisedButton(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.0),
-                      side: BorderSide(color: Colors.green)
-                    ),
-                    color: Colors.green,
-                    textColor: Colors.white,
-                    disabledColor: Colors.grey,
-                    disabledTextColor: Colors.black,
-                    padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 80.0),
-                    splashColor: Colors.greenAccent,
-                    onPressed: () => {
-                      _showResultDialog()
-                    },
-                    child: Text(
-                      "경매 결과창 테스트",
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold
-                      ),
-                    ),
-                  ),
-                  RichText(
-                    text: TextSpan(
-                      text: '자동입찰 설정하기',
-                      style: TextStyle(
-                        color: Colors.black,
-                        decoration: TextDecoration.underline
-                      ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () => {
-                          _showAutoBiddingDialog(snapshot.data.price, snapshot.data.unitPrice)
-                        }
                     ),
                   ),
                   Container(
@@ -721,13 +921,12 @@ class BiddingFormState extends State<BiddingForm> {
               onPressed: () async {
                 if (_formKey.currentState.validate()) {
                   http.Response response = await addBidding(widget.goodID, selectedPrice);
-                  print(response.statusCode);
-                  print(response.body);
-                  if (response.statusCode == 200) {
+                  if (response.statusCode == 200 && response.body == "1") {
                     ScaffoldMessenger.of(context)
                         .showSnackBar(SnackBar(content: Text('입찰가 제출에 성공했습니다')));
                     this.widget.parent.setState(() {
                       this.widget.parent.currentGood = fetchGood(widget.goodID);
+                      this.widget.parent.currentPrice = selectedPrice;
                     });
                     Navigator.pop(context);
                   }
@@ -743,7 +942,7 @@ class BiddingFormState extends State<BiddingForm> {
               ),
             ),
           ]
-      )
+        )
       )
     );
   }
@@ -769,22 +968,20 @@ class AutoBiddingFormState extends State<AutoBiddingForm> {
   final _formKey = GlobalKey<FormState>();
   int selectedPrice;
 
-  // TODO: Auto Bidding API 호출
-  // Future<http.Response> addAutoBidding(int id, int price) async {
-  //   //final http.Response response = await
+  Future<http.Response> addAutoBidding(int id, int price) async {
+    print("자동 입찰: " + id.toString() + "번 상품에 " + price.toString() + "원");
+    var map = new Map<String, dynamic>();
+    map['auction_id'] = id.toString();
+    map['price'] = price.toString();
 
-  //   var map = new Map<String, dynamic>();
-  //   map['auction_id'] = id.toString();
-  //   map['price'] = price.toString();
-
-  //   return http.post(
-  //     'https://ibsoft.site/revault/addBidLog',
-  //     headers: <String, String>{
-  //       'Cookie': widget.session,
-  //     },
-  //     body: map,
-  //   );
-  // }
+    return http.post(
+      'https://ibsoft.site/revault/setAutoBid',
+      headers: <String, String>{
+        'Cookie': widget.session,
+      },
+      body: map,
+    );
+  }
 
   @override void initState() {
     selectedPrice = widget.price + widget.unit;
@@ -989,11 +1186,21 @@ class AutoBiddingFormState extends State<AutoBiddingForm> {
                   disabledTextColor: Colors.grey,
                   padding: EdgeInsets.all(8.0),
                   splashColor: Colors.transparent,
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState.validate()) {
-                      // TODO: API 호출 및 처리
-                      ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBar(content: Text('자동입찰 설정 진행중')));
+                      http.Response response = await addAutoBidding(widget.goodID, selectedPrice);
+                      if (response.statusCode == 200 && response.body == "1") {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text('자동 입찰 등록에 성공했습니다')));
+                        this.widget.parent.setState(() {
+                          this.widget.parent.currentGood = fetchGood(widget.goodID);
+                        });
+                        Navigator.pop(context);
+                      }
+                      else {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text('오류가 발생했습니다. 다시 시도해주세요')));
+                      }
                     }
                   },
                   child: Text(
@@ -1075,9 +1282,7 @@ class CommentFormState extends State<CommentForm> {
             onPressed: () async {
               if (_formKey.currentState.validate()) {
                 http.Response response = await addComment(widget.goodID, _passController.text);
-                print(response.statusCode);
-                print(response.body);
-                if (response.statusCode == 200 || response.statusCode == 201) {
+                if ((response.statusCode == 200 || response.statusCode == 201) && response.body == "1") {
                   ScaffoldMessenger.of(context)
                       .showSnackBar(SnackBar(content: Text('댓글 작성에 성공했습니다')));
                   this.widget.parent.setState(() {

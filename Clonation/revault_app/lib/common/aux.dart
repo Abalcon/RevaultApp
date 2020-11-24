@@ -2,13 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
-Future<String> isLogged() async {
+class SessionNamePair {
+  final String session;
+  final String name;
+  SessionNamePair(
+    this.session,
+    this.name,
+  );
+
+  @override
+  String toString() => 'SessionNamePair[$session, $name]';
+
+  String getSession() => this.session;
+  String getName() => this.name;
+}
+
+Future<SessionNamePair> isLogged() async {
   final storage = new FlutterSecureStorage();
   String currSession = await storage.read(key: "session");
 
   if (currSession == null) {
     print("Not Logged In");
-    return null;
+    return SessionNamePair(null, null);
   }
   
   http.Response response = await http.get(
@@ -20,12 +35,12 @@ Future<String> isLogged() async {
 
   if (response.statusCode == 200 && response.body != null && response.body != "") {
     print("Logged In: ${response.body}");
-    return currSession;
+    return SessionNamePair(currSession, response.body);
   }
   // 사용자 정보가 만료
   print("Session Expired");
   await storage.delete(key: "session",);
-  return null;
+  return SessionNamePair(null, null);
 }
 
 // Duration remainingTime(DateTime deadline) {
