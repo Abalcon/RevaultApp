@@ -15,9 +15,10 @@ List<AuctionGood> parseGoodList(String responseBody) {
   return parsed.map<AuctionGood>((json) => AuctionGood.fromJson(json)).toList();
 }
 
-Future<List<AuctionGood>> fetchWinnings(String session) async {
+Future<List<AuctionGood>> fetchGoodList(String session, int status, String type) async {
+  final String typeParam = (type == '') ? '' : '&is$type=1';
   final response = await http.get(
-    'https://ibsoft.site/revault/getAuctionList?status=2&isWin=1',
+    'https://ibsoft.site/revault/getAuctionList?status=$status$typeParam',
     headers: <String, String>{
       'Cookie': session,
     },
@@ -65,12 +66,43 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
     }
     else {
       setState(() {
-        winningList = fetchWinnings(currUser.getSession());
+        ongoingList = fetchGoodList(currUser.getSession(), 1, 'Bid');
+        recordList = fetchGoodList(currUser.getSession(), 2, '');
+        winningList = fetchGoodList(currUser.getSession(), 2, 'Win');
       });
     }
   }
 
+  Future<List<AuctionGood>> ongoingList;
+  Future<List<AuctionGood>> recordList;
   Future<List<AuctionGood>> winningList;
+  Widget _listCountText(Future future, String route) {
+    return FutureBuilder<List<AuctionGood>>(
+      future: future,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return RichText(
+            text: TextSpan(
+              text: '${snapshot.data.length}',
+              style: TextStyle(
+                fontSize: 40, 
+                fontWeight: FontWeight.bold,
+                color: Colors.green,
+              ),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () => Navigator.pushNamed(context, route)
+            ),
+          );
+        }
+        else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+
+        return Center(child: CircularProgressIndicator());
+      }
+    );
+  }
+
   Widget _buildWithList() {
     return FutureBuilder<List<AuctionGood>>(
       future: winningList,
@@ -302,18 +334,7 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
                         fontWeight: FontWeight.bold
                       )
                     ),
-                    RichText(
-                      text: TextSpan(
-                        text: '1',
-                        style: TextStyle(
-                          fontSize: 40, 
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green,
-                        ),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () => Navigator.pushNamed(context, '/myparticipations')
-                      ),
-                    ),
+                    _listCountText(ongoingList, '/myparticipations'),
                   ]
                 ),
                 VerticalDivider(
@@ -332,18 +353,7 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
                         fontWeight: FontWeight.bold
                       )
                     ),
-                    RichText(
-                      text: TextSpan(
-                        text: '3',
-                        style: TextStyle(
-                          fontSize: 40, 
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green,
-                        ),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () => Navigator.pushNamed(context, '/myprevrecords')
-                      ),
-                    ),
+                    _listCountText(recordList, '/myprevrecords'),
                   ]
                 )
               ]
