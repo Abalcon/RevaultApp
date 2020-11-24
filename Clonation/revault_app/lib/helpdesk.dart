@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:revault_app/common/aux.dart';
 import 'customerRequest.dart';
 
 class HelpDesk extends StatelessWidget {
@@ -40,6 +41,73 @@ class HelpDesk extends StatelessWidget {
           )
         ),
       )
+    );
+  }
+}
+
+class HelpDeskDetails extends StatefulWidget {
+
+  @override
+  HelpDeskDetailsState createState() => HelpDeskDetailsState();
+}
+
+class HelpDeskDetailsState extends State<HelpDeskDetails> {
+  SessionNamePair currUser;
+  _checkUser() async {
+    currUser = await isLogged();
+    print(currUser);
+    if (currUser.getName() == null) {
+      ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('로그인 정보가 만료되었습니다. 다시 로그인하시기 바랍니다')));
+      Navigator.pushReplacementNamed(context, '/login');
+    }
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkUser();
+    });
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 2,
+      child: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            SliverAppBar(
+              expandedHeight: 50.0,
+              floating: false,
+              pinned: true,
+              flexibleSpace: FlexibleSpaceBar(
+                centerTitle: true,
+                title: Text("고객센터"),
+              ),
+            ),
+            SliverPersistentHeader(
+              delegate: _SliverAppBarDelegate(
+                TabBar(
+                  tabs: [
+                    Tab(child: Text("1:1 문의하기", style: Theme.of(context).textTheme.headline6)),
+                    Tab(child: Text("1:1 문의내역", style: Theme.of(context).textTheme.headline6)),
+                  ],
+                ),
+              ),
+              pinned: true,
+            ),
+          ];
+        },
+        body: TabBarView(
+          children: <Widget> [
+            Center(child: RequestForm()),
+            Center(child: HelpResponse()),
+          ],
+        )
+      ),
     );
   }
 }

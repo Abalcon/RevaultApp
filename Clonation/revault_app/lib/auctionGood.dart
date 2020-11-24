@@ -22,6 +22,8 @@ class AuctionGood {
   List<Comment> commentList;
   List<Bidding> biddingList;
   // List<AuctionImage> imageList;
+  int autoPrice;
+  String autoUser;
 
   AuctionGood({
     @required this.auctionID,
@@ -39,7 +41,9 @@ class AuctionGood {
     @required this.sellState,
     this.winner,
     this.commentList,
-    this.biddingList
+    this.biddingList,
+    this.autoPrice,
+    this.autoUser,
   });
 
   factory AuctionGood.fromJson(Map<String, dynamic> json) {
@@ -67,6 +71,8 @@ class AuctionGood {
       winner: json['winner_id'],
       commentList: comList,
       biddingList: bidList,
+      autoPrice: json['auto_price'],
+      autoUser: json['auto_user'],
       // 2020-11-17 추가분
       // auction_id_arr, auction_id_list, isBid, isWin, isLose
     );

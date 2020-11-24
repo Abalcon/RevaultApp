@@ -72,7 +72,7 @@ class EmailVerifyFormState extends State<EmailVerifyForm> {
                           if (value.isEmpty) {
                             return 'Please enter your username';
                           }
-                          // TODO: Check whether the address is exist in the database
+                          // TODO: 이메일이 등록되어있는지 확인하기
                           return null;
                         },
                       ),
@@ -125,7 +125,7 @@ class EmailVerifyFormState extends State<EmailVerifyForm> {
                           if (value.isEmpty) {
                             return 'Please enter your confirmation code';
                           }
-                          // TODO: Check whether the code is correct
+                          // TODO: 인증 코드가 맞는지 확인하기
                           return null;
                         },
                       ),

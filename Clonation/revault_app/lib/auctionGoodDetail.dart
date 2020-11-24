@@ -11,6 +11,7 @@ import 'package:video_player/video_player.dart';
 import 'package:http/http.dart' as http;
 
 AuctionGood parseGood(String responseBody) {
+  //print(responseBody);
   return AuctionGood.fromJson(jsonDecode(responseBody));
 }
 
@@ -95,7 +96,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                     indent: 50,
                     endIndent: 50,
                   ),
-                  BiddingForm(goodID: widget.goodID, price: currPrice, unit: unitPrice, session: currSession, parent: this),
+                  BiddingForm(goodID: widget.goodID, price: currPrice, unit: unitPrice, session: currUser.getSession(), parent: this),
                   Divider(),
                   Text(
                     '안내사항',
@@ -140,14 +141,14 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
       barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
-          content: AutoBiddingForm(goodID: widget.goodID, price: currPrice, unit: unitPrice, session: currSession, parent: this)
+          content: AutoBiddingForm(goodID: widget.goodID, price: currPrice, unit: unitPrice, session: currUser.getSession(), parent: this)
         );
       }
     );
   }
 
   // 경매 결과 알림창
-  Future<void> _showResultDialog() async {
+  Future<void> _showResultDialog(AuctionGood good) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: true,
@@ -173,7 +174,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                     backgroundColor: Colors.transparent
                   ),
                   Text(
-                    'noname님 축하드립니다.',
+                    '${good.biddingList[0].username}님 축하드립니다.',
                     style: TextStyle(
                       fontSize: 16, 
                       fontWeight: FontWeight.bold
@@ -209,6 +210,15 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                         )
                       ],
                     ),
+                  ),
+                  Text(
+                    // 임시
+                    good.winner == null ? '아직 낙찰자가 나오지 않았습니다'
+                    : '${good.winner}님께서 ${good.price}원에 낙찰되셨습니다',
+                    style: TextStyle(
+                      fontSize: 18, 
+                      fontWeight: FontWeight.bold
+                    )
                   ),
                   RaisedButton(
                     color: Colors.black,
@@ -307,7 +317,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                     ),
                   ),
                 ),
-                CommentForm(goodID: widget.goodID, session: currSession, parent: this),
+                CommentForm(goodID: widget.goodID, session: currUser.getSession(), parent: this),
               ],
             )
           )
@@ -320,10 +330,13 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
   Future<void> _initializeVideoPlayerFuture;
   List<Widget> sliderItems;
   Future<AuctionGood> currentGood;
-  String currSession;
+  SessionNamePair currUser;
   _asyncMethod() async {
-    currSession = await isLogged();
-    print(currSession);
+    currUser = await isLogged();
+    print(currUser);
+    if (currUser.getName() == null) {
+      // TODO: 회원만 상세 정보를 조회할 수 있어야할까?
+    }
   }
 
   @override
@@ -485,7 +498,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                     padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 80.0),
                     splashColor: Colors.greenAccent,
                     onPressed: () => {
-                      _showResultDialog()
+                      _showResultDialog(snapshot.data)
                     },
                     child: Text(
                       "경매 결과창 테스트",
@@ -495,7 +508,23 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                       ),
                     ),
                   ),
-                  RichText(
+                  currUser.getName() == snapshot.data.autoUser ?
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.cached,
+                        color: Colors.green,
+                      ),
+                      Text(
+                        "${snapshot.data.autoPrice}원 까지 자동입찰 중",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    ]
+                  )
+                  : RichText(
                     text: TextSpan(
                       text: '자동입찰 설정하기',
                       style: TextStyle(
@@ -721,9 +750,7 @@ class BiddingFormState extends State<BiddingForm> {
               onPressed: () async {
                 if (_formKey.currentState.validate()) {
                   http.Response response = await addBidding(widget.goodID, selectedPrice);
-                  print(response.statusCode);
-                  print(response.body);
-                  if (response.statusCode == 200) {
+                  if (response.statusCode == 200 && response.body == "1") {
                     ScaffoldMessenger.of(context)
                         .showSnackBar(SnackBar(content: Text('입찰가 제출에 성공했습니다')));
                     this.widget.parent.setState(() {
@@ -743,7 +770,7 @@ class BiddingFormState extends State<BiddingForm> {
               ),
             ),
           ]
-      )
+        )
       )
     );
   }
@@ -769,22 +796,20 @@ class AutoBiddingFormState extends State<AutoBiddingForm> {
   final _formKey = GlobalKey<FormState>();
   int selectedPrice;
 
-  // TODO: Auto Bidding API 호출
-  // Future<http.Response> addAutoBidding(int id, int price) async {
-  //   //final http.Response response = await
+  Future<http.Response> addAutoBidding(int id, int price) async {
+    print("자동 입찰: " + id.toString() + "번 상품에 " + price.toString() + "원");
+    var map = new Map<String, dynamic>();
+    map['auction_id'] = id.toString();
+    map['price'] = price.toString();
 
-  //   var map = new Map<String, dynamic>();
-  //   map['auction_id'] = id.toString();
-  //   map['price'] = price.toString();
-
-  //   return http.post(
-  //     'https://ibsoft.site/revault/addBidLog',
-  //     headers: <String, String>{
-  //       'Cookie': widget.session,
-  //     },
-  //     body: map,
-  //   );
-  // }
+    return http.post(
+      'https://ibsoft.site/revault/setAutoBid',
+      headers: <String, String>{
+        'Cookie': widget.session,
+      },
+      body: map,
+    );
+  }
 
   @override void initState() {
     selectedPrice = widget.price + widget.unit;
@@ -989,11 +1014,21 @@ class AutoBiddingFormState extends State<AutoBiddingForm> {
                   disabledTextColor: Colors.grey,
                   padding: EdgeInsets.all(8.0),
                   splashColor: Colors.transparent,
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState.validate()) {
-                      // TODO: API 호출 및 처리
-                      ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBar(content: Text('자동입찰 설정 진행중')));
+                      http.Response response = await addAutoBidding(widget.goodID, selectedPrice);
+                      if (response.statusCode == 200 && response.body == "1") {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text('자동 입찰 등록에 성공했습니다')));
+                        this.widget.parent.setState(() {
+                          this.widget.parent.currentGood = fetchGood(widget.goodID);
+                        });
+                        Navigator.pop(context);
+                      }
+                      else {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text('오류가 발생했습니다. 다시 시도해주세요')));
+                      }
                     }
                   },
                   child: Text(
@@ -1075,9 +1110,7 @@ class CommentFormState extends State<CommentForm> {
             onPressed: () async {
               if (_formKey.currentState.validate()) {
                 http.Response response = await addComment(widget.goodID, _passController.text);
-                print(response.statusCode);
-                print(response.body);
-                if (response.statusCode == 200 || response.statusCode == 201) {
+                if ((response.statusCode == 200 || response.statusCode == 201) && response.body == "1") {
                   ScaffoldMessenger.of(context)
                       .showSnackBar(SnackBar(content: Text('댓글 작성에 성공했습니다')));
                   this.widget.parent.setState(() {

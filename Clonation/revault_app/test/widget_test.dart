@@ -1,30 +1,29 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility that Flutter provides. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:revault_app/auctionList.dart';
+import 'package:revault_app/auctionGood.dart';
+import 'package:mockito/mockito.dart';
+import 'package:http/http.dart' as http;
 
-import 'package:revault_app/main.dart';
-
+class MockClient extends Mock implements http.Client {}
+// 경매 리스트 불러오기 테스트
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
+  group('fetchGoodList', () {
+    test('호출이 성공하면 경매 상품 리스트를 받는다', () async {
+      final client = MockClient();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+      when(client.get('https://ibsoft.site/revault/getAuctionList'))
+        .thenAnswer((_) async => http.Response('[]', 200));
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+      expect(await fetchGoodList(1), isA<List<AuctionGood>>());
+    });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    test('호출이 실패하면 exception을 던진다', () async {
+      final client = MockClient();
+
+      when(client.get('https://ibsoft.site/revault/getAuctionList'))
+        .thenAnswer((_) async => http.Response('[]', 200));
+
+      expect(await fetchGoodList(-1), isA<List<AuctionGood>>());
+    });
   });
 }
