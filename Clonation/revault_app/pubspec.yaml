@@ -33,6 +33,9 @@ dependencies:
   customtogglebuttons: ^0.0.5
   http: ^0.12.2
   flutter_secure_storage: ^3.3.5
+  intl: ^0.16.1
+  web_socket_channel: ^1.1.0
+  firebase_messaging: ^7.0.3
 
 dev_dependencies:
   flutter_test:

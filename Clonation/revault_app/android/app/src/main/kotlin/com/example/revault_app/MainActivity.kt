@@ -1,4 +1,4 @@
-package com.example.revault_app
+package clonation.revault.revault_app
 
 import io.flutter.embedding.android.FlutterActivity
 

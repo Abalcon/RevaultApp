@@ -20,6 +20,8 @@ Future<List<AuctionGood>> fetchParticipations(String session) async {
     },
   );
   if (response.statusCode == 200) {
+    if (response.body == "")
+      return [];
     return compute(parseGoodList, response.body);
   }
   else {

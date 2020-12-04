@@ -32,6 +32,9 @@ class MyPageDetailsState extends State<MyPageDetails> {
         .showSnackBar(SnackBar(content: Text('로그인 정보가 만료되었습니다. 다시 로그인하시기 바랍니다')));
       Navigator.pushReplacementNamed(context, '/login');
     }
+    else {
+      
+    }
   }
 
   @override
