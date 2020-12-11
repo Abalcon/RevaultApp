@@ -137,7 +137,7 @@ class MyStackInfo extends StatelessWidget {
                       horizontal: MediaQuery.of(context).size.width / 3),
                     splashColor: Colors.black,
                     onPressed: () => {
-                      // TODO: 충전하기 화면 진행중
+                      // TODO: 충전금 삭제했으니 안 만들어도 된다
                     },
                     child: Text(
                       "충전하기",

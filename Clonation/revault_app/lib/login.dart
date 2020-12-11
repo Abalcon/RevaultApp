@@ -40,21 +40,23 @@ class LoginFormState extends State<LoginForm> {
   String currSession = "";
   String loginResult = "-1";
 
-  Future<http.Response> tryLogin(String id, String pw) async {
+  Future<http.Response> tryLogin(String id, String pw, String token) async {
     var map = new Map<String, dynamic>();
     map['user_id'] = id;
     map['passwd'] = pw;
+    map['user_token'] = token;
     
     http.Response response = await http.post(
       'https://ibsoft.site/revault/login',
       body: map,
     );
 
+    print(response.headers); // set-cookie: JSESSIONID=blahblah
+    print(response.body); // string: "1" or "-1"
     if (response.statusCode == 200) {
-      print(response.headers); // set-cookie: JSESSIONID=blahblah
-      print(response.body); // string: "1" or "-1"
       return response;
     } else {
+
       throw Exception('오류가 발생했습니다. 다시 시도해주세요');
     }
   }
@@ -136,7 +138,8 @@ class LoginFormState extends State<LoginForm> {
                             splashColor: Colors.greenAccent,
                             onPressed: () async {
                               if (_formKey.currentState.validate()) {
-                                var loginResponse = await tryLogin(_idController.text, _pwController.text);
+                                var fcmToken = await storage.read(key: "fcm");
+                                var loginResponse = await tryLogin(_idController.text, _pwController.text, fcmToken);
                                 setState(() {
                                   loginResult = loginResponse.body;
                                 });

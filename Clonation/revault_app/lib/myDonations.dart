@@ -3,18 +3,18 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import "package:http/http.dart" as http;
-import 'auctionGood.dart';
+import 'auctionResult.dart';
 import 'package:revault_app/common/aux.dart';
 
-List<AuctionGood> parseGoodList(String responseBody) {
+List<AuctionResult> parseGoodList(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
   print(parsed);
-  return parsed.map<AuctionGood>((json) => AuctionGood.fromJson(json)).toList();
+  return parsed.map<AuctionResult>((json) => AuctionResult.fromJson(json)).toList();
 }
 
-Future<List<AuctionGood>> fetchDonations(String session) async {
+Future<List<AuctionResult>> fetchDonations(String session) async {
   final response = await http.get(
-    'https://ibsoft.site/revault/getAuctionList?status=2&isWin=1',
+    'https://ibsoft.site/revault/getAuctionResultList',
     headers: <String, String>{
       'Cookie': session,
     },
@@ -24,10 +24,8 @@ Future<List<AuctionGood>> fetchDonations(String session) async {
       return [];
     return compute(parseGoodList, response.body);
   }
-  else {
-    // throw Exception('상품 정보를 불러오지 못했습니다');
-    return [];
-  }
+
+  return [];
 }
 
 class MyDonations extends StatelessWidget {
@@ -61,15 +59,15 @@ SessionNamePair currUser;
     }
     else {
       setState(() {
-        auctionList = fetchDonations(currUser.getSession());
+        resultList = fetchDonations(currUser.getSession());
       });
     }
   }
 
-  Future<List<AuctionGood>> auctionList;
+  Future<List<AuctionResult>> resultList;
   Widget _buildWithList() {
-    return FutureBuilder<List<AuctionGood>>(
-      future: auctionList,
+    return FutureBuilder<List<AuctionResult>>(
+      future: resultList,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data.length > 0) {
@@ -101,7 +99,7 @@ SessionNamePair currUser;
                                   fontSize: 14,
                                 )
                               ),
-                              Text('${snapshot.data[i].goodName}',
+                              Text('${snapshot.data[i].name}',
                                 style: TextStyle(
                                   fontSize: 14,
                                 )

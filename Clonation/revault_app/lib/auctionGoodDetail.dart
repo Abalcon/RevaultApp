@@ -178,7 +178,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                     radius: 80.0,
                     backgroundImage:
                       NetworkImage(
-                        'https://www.go4thetop.net/assets/images/Staff_Ryunan.jpg'
+                        'https://revault.co.kr/web/upload/NNEditor/20201210/94b9ab77d43e7672ba4d14e021235d0e.jpg'
                       ),
                     backgroundColor: Colors.transparent
                   ),
@@ -284,7 +284,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                                   radius: 20.0,
                                   backgroundImage:
                                     NetworkImage(
-                                      'https://www.go4thetop.net/assets/images/Staff_Ryunan.jpg'
+                                      'https://revault.co.kr/web/upload/NNEditor/20201210/94b9ab77d43e7672ba4d14e021235d0e.jpg'
                                     ),
                                   backgroundColor: Colors.transparent,
                                 ),
@@ -492,7 +492,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                               radius: 20.0,
                               backgroundImage:
                                 NetworkImage(
-                                  'https://www.go4thetop.net/assets/images/Staff_Ryunan.jpg'
+                                  'https://revault.co.kr/web/upload/NNEditor/20201210/94b9ab77d43e7672ba4d14e021235d0e.jpg'
                                 ),
                               backgroundColor: Colors.transparent,
                               ),
@@ -731,7 +731,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                         radius: 20.0,
                         backgroundImage:
                           NetworkImage(
-                            'https://www.go4thetop.net/assets/images/Staff_Ryunan.jpg'
+                            'https://revault.co.kr/web/upload/NNEditor/20201210/94b9ab77d43e7672ba4d14e021235d0e.jpg'
                           ),
                         backgroundColor: Colors.transparent,
                       ),
@@ -791,7 +791,7 @@ class BiddingForm extends StatefulWidget {
   final int unit;
   final int goodID;
   final String session;
-  _AGDWithVideoState parent;
+  final _AGDWithVideoState parent;
 
   BiddingForm({Key key, @required this.goodID, @required this.price, @required this.unit,
     @required this.session, @required this.parent}) : super(key: key);
@@ -928,11 +928,11 @@ class BiddingFormState extends State<BiddingForm> {
                       this.widget.parent.currentGood = fetchGood(widget.goodID);
                       this.widget.parent.currentPrice = selectedPrice;
                     });
-                    Navigator.pop(context);
+                    Navigator.pop(context, "Changed");
                   }
                   else {
                     ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBar(content: Text('오류가 발생했습니다. 다시 시도해주세요')));
+                      .showSnackBar(SnackBar(content: Text('오류가 발생했습니다. 다시 시도해주세요')));
                   }
                 }
               },
@@ -953,7 +953,7 @@ class AutoBiddingForm extends StatefulWidget {
   final int unit;
   final int goodID;
   final String session;
-  _AGDWithVideoState parent;
+  final _AGDWithVideoState parent;
   AutoBiddingForm({Key key, @required this.goodID, @required this.price, @required this.unit,
     @required this.session, @required this.parent}) : super(key: key);
 
@@ -1220,7 +1220,7 @@ class AutoBiddingFormState extends State<AutoBiddingForm> {
 class CommentForm extends StatefulWidget {
   final int goodID;
   final String session;
-  _AGDWithVideoState parent;
+  final _AGDWithVideoState parent;
 
   CommentForm({Key key, @required this.goodID,
     @required this.session, @required this.parent}) : super(key: key);

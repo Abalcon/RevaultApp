@@ -1,9 +1,14 @@
+import 'dart:io';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:overlay_support/overlay_support.dart';
 import 'package:revault_app/auctionList.dart';
 import 'package:revault_app/changeAddress.dart';
 import 'package:revault_app/changePassword.dart';
+import 'package:revault_app/changeProfile.dart';
 import 'package:revault_app/emailVerify.dart';
 import 'package:revault_app/helpdesk.dart';
 import 'package:revault_app/languageSelect.dart';
@@ -47,56 +52,47 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(create: (context) => UserModel()),
       ],
-      child: MaterialApp(
-        title: 'Welcome to REVAULT',
-        theme: ThemeData(
-          primarySwatch: Colors.green,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-          textTheme: Typography.blackMountainView,
-          //tabBarTheme: TabBarTheme(labelColor: Colors.white),
+      child: OverlaySupport(
+        child: MaterialApp(
+          title: 'Welcome to REVAULT',
+          theme: ThemeData(
+            primarySwatch: Colors.green,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+            textTheme: Typography.blackMountainView,
+            //tabBarTheme: TabBarTheme(labelColor: Colors.white),
+          ),
+          home: MyHomePage(title: 'REVAULT Start Page'),
+          routes: {
+            '/login': (context) => Login(),
+            '/signup': (context) => SignUp(),
+            '/verifyemail': (context) => EmailVerify(),
+            '/passwordreset': (context) => ResetPassword(),
+            '/auctionlist': (context) => AuctionList(),
+            '/auctiongooddetail': (context) => AuctionGoodDetail(),
+            '/mypage': (context) => MyPage(),
+            '/myauctioninfo': (context) => MyAuctionInfo(),
+            '/myproceedings': (context) => MyProceedings(),
+            '/myparticipations': (context) => MyParticipations(),
+            '/myprevrecords': (context) => MyPrevRecords(),
+            '/mysettings': (context) => MySettings(),
+            '/mystackinfo': (context) => MyStackInfo(),
+            '/mybillings': (context) => MyBillings(),
+            '/mydonations': (context) => MyDonations(),
+            '/helpdesk': (context) => HelpDesk(),
+            '/changeaddress': (context) => ChangeAddress(),
+            '/changepassword': (context) => ChangePassword(),
+            '/changeprofile': (context) => ChangeProfile(),
+            '/languageselect': (context) => LanguageSelect()
+          },
+          // Error 처리용 페이지
+          onUnknownRoute: (RouteSettings settings) {
+            return MaterialPageRoute<void>(
+              settings: settings,
+              builder: (BuildContext context) =>
+                  Scaffold(body: Center(child: Text('Not Found'))),
+            );
+          },
         ),
-        home: MyHomePage(title: 'REVAULT Start Page'),
-        routes: {
-          '/login': (context) => Login(),
-          '/signup': (context) => SignUp(),
-          '/verifyemail': (context) => EmailVerify(),
-          '/passwordreset': (context) => ResetPassword(),
-          '/auctionlist': (context) => AuctionList(),
-          '/auctiongooddetail': (context) => AuctionGoodDetail(),
-          '/mypage': (context) => MyPage(),
-          '/myauctioninfo': (context) => MyAuctionInfo(),
-          '/myproceedings': (context) => MyProceedings(),
-          '/myparticipations': (context) => MyParticipations(),
-          '/myprevrecords': (context) => MyPrevRecords(),
-          '/mysettings': (context) => MySettings(),
-          '/mystackinfo': (context) => MyStackInfo(),
-          '/mybillings': (context) => MyBillings(),
-          '/mydonations': (context) => MyDonations(),
-          '/helpdesk': (context) => HelpDesk(),
-          '/changeaddress': (context) => ChangeAddress(),
-          '/changepassword': (context) => ChangePassword(),
-          '/languageselect': (context) => LanguageSelect()
-        },
-        // onGenerateRoute: (settings) {
-        //   if (settings.name == '/auctiongooddetail') {
-        //     final AuctionGoodArguments args = settings.arguments;
-
-        //     return MaterialPageRoute(
-        //       builder: (context) => AuctionGoodDetail(args.goodID)
-        //     );
-        //   }
-
-        //   assert(false, 'Need to implement ${settings.name}');
-        //   return null;
-        // },
-        // TODO: Error 처리용 페이지
-        onUnknownRoute: (RouteSettings settings) {
-          return MaterialPageRoute<void>(
-            settings: settings,
-            builder: (BuildContext context) =>
-                Scaffold(body: Center(child: Text('Not Found'))),
-          );
-        },
       )
     );
   }
@@ -112,12 +108,50 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  // TODO: FCM 알림 수신했을 때 상품 상세 정보로 넘어갈 수 있도록 만들기
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
   static final storage = new FlutterSecureStorage();
   String currSession = "";
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   _checkLogged() async {
     currSession = await storage.read(key: "session");
     print(currSession);
+    // FCM Token 받기 및 알림 수신 준비
+    _firebaseMessaging.requestNotificationPermissions();
+    var fcmToken = await _firebaseMessaging.getToken();
+    print(fcmToken);
+    storage.write(key: "fcm", value: fcmToken);
+    if (Platform.isIOS) {
+      _firebaseMessaging.onIosSettingsRegistered.listen((IosNotificationSettings settings) {
+        print("Settings registered: $settings");
+      });
+    }
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+        String body = message['notification']['body'];
+        showSimpleNotification(
+          Text(
+            '$body',
+            style: TextStyle(
+              fontSize: 16, 
+            )
+          ),
+          background: Colors.lightBlue,
+        );
+      },
+      //onBackgroundMessage: myBackgroundMessageHandler,
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
+        //moveToGoodDetail(message);
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+        //moveToGoodDetail(message);
+      }
+    );
 
     if (currSession != null) {
       http.Response response = await http.get(
@@ -153,6 +187,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

@@ -1,58 +1,35 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'auctionGood.dart';
+import 'package:http/http.dart' as http;
+import 'package:revault_app/auctionResult.dart';
+import 'package:revault_app/common/aux.dart';
+import 'package:revault_app/userInfo.dart';
+
+List<AuctionResult> parseWinningList(String responseBody) {
+  final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+  print(parsed);
+  return parsed.map<AuctionResult>((json) => AuctionResult.fromJson(json)).toList();
+}
+
+Future<List<AuctionResult>> fetchWinningList(String session) async {
+  final response = await http.get(
+    'https://ibsoft.site/revault/getAuctionResultList',
+    headers: <String, String>{
+      'Cookie': session,
+    },
+  );
+  if (response.statusCode == 200) {
+    if (response.body == "")
+      return [];
+    return compute(parseWinningList, response.body);
+  }
+
+  return [];
+}
 
 class MyProceedings extends StatelessWidget {
-  final List<AuctionGood> items = [
-    AuctionGood(
-      auctionID: 1,
-      seller: 'KIDMILLE',
-      condition: 'B',
-      size: 'S',
-      startDate: DateTime.fromMillisecondsSinceEpoch(1603285200000),
-      endDate: DateTime.fromMillisecondsSinceEpoch(1603612800000),
-      brand: 'NIKE ACG',
-      goodName: 'Black Hoodie',
-      price: 230000,
-      aucState: '배송중'
-    ),
-    AuctionGood(
-      auctionID: 2,
-      seller: 'KIDMILLE',
-      condition: 'A',
-      size: 'M',
-      startDate: DateTime.fromMillisecondsSinceEpoch(1603285200000),
-      endDate: DateTime.fromMillisecondsSinceEpoch(1603612800000),
-      brand: 'NIKE ACG',
-      goodName: 'Jacket With Gloves',
-      price: 200000,
-      aucState: '배송준비'
-    ),
-    AuctionGood(
-      auctionID: 3,
-      seller: 'KIDMILLE',
-      condition: 'S',
-      size: 'L',
-      startDate: DateTime.fromMillisecondsSinceEpoch(1603285200000),
-      endDate: DateTime.fromMillisecondsSinceEpoch(1603612800000),
-      brand: 'NIKE ACG',
-      goodName: 'Black Hoodie',
-      price: 230000,
-      aucState: '입금대기'
-    ),
-    AuctionGood(
-      auctionID: 4,
-      seller: 'KIDMILLE',
-      condition: 'NEW',
-      size: 'XL',
-      startDate: DateTime.fromMillisecondsSinceEpoch(1603285200000),
-      endDate: DateTime.fromMillisecondsSinceEpoch(1603612800000),
-      brand: 'NIKE ACG',
-      goodName: 'Jacket With Gloves',
-      price: 200000,
-      aucState: '배송완료'
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,176 +37,262 @@ class MyProceedings extends StatelessWidget {
         centerTitle: true,
         title: Text("낙찰 과정중인 상품"),
       ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            children: [
-              Container(
-                color: Colors.black,
-                padding: EdgeInsets.symmetric(vertical: 15),
-                alignment: Alignment.center,
-                child: Text(
-                  '제품정보',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              ListView.builder(
-                shrinkWrap: true,
-                padding: const EdgeInsets.all(10),
-                itemCount: items.length,
-                itemBuilder: (BuildContext _context, int i) {
-                  bool isPayingEnabled = (items[i].aucState != '배송완료');
+      body: MyProceedingsDetail(),
+    );
+  }
+}
 
-                  return Column(
-                    children: [
-                      Row(
-                        children: [
-                          // image section
-                          Image.asset(
-                            'images/nike_black_hoodie1.jpeg',
-                            height: 60.0,
-                            width: 60.0, 
-                            fit: BoxFit.cover,
+class MyProceedingsDetail extends StatefulWidget {
+
+  @override
+  MyProceedingsDetailState createState() => MyProceedingsDetailState();
+}
+
+class MyProceedingsDetailState extends State<MyProceedingsDetail> {
+  SessionNamePair currUser;
+  _checkUser() async {
+    currUser = await isLogged();
+    print(currUser);
+    if (currUser.getName() == null) {
+      ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('로그인 정보가 만료되었습니다. 다시 로그인하시기 바랍니다')));
+      Navigator.pushReplacementNamed(context, '/login');
+    }
+    else {
+      setState(() {
+        winningList = fetchWinningList(currUser.getSession());
+        currInfo = getInfo(currUser.getSession());
+      });
+    }
+  }
+
+  Future<List<AuctionResult>> winningList;
+  Widget _buildWinningList() {
+    return FutureBuilder<List<AuctionResult>>(
+      future: winningList,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          if (snapshot.data.length > 0) {
+            return ListView.builder(
+              shrinkWrap: true,
+              padding: const EdgeInsets.all(10),
+              itemCount: snapshot.data.length,
+              itemBuilder: (BuildContext _context, int i) {
+                var good = snapshot.data[i];
+                bool isPayingEnabled = (good.status == '입금대기');
+                return Column(
+                  children: [
+                    Row(
+                      children: [
+                        // image section
+                        Image.asset(
+                          'images/nike_black_hoodie1.jpeg',
+                          height: 60.0,
+                          width: 60.0, 
+                          fit: BoxFit.cover,
+                        ),
+                        // text section
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                good.brand,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                )
+                              ),
+                              // Text('Size ${good.size} Condition ${good.condition}',
+                              //   style: TextStyle(
+                              //     fontSize: 14,
+                              //   )
+                              // ),
+                              Text(
+                                '${good.price}원',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                )
+                              ),
+                              Text(
+                                good.status,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Colors.lightGreen
+                                )
+                              ),
+                            ],
                           ),
-                          // text section
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '[${items[i].brand}] ${items[i].goodName}',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                  )
-                                ),
-                                Text('Size ${items[i].size} Condition ${items[i].condition}',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                  )
-                                ),
-                                Text('${items[i].price}원',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                  )
-                                ),
-                                Text('${items[i].aucState}',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: Colors.lightGreen
-                                  )
-                                ),
-                              ],
-                            ),
+                        ),
+                        // buttonSection
+                        RaisedButton(
+                          color: Colors.white,
+                          textColor: Colors.grey,
+                          disabledColor: Colors.transparent,
+                          disabledTextColor: Colors.transparent,
+                          splashColor: Colors.grey,
+                          padding: EdgeInsets.all(10),
+                          child: Text('결제하기',
+                            style: TextStyle(
+                              fontSize: 14,
+                            )
                           ),
-                          // buttonSection
-                          RaisedButton(
-                            color: Colors.white,
-                            textColor: Colors.grey,
-                            disabledColor: Colors.transparent,
-                            disabledTextColor: Colors.transparent,
-                            splashColor: Colors.grey,
-                            padding: EdgeInsets.all(10),
-                            child: Text('결제하기',
-                              style: TextStyle(
-                                fontSize: 14,
-                              )
-                            ),
-                            onPressed: isPayingEnabled ? () {
-                              // TODO: 상품 결제 부분 만들기
-                            } : null,
-                          ),
-                        ],
-                      ),
-                      Divider()
-                    ]
-                  );
-                }
-              ),
-              Container(
-                padding: EdgeInsets.all(15),
-                child: Column(
+                          onPressed: isPayingEnabled ? () {
+                            // TODO: 상품 결제 부분 만들기
+                          } : null,
+                        ),
+                      ],
+                    ),
+                    Divider()
+                  ]
+                );
+              }
+            );
+          }
+
+          return Text(
+            "현재 낙찰된 상품이 없습니다",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          );
+        }
+        else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+
+        return Center(child: CircularProgressIndicator());
+      },
+    );
+  }
+
+  Future<UserInfo> currInfo;
+  Widget _buildAddressPart() {
+    return FutureBuilder<UserInfo>(
+      future: currInfo,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          var user = snapshot.data;
+          return Container(
+            padding: EdgeInsets.all(15),
+            child: Column(
+              children: [
+                Text(
+                  '배송지 정보',
+                  style: TextStyle(
+                    fontSize: 16, 
+                    fontWeight: FontWeight.bold
+                  )
+                ),
+                Divider(
+                  color: Colors.white,
+                  height: 15
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      '배송지 정보',
+                      '수령인',
                       style: TextStyle(
-                        fontSize: 16, 
-                        fontWeight: FontWeight.bold
+                        fontSize: 14, 
                       )
                     ),
-                    Divider(
-                      color: Colors.white,
-                      height: 15
+                    VerticalDivider(
+                      width: 20
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          '수령인',
-                          style: TextStyle(
-                            fontSize: 14, 
-                          )
-                        ),
-                        VerticalDivider(
-                          width: 20
-                        ),
-                        Text(
-                          '홍길동',
-                          style: TextStyle(
-                            fontSize: 14, 
-                          )
-                        )
-                      ],
+                    Text(
+                      user.name,
+                      style: TextStyle(
+                        fontSize: 14, 
+                      )
+                    )
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      '연락처',
+                      style: TextStyle(
+                        fontSize: 14, 
+                      )
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          '연락처',
-                          style: TextStyle(
-                            fontSize: 14, 
-                          )
-                        ),
-                        VerticalDivider(
-                          width: 20
-                        ),
-                        Text(
-                          '010-1234-5678',
-                          style: TextStyle(
-                            fontSize: 14, 
-                          )
-                        )
-                      ],
+                    VerticalDivider(
+                      width: 20
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          '주소',
-                          style: TextStyle(
-                            fontSize: 14, 
-                          )
-                        ),
-                        VerticalDivider(
-                          width: 33
-                        ),
-                        Text(
-                          '서울특별시 서초구 신반포로45길 54 B1F',
-                          style: TextStyle(
-                            fontSize: 14, 
-                          )
-                        )
-                      ],
+                    Text(
+                      user.phone,
+                      style: TextStyle(
+                        fontSize: 14, 
+                      )
+                    )
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      '주소',
+                      style: TextStyle(
+                        fontSize: 14, 
+                      )
                     ),
-                  ]
-                )
+                    VerticalDivider(
+                      width: 33
+                    ),
+                    Text(
+                      user.address,
+                      style: TextStyle(
+                        fontSize: 14, 
+                      )
+                    )
+                  ],
+                ),
+              ]
+            )
+          );
+        }
+        else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+
+        return Center(child: CircularProgressIndicator());
+      }
+    );
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkUser();
+    });
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Center(
+        child: Column(
+          children: [
+            Container(
+              color: Colors.black,
+              padding: EdgeInsets.symmetric(vertical: 15),
+              alignment: Alignment.center,
+              child: Text(
+                '제품정보',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ]
-          ),
+            ),
+            _buildWinningList(),
+            _buildAddressPart(),
+          ]
         ),
       ),
     );

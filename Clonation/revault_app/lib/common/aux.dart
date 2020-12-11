@@ -1,6 +1,11 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:revault_app/userInfo.dart';
 
 class SessionNamePair {
   final String session;
@@ -41,6 +46,40 @@ Future<SessionNamePair> isLogged() async {
   print("Session Expired");
   await storage.delete(key: "session",);
   return SessionNamePair(null, null);
+}
+
+UserInfo parseInfo(String responseBody) {
+  return UserInfo.fromJson(jsonDecode(responseBody));
+}
+
+Future<UserInfo> getInfo(String session) async {
+  http.Response response = await http.get(
+    'https://ibsoft.site/revault/mypage',
+    headers: <String, String>{
+      'Cookie': session,
+    },
+  );
+
+  if (response.statusCode == 200 && response.body != null && response.body != "") {
+    print("Current User Info: ${response.body}");
+    return compute(parseInfo, response.body);
+  }
+
+  return UserInfo(
+    ref: null,
+    userID: null,
+    email: null,
+    name: null,
+    phone: null,
+    address: null,
+    profile: null,
+    auctionList: null,
+    commentList: null,
+    fcmToken: null,
+    alarmPrice: null,
+    alarmStatus: null,
+    alarmComment: null,
+  );
 }
 
 // Duration remainingTime(DateTime deadline) {
@@ -154,3 +193,116 @@ Widget remainingTimeDisplay(DateTime deadline, int entries) {
     ],
   );
 }
+
+class ReceiverArguments {
+  final String session;
+  final int ref;
+  final String name;
+  final String phone;
+  final String address;
+
+  ReceiverArguments(
+    this.session,
+    this.ref,
+    this.name,
+    this.phone,
+    this.address,
+  );
+}
+
+Future<http.Response> tryModifyUserAddress(String session, String address, String phone, String name) async {
+  var map = new Map<String, dynamic>();
+  map['address'] = address;
+  map['tel'] = phone;
+  map['name'] = name;
+
+  http.Response response = await http.post(
+    'https://ibsoft.site/revault/modUserInfo',
+    headers: <String, String>{
+      'Cookie': session,
+    },
+    body: map,
+  );
+
+  print(response.statusCode); // 200 or 201
+  print(response.body); // string: "1" or "-1"
+  return response;
+}
+
+class ProfileArguments {
+  final String session;
+  final String imagePath;
+
+  ProfileArguments(
+    this.session,
+    this.imagePath,
+  );
+}
+
+Future<http.StreamedResponse> tryModifyUserProfile(String session, File image) async {
+  var client = new http.Client();
+  http.StreamedResponse response;
+  try {
+    Map<String, String> headers = { "Cookie": session};
+    //String encodedImage = base64Encode(image.readAsBytesSync());
+
+    http.MultipartRequest request = new http.MultipartRequest(
+      'POST', Uri.parse('https://ibsoft.site/revault/modUserProfile'));
+    //Uri.https('ibsoft.site', '/revault/modUserProfile', {'mf': encodedImage}));
+    request.fields['mf'] = 'newProfileImage';
+    request.headers.addAll(headers);
+    request.files.add(await http.MultipartFile.fromPath('mf', image.path));
+    response = await request.send();
+  }
+  catch (e) {
+    throw Exception(e);
+  }
+  finally {
+    client.close();
+  }
+
+  print(response.statusCode); // 200 or 201
+  return response;
+}
+
+Future<http.Response> tryModifyUserPassword(String session, String oldPass, String newPass) async {
+  var map = new Map<String, dynamic>();
+  map['passwd'] = newPass;
+
+  http.Response response = await http.post(
+    'https://ibsoft.site/revault/modUserInfo',
+    headers: <String, String>{
+      'Cookie': session,
+    },
+    body: map,
+  );
+
+  print(response.statusCode); // 200 or 201
+  print(response.body); // string: "1" or "-1"
+  return response;
+}
+
+Future<http.Response> tryModifyUserAlarms(
+  String session, bool price, bool comment, bool status) async {
+  String boolToString(bool val) {
+    return val ? "1" : "0";
+  }
+
+  var map = new Map<String, dynamic>();
+  map['alarm_price'] = boolToString(price);
+  map['alarm_comment'] = boolToString(comment);
+  map['alarm_status'] = boolToString(status);
+
+  http.Response response = await http.post(
+    'https://ibsoft.site/revault/modUserInfo',
+    headers: <String, String>{
+      'Cookie': session,
+    },
+    body: map,
+  );
+
+  print(response.statusCode); // 200 or 201
+  print(response.body); // string: "1" or "-1"
+  return response;
+}
+

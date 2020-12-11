@@ -4,9 +4,9 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter/semantics.dart';
 import 'package:http/http.dart' as http;
 import 'package:revault_app/auctionGood.dart';
+import 'package:revault_app/auctionResult.dart';
 import 'package:revault_app/common/aux.dart';
 
 List<AuctionGood> parseGoodList(String responseBody) {
@@ -33,6 +33,28 @@ Future<List<AuctionGood>> fetchGoodList(String session, int status, String type)
     // throw Exception('상품 정보를 불러오지 못했습니다');
     return [];
   }
+}
+
+List<AuctionResult> parseResultList(String responseBody) {
+  final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+  print(parsed);
+  return parsed.map<AuctionResult>((json) => AuctionResult.fromJson(json)).toList();
+}
+
+Future<List<AuctionResult>> fetchResultList(String session) async {
+  final response = await http.get(
+    'https://ibsoft.site/revault/getAuctionResultList',
+    headers: <String, String>{
+      'Cookie': session,
+    },
+  );
+  if (response.statusCode == 200) {
+    if (response.body == "")
+      return [];
+    return compute(parseResultList, response.body);
+  }
+
+  return [];
 }
 
 class MyAuctionInfo extends StatelessWidget {
@@ -68,14 +90,14 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
       setState(() {
         ongoingList = fetchGoodList(currUser.getSession(), 1, 'Bid');
         recordList = fetchGoodList(currUser.getSession(), 2, '');
-        winningList = fetchGoodList(currUser.getSession(), 2, 'Win');
+        winningList = fetchResultList(currUser.getSession());
       });
     }
   }
 
   Future<List<AuctionGood>> ongoingList;
   Future<List<AuctionGood>> recordList;
-  Future<List<AuctionGood>> winningList;
+  Future<List<AuctionResult>> winningList;
   Widget _listCountText(Future future, String route) {
     return FutureBuilder<List<AuctionGood>>(
       future: future,
@@ -104,7 +126,7 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
   }
 
   Widget _buildWithList() {
-    return FutureBuilder<List<AuctionGood>>(
+    return FutureBuilder<List<AuctionResult>>(
       future: winningList,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
@@ -164,7 +186,7 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
                                       )
                                     ),
                                     Text(
-                                      good.goodName,
+                                      good.name,
                                       style: TextStyle(
                                         fontSize: 14,
                                       )
@@ -256,8 +278,24 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
                                         fontSize: 14,
                                       )
                                     ),
-                                    onPressed: () {
-                                      Navigator.pushNamed(context, '/changeaddress');
+                                    onPressed: () async {
+                                      await Navigator.pushNamed(
+                                        context, '/changeaddress',
+                                        arguments: ReceiverArguments(
+                                          currUser.getSession(),
+                                          good.ref,
+                                          good.receiver,
+                                          good.phone,
+                                          good.address,
+                                        )
+                                      );
+                                      //if (result == "Changed") {
+                                        setState(() {
+                                          ongoingList = fetchGoodList(currUser.getSession(), 1, 'Bid');
+                                          recordList = fetchGoodList(currUser.getSession(), 2, '');
+                                          winningList = fetchResultList(currUser.getSession());
+                                        });
+                                      //}
                                     },
                                   ),
                                 ),

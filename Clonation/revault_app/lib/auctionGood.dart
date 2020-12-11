@@ -51,7 +51,7 @@ class AuctionGood {
     List<Bidding> bidList = (biddingsPart == null) ?
       [] : biddingsPart.map<Bidding>((json) => Bidding.fromJson(json)).toList();
     var commentsPart = json['comment_list'] as List;
-    List<Comment> comList = (biddingsPart == null) ?
+    List<Comment> comList = (commentsPart == null) ?
       [] : commentsPart.map<Comment>((json) => Comment.fromJson(json)).toList();
 
     return AuctionGood(

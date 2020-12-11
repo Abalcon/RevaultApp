@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:revault_app/common/aux.dart';
 
 // Change Password - After Verification
 class ChangePassword extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final String session = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text("비밀번호 변경"),
       ),
-      body: ChangePasswordForm()
+      body: ChangePasswordForm(session: session)
     );
   }
 }
 
 class ChangePasswordForm extends StatefulWidget {
+  final String session;
+  ChangePasswordForm({Key key, @required this.session}) : super(key: key);
+
   @override
   ChangePasswordFormState createState() {
     return ChangePasswordFormState();
@@ -77,10 +82,7 @@ class ChangePasswordFormState extends State<ChangePasswordForm> {
                         ),
                         validator: (value) {
                           if (value.isEmpty) {
-                            return 'Please enter your currenct password';
-                          }
-                          else if (value != _passController.text) {
-                            return 'Password is incorrect';
+                            return 'Please enter your current password';
                           }
                           return null;
                         },
@@ -131,10 +133,26 @@ class ChangePasswordFormState extends State<ChangePasswordForm> {
                             disabledTextColor: Colors.black,
                             padding: EdgeInsets.all(8.0),
                             splashColor: Colors.greenAccent,
-                            onPressed: () {
+                            onPressed: () async {
                               if (_formKey1.currentState.validate()) {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(content: Text('Ready to Change password!')));
+                                var changeResponse = await tryModifyUserPassword(
+                                  widget.session, 'oldPass', _passController.text);
+
+                                if (changeResponse.statusCode == 200 || changeResponse.statusCode == 201) {
+                                  if (changeResponse.body == "-1") {
+                                    ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(content: Text('비밀번호 변경에 실패했습니다. 다시 시도해주세요')));
+                                    return;
+                                  }
+
+                                  ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(content: Text('비밀번호 변경에 성공했습니다')));
+                                  Navigator.pop(context);
+                                }
+                                else {
+                                  ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(content: Text('오류가 발생했습니다. 다시 시도해주세요')));
+                                }
                               }
                             },
                             child: Text(

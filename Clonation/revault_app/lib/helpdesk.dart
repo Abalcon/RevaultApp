@@ -88,7 +88,9 @@ class HelpDeskDetailsState extends State<HelpDeskDetails> {
           );
         }
         else if (snapshot.hasData && snapshot.data != null) {
-          // TODO: 세션이 만료되었으므로 로그인 페이지로 돌아가기
+          Future.delayed(Duration(seconds: 5),
+            () => Navigator.pushReplacementNamed(context, '/login'));
+
           return Center(
             child: Text(
               "세션이 만료되었습니다\n로그인 화면으로 돌아갑니다",
