@@ -156,20 +156,12 @@ packages:
     source: hosted
     version: "1.2.0-nullsafety.3"
   firebase_core:
-<<<<<<< HEAD
     dependency: "direct main"
-=======
-    dependency: transitive
->>>>>>> ce16c8051c88ef1e2bb5d579a985c361707cf6b4
     description:
       name: firebase_core
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "0.5.3"
-=======
-    version: "0.5.2+1"
->>>>>>> ce16c8051c88ef1e2bb5d579a985c361707cf6b4
   firebase_core_platform_interface:
     dependency: transitive
     description:
