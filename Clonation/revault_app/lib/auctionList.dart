@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:revault_app/common/aux.dart';
 import 'semiRoundedButton.dart';
 import 'auctionGood.dart';
@@ -302,11 +304,78 @@ class _AuctionGoodsState extends State<AuctionGoods> {
     );
   }
 
+  // TODO: FCM 알림 수신했을 때 상품 상세 정보로 넘어갈 수 있도록 만들기
+  // Widget _buildDialog(BuildContext context, AuctionGood good) {
+  //   return AlertDialog(
+  //     content: Text("${good.goodName}의 입찰 가격이 ${good.price}로 올라갔습니다"),
+  //     actions: <Widget>[
+  //       FlatButton(
+  //         child: const Text('CLOSE'),
+  //         onPressed: () {
+  //           Navigator.pop(context, false);
+  //         },
+  //       ),
+  //       FlatButton(
+  //         child: const Text('SHOW'),
+  //         onPressed: () {
+  //           Navigator.pop(context, true);
+  //         },
+  //       ),
+  //     ],
+  //   );
+  // }
+
+  // void showGoodDialog(Map<String, dynamic> message) {
+  //   showDialog<bool>(
+  //     context: context,
+  //     builder: (_) => _buildDialog(context, _itemForMessage(message)),
+  //   ).then((bool shouldNavigate) {
+  //     if (shouldNavigate == true) {
+  //       moveToGoodDetail(message);
+  //     }
+  //   });
+  // }
+
+  // void moveToGoodDetail(Map<String, dynamic> message) {
+  //   final AuctionGood good = _itemForMessage(message);
+  //   // Clear away dialogs
+  //   Navigator.popUntil(context, (Route<dynamic> route) => route is PageRoute);
+  //   //if (!good.route.isCurrent) {
+  //     Navigator.pushNamed(context, '/auctiongooddetail',
+  //       arguments: good.auctionID // 2020-11-17 djkim: 상품 ID 가져오기
+  //     );
+  //   //}
+  // }
+
   String currSession = "";
   static final storage = new FlutterSecureStorage();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   _asyncMethod() async {
     currSession = await storage.read(key: "session");
     print(currSession);
+    _firebaseMessaging.requestNotificationPermissions();
+    var fcmToken = await _firebaseMessaging.getToken();
+    print(fcmToken);
+    if (Platform.isIOS) {
+      _firebaseMessaging.onIosSettingsRegistered.listen((IosNotificationSettings settings) {
+        print("Settings registered: $settings");
+      });
+    }
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+        //showGoodDialog(message);
+      },
+      //onBackgroundMessage: myBackgroundMessageHandler,
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
+        //moveToGoodDetail(message);
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+        //moveToGoodDetail(message);
+      }
+    );
   }
 
   @override

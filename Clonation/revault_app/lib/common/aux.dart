@@ -17,7 +17,6 @@ class SessionNamePair {
 
   @override
   String toString() => 'SessionNamePair[$session, $name]';
-
   String getSession() => this.session;
   String getName() => this.name;
 }
