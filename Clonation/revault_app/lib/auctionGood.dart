@@ -121,18 +121,21 @@ class Comment {
   String username;
   DateTime date;
   String content;
+  String profile;
 
   Comment({
     @required this.username,
     @required this.date,
     @required this.content,
+    @required this.profile,
   });
 
   factory Comment.fromJson(Map<String, dynamic> json) {
     return Comment(
       username: json['user_id'],
       date: DateTime.fromMillisecondsSinceEpoch(json['add_time']),
-      content: json['content']
+      content: json['content'],
+      profile: json['profile'],
     );
   }
 }

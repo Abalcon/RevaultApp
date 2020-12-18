@@ -282,12 +282,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                                 CircleAvatar(
                                   radius: 20.0,
                                   backgroundImage:
-                                    AssetImage(
-                                      'images/revault_square_logo.jpg',
-                                    ),
-                                    // NetworkImage(
-                                    //   'https://revault.co.kr/web/upload/NNEditor/20201210/94b9ab77d43e7672ba4d14e021235d0e.jpg'
-                                    // ),
+                                    NetworkImage(comments[i].profile),
                                   backgroundColor: Colors.transparent,
                                 ),
                                 Column(
@@ -753,12 +748,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                       CircleAvatar(
                         radius: 20.0,
                         backgroundImage:
-                          AssetImage(
-                            'images/revault_square_logo.jpg',
-                          ),
-                          // NetworkImage(
-                          //   'https://revault.co.kr/web/upload/NNEditor/20201210/94b9ab77d43e7672ba4d14e021235d0e.jpg'
-                          // ),
+                          NetworkImage(good.commentList[0].profile),
                         backgroundColor: Colors.transparent,
                       ),
                       Column(
