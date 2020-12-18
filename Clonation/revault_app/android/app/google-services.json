@@ -30,6 +30,13 @@
             {
               "client_id": "970575135971-abpc6ji90863p0g00ua358ma9sfdfrts.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "970575135971-399trfthbmogspjkdu61d130qp5icust.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "clonation.revault.revaultapp"
+              }
             }
           ]
         }

@@ -1,8 +1,8 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:revault_app/signup.dart';
-import 'emailVerify.dart';
+import 'package:revault_app/common/aux.dart';
 
 // Login
 class Login extends StatelessWidget {
@@ -11,7 +11,7 @@ class Login extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Login"),
+        title: Text("로그인"),
       ),
       body: LoginForm()
     );
@@ -41,6 +41,7 @@ class LoginFormState extends State<LoginForm> {
   String loginResult = "-1";
 
   Future<http.Response> tryLogin(String id, String pw, String token) async {
+    debugPrint(token);
     var map = new Map<String, dynamic>();
     map['user_id'] = id;
     map['passwd'] = pw;
@@ -61,25 +62,6 @@ class LoginFormState extends State<LoginForm> {
     }
   }
 
-  // 2020-09-22 djkim: Navigation Refactor
-  _letsSignUp(context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: ((BuildContext context) => SignUp()), // ...to here.
-      ),
-    );
-  }
-
-  _forgotPassword(context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: ((BuildContext context) => EmailVerify()), // ...to here.
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     TextEditingController _idController = new TextEditingController();
@@ -91,7 +73,6 @@ class LoginFormState extends State<LoginForm> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              // Start of Login Form
               Form(
                 key: _formKey,
                   child: Column(
@@ -99,9 +80,11 @@ class LoginFormState extends State<LoginForm> {
                       TextFormField(
                         controller: _idController,
                         decoration: InputDecoration(
-                          icon: Icon(Icons.person),
-                          hintText: 'Enter your username',
-                          labelText: 'Username'
+                          //icon: Icon(Icons.person),
+                          //hintText: 'Enter your username',
+                          labelText: '아이디 입력',
+                          border: inputBorder,
+                          focusedBorder: inputBorder,
                         ),
                         validator: (value) {
                           if (value.isEmpty) {
@@ -110,13 +93,16 @@ class LoginFormState extends State<LoginForm> {
                           return null;
                         },
                       ),
+                      Divider(color: Colors.white),
                       TextFormField(
                         controller: _pwController,
                         obscureText: true,
                         decoration: InputDecoration(
-                          icon: Icon(Icons.lock),
-                          hintText: 'Enter your password',
-                          labelText: 'Password'
+                          //icon: Icon(Icons.lock),
+                          //hintText: 'Enter your password',
+                          labelText: '비밀번호 입력',
+                          border: inputBorder,
+                          focusedBorder: inputBorder,
                         ),
                         validator: (value) {
                           if (value.isEmpty) {
@@ -130,12 +116,12 @@ class LoginFormState extends State<LoginForm> {
                         child: SizedBox(
                           width: double.infinity,
                           child: RaisedButton(
-                            color: Colors.green,
+                            color: Colors.black,
                             textColor: Colors.white,
                             disabledColor: Colors.grey,
                             disabledTextColor: Colors.black,
                             padding: EdgeInsets.all(8.0),
-                            splashColor: Colors.greenAccent,
+                            splashColor: Colors.black,
                             onPressed: () async {
                               if (_formKey.currentState.validate()) {
                                 var fcmToken = await storage.read(key: "fcm");
@@ -158,40 +144,23 @@ class LoginFormState extends State<LoginForm> {
                               }
                             },
                             child: Text(
-                              "Login",
+                              "로그인",
                               style: TextStyle(fontSize: 20.0),
                             ),
                           ),
                         )
                       ),
-                      SizedBox(
-                        width: double.infinity,
-                        child: RaisedButton(
-                          color: Colors.grey,
-                          textColor: Colors.white,
-                          disabledColor: Colors.black,
-                          disabledTextColor: Colors.grey,
-                          padding: EdgeInsets.all(8.0),
-                          splashColor: Colors.blueGrey,
-                          onPressed: () => _forgotPassword(context),
-                          child: Text(
-                            "Forgot Password?",
-                            style: TextStyle(fontSize: 20.0),
-                          ),
-                        )
-                      )
                     ]
                 )
               ),
-              // End of Login Form
               divider,
               Text(
                 'Login with Social Accounts',
               ),
               SizedBox(
                 width: double.infinity,
-                child: FlatButton(
-                  color: Colors.blue,
+                child: RaisedButton(
+                  color: Color(0xFF1877F2),
                   textColor: Colors.white,
                   disabledColor: Colors.grey,
                   disabledTextColor: Colors.black,
@@ -202,32 +171,97 @@ class LoginFormState extends State<LoginForm> {
                     ScaffoldMessenger.of(context)
                           .showSnackBar(SnackBar(content: Text('Facebook Login Unimplemented')));
                   },
-                  child: Text(
-                    "Login with Facebook",
-                    style: TextStyle(fontSize: 20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'images/facebook_login_icon.png',
+                        //color: Color(0xFF1877F2),
+                        width: 30.0,
+                        fit: BoxFit.cover,
+                      ),
+                      VerticalDivider(width: 12.0),
+                      Text(
+                        "페이스북으로 로그인",
+                        style: TextStyle(fontSize: 20.0),
+                      ),
+                    ]
+                  ),
+                ),
+              ),
+              Divider(color: Colors.white),
+              SizedBox(
+                width: double.infinity,
+                child: RaisedButton(
+                  color: Color(0xFFFEE500),
+                  textColor: Colors.black,
+                  disabledColor: Colors.grey,
+                  disabledTextColor: Colors.white,
+                  padding: EdgeInsets.all(8.0),
+                  splashColor: Colors.blueAccent,
+                  onPressed: () {
+                    // TODO: Implement Kakao Login Attempt
+                    ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text('Kakao Login Unimplemented')));
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'images/kakao_login_icon.png',
+                        width: 30.0,
+                        fit: BoxFit.cover,
+                      ),
+                      VerticalDivider(width: 12.0),
+                      Text(
+                        "카카오 계정으로 로그인",
+                        style: TextStyle(fontSize: 20.0),
+                      ),
+                    ],
                   ),
                 ),
               ),
               divider,
-              Text(
-                'Not a member yet?',
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: FlatButton(
-                  color: Colors.red,
-                  textColor: Colors.white,
-                  disabledColor: Colors.grey,
-                  disabledTextColor: Colors.black,
-                  padding: EdgeInsets.all(8.0),
-                  splashColor: Colors.redAccent,
-                  onPressed: () => _letsSignUp(context),
-                  child: Text(
-                    "Sign Up",
-                    style: TextStyle(fontSize: 20.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  RichText(
+                    text: TextSpan(
+                      text: '회원가입',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 16,
+                      ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () => Navigator.pushNamed(context, '/signup')
+                    ),
                   ),
-                ),
-              )
+                  VerticalDivider(thickness: 5, color: Colors.grey,),
+                  RichText(
+                    text: TextSpan(
+                      text: '계정찾기',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 16,
+                      ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () => Navigator.pushNamed(context, '/verifyemail')
+                    ),
+                  ),
+                  VerticalDivider(thickness: 5, color: Colors.grey,),
+                  RichText(
+                    text: TextSpan(
+                      text: '비밀번호 재설정',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 16,
+                      ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () => Navigator.pushNamed(context, '/verifyemail')
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         )

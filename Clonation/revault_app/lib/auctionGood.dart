@@ -16,14 +16,17 @@ class AuctionGood {
   int initPrice;
   int unitPrice;
 
-  String aucState;
+  int aucState;
   String winner;
 
   List<Comment> commentList;
   List<Bidding> biddingList;
-  // List<AuctionImage> imageList;
+  List<String> imageUrlList;
   int autoPrice;
   String autoUser;
+
+  int waitingCount;
+  List<String> waitingList;
 
   AuctionGood({
     @required this.auctionID,
@@ -42,8 +45,11 @@ class AuctionGood {
     this.winner,
     this.commentList,
     this.biddingList,
+    this.imageUrlList,
     this.autoPrice,
     this.autoUser,
+    this.waitingList,
+    this.waitingCount,
   });
 
   factory AuctionGood.fromJson(Map<String, dynamic> json) {
@@ -53,6 +59,15 @@ class AuctionGood {
     var commentsPart = json['comment_list'] as List;
     List<Comment> comList = (commentsPart == null) ?
       [] : commentsPart.map<Comment>((json) => Comment.fromJson(json)).toList();
+    var imageUrlPart = json['ai_list'] as List;
+    List<String> imgUrlList = (imageUrlPart == null) ?
+      [] : imageUrlPart.map<String>((json) => json['path']).toList();
+    var waitUrlPart = json['wait_user_profile'] as List;
+    List<String> waitUrlList = (waitUrlPart == null) ?
+      [] : waitUrlPart.map<String>((val) => val.toString()).toList();
+
+    String brandAndTitle = json['title'];
+    var nameDivisor = brandAndTitle.indexOf(']');
 
     return AuctionGood(
       auctionID: json['auction_id'],
@@ -62,17 +77,20 @@ class AuctionGood {
       addedDate: DateTime.fromMillisecondsSinceEpoch(json['add_time']),
       startDate: DateTime.fromMillisecondsSinceEpoch(json['start_time']),
       endDate: DateTime.fromMillisecondsSinceEpoch(json['end_time']),
-      brand: json['title'],
-      goodName: json['title'],
+      brand: brandAndTitle.substring(1, nameDivisor),
+      goodName: brandAndTitle.substring(nameDivisor + 1),
       price: json['price'],
       initPrice: json['start_price'],
       unitPrice: json['unit_price'],
-      aucState: json['status'].toString(),
+      aucState: json['status'],
       winner: json['winner_id'],
       commentList: comList,
       biddingList: bidList,
+      imageUrlList: imgUrlList,
       autoPrice: json['auto_price'],
       autoUser: json['auto_user'],
+      waitingCount: json['wait_user_cnt'] == null ? 0 : json['wait_user_cnt'],
+      waitingList: waitUrlList,
       // 2020-11-17 추가분
       // auction_id_arr, auction_id_list, isBid, isWin, isLose
     );

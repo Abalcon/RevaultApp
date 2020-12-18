@@ -89,34 +89,40 @@ class MyStackInfo extends StatelessWidget {
                   ),
                 ),
               ),
-              Container(
-                padding: EdgeInsets.only(left: 10, top: 10),
-                alignment: Alignment.centerLeft,
-                child: RichText(
-                  text: TextSpan(
-                    text: '충전금 사용내역',
-                    style: TextStyle(
-                      color: Colors.black,
-                      //decoration: TextDecoration.underline
+              SizedBox(
+                width: double.infinity,
+                child: FlatButton(
+                  color: Colors.white,
+                  textColor: Colors.grey[600],
+                  onPressed: () => Navigator.pushNamed(context, '/mybillings'),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "충전금 사용 내역",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16.0,
+                      ),
                     ),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () => Navigator.pushNamed(context, '/mybillings')
                   ),
                 ),
               ),
-              Divider(),
-              Container(
-                padding: EdgeInsets.only(left: 10, bottom: 10),
-                alignment: Alignment.centerLeft,
-                child: RichText(
-                  text: TextSpan(
-                    text: '기부 내역',
-                    style: TextStyle(
-                      color: Colors.black,
-                      //decoration: TextDecoration.underline
+              Divider(height: 1, thickness: 3),
+              SizedBox(
+                width: double.infinity,
+                child: FlatButton(
+                  color: Colors.white,
+                  textColor: Colors.grey[600],
+                  onPressed: () => Navigator.pushNamed(context, '/mydonations'),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "기부 내역",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16.0,
+                      ),
                     ),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () => Navigator.pushNamed(context, '/mydonations')
                   ),
                 ),
               ),
@@ -125,29 +131,24 @@ class MyStackInfo extends StatelessWidget {
                 height: 300.0,
                 color: Colors.grey[350],
                 alignment: Alignment.bottomCenter,
-                child: Container(
-                  height: 50,
+                child: SizedBox(
+                  width: double.infinity,
                   child: RaisedButton(
                     color: Colors.black,
                     textColor: Colors.white,
                     disabledColor: Colors.grey,
                     disabledTextColor: Colors.black,
-                    padding: EdgeInsets.symmetric(
-                      vertical: 8.0,
-                      horizontal: MediaQuery.of(context).size.width / 3),
-                    splashColor: Colors.black,
-                    onPressed: () => {
-                      // TODO: 충전금 삭제했으니 안 만들어도 된다
-                    },
+                    onPressed: () => Navigator.pushNamed(context, '/mydonations'),
+                    padding: EdgeInsets.symmetric(vertical: 15.0),
                     child: Text(
                       "충전하기",
                       style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                )
+                ),
               ),
             ],
           ),

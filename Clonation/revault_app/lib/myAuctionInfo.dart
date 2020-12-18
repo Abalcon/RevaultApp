@@ -177,6 +177,7 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
                                 ),
                                 Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       good.brand,
@@ -464,7 +465,7 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
                           recognizer: TapGestureRecognizer()
                             ..onTap = () => Navigator.pushNamed(context, '/mystackinfo')
                         ),
-                      )
+                      ),
                     ]
                   )
                 ),

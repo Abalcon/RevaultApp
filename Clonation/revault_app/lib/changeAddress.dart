@@ -112,6 +112,9 @@ class ChangeAddressFormState extends State<ChangeAddressForm> {
                         controller: _nameCtrl,
                         decoration: InputDecoration(
                           hintText: '받는 사람',
+                          border: inputBorder,
+                          focusedBorder: inputBorder,
+                          contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 13),
                         ),
                         validator: (value) {
                           if (value.isEmpty) {
@@ -120,10 +123,14 @@ class ChangeAddressFormState extends State<ChangeAddressForm> {
                           return null;
                         },
                       ),
+                      Divider(color: Colors.white),
                       TextFormField(
                         controller: _phoneCtrl,
                         decoration: InputDecoration(
                           hintText: '연락처',
+                          border: inputBorder,
+                          focusedBorder: inputBorder,
+                          contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 13),
                         ),
                         validator: (value) {
                           if (value.isEmpty) {
@@ -132,6 +139,7 @@ class ChangeAddressFormState extends State<ChangeAddressForm> {
                           return null;
                         },
                       ),
+                      Divider(color: Colors.white),
                       Row(
                         children: [
                           Expanded(
@@ -140,6 +148,9 @@ class ChangeAddressFormState extends State<ChangeAddressForm> {
                               controller: _zipCtrl,
                               decoration: InputDecoration(
                                 hintText: '우편번호',
+                                border: inputBorder,
+                                focusedBorder: inputBorder,
+                                contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 13),
                               ),
                               validator: (value) {
                                 if (value.isEmpty) {
@@ -149,12 +160,13 @@ class ChangeAddressFormState extends State<ChangeAddressForm> {
                               },
                             ),
                           ),
+                          VerticalDivider(),
                           RaisedButton(
-                            color: Colors.black,
-                            textColor: Colors.white,
-                            disabledColor: Colors.grey,
-                            disabledTextColor: Colors.black,
-                            padding: EdgeInsets.all(8.0),
+                            color: Colors.grey[300],
+                            textColor: Colors.grey[700],
+                            disabledColor: Colors.black,
+                            disabledTextColor: Colors.grey,
+                            padding: EdgeInsets.all(12.0),
                             splashColor: Colors.transparent,
                             onPressed: () async {
                               KopoModel model = await Navigator.push(
@@ -175,15 +187,22 @@ class ChangeAddressFormState extends State<ChangeAddressForm> {
                             },
                             child: Text(
                               '우편번호 검색',
-                              style: TextStyle(fontSize: 14.0)
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ],
                       ),
+                      Divider(color: Colors.white),
                       TextFormField(
                         controller: _addrCtrl,
                         decoration: InputDecoration(
                           hintText: '주소',
+                          border: inputBorder,
+                          focusedBorder: inputBorder,
+                          contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 13),
                         ),
                         validator: (value) {
                           if (value.isEmpty) {
@@ -192,10 +211,14 @@ class ChangeAddressFormState extends State<ChangeAddressForm> {
                           return null;
                         },
                       ),
+                      Divider(color: Colors.white),
                       TextFormField(
                         controller: _detCtrl,
                         decoration: InputDecoration(
                           hintText: '상세주소',
+                          border: inputBorder,
+                          focusedBorder: inputBorder,
+                          contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 13),
                         ),
                       ),
                       Padding(

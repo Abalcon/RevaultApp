@@ -4,7 +4,7 @@ PODS:
   - Firebase/Messaging (6.33.0):
     - Firebase/CoreOnly
     - FirebaseMessaging (~> 4.7.0)
-  - firebase_core (0.5.2-1):
+  - firebase_core (0.5.3):
     - Firebase/CoreOnly (~> 6.33.0)
     - Flutter
   - firebase_messaging (7.0.3):
@@ -61,13 +61,21 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (6.7.2):
     - GoogleUtilities/Logger
+  - image_picker (0.0.1):
+    - Flutter
+  - kakao_flutter_sdk (0.5.2):
+    - Flutter
   - nanopb (1.30906.0):
     - nanopb/decode (= 1.30906.0)
     - nanopb/encode (= 1.30906.0)
   - nanopb/decode (1.30906.0)
   - nanopb/encode (1.30906.0)
+  - package_info (0.0.1):
+    - Flutter
   - PromisesObjC (1.2.11)
   - Protobuf (3.13.0)
+  - shared_preferences (0.0.1):
+    - Flutter
   - video_player (0.0.1):
     - Flutter
   - webview_flutter (0.0.1):
@@ -78,6 +86,10 @@ DEPENDENCIES:
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
+  - image_picker (from `.symlinks/plugins/image_picker/ios`)
+  - kakao_flutter_sdk (from `.symlinks/plugins/kakao_flutter_sdk/ios`)
+  - package_info (from `.symlinks/plugins/package_info/ios`)
+  - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - video_player (from `.symlinks/plugins/video_player/ios`)
   - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
 
@@ -104,6 +116,14 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
+  image_picker:
+    :path: ".symlinks/plugins/image_picker/ios"
+  kakao_flutter_sdk:
+    :path: ".symlinks/plugins/kakao_flutter_sdk/ios"
+  package_info:
+    :path: ".symlinks/plugins/package_info/ios"
+  shared_preferences:
+    :path: ".symlinks/plugins/shared_preferences/ios"
   video_player:
     :path: ".symlinks/plugins/video_player/ios"
   webview_flutter:
@@ -111,7 +131,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Firebase: 8db6f2d1b2c5e2984efba4949a145875a8f65fe5
-  firebase_core: 7423d688a1c6f2f2d859d64ae26991be39989781
+  firebase_core: 5d6a02f3d85acd5f8321c2d6d62877626a670659
   firebase_messaging: 0aea2cd5885b65e19ede58ee3507f485c992cc75
   FirebaseCore: d889d9e12535b7f36ac8bfbf1713a0836a3012cd
   FirebaseCoreDiagnostics: 770ac5958e1372ce67959ae4b4f31d8e127c3ac1
@@ -122,12 +142,16 @@ SPEC CHECKSUMS:
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
   GoogleDataTransport: f56af7caa4ed338dc8e138a5d7c5973e66440833
   GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
+  image_picker: 9c3312491f862b28d21ecd8fdf0ee14e601b3f09
+  kakao_flutter_sdk: c314c15347e033a31279acaa3c5efb5cad1426eb
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
+  package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
   PromisesObjC: 8c196f5a328c2cba3e74624585467a557dcb482f
   Protobuf: 3dac39b34a08151c6d949560efe3f86134a3f748
+  shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
   webview_flutter: d2b4d6c66968ad042ad94cbb791f5b72b4678a96
 
-PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
+PODFILE CHECKSUM: 51e4c8887d0e8434a3595721a3afaff90cc63499
 
 COCOAPODS: 1.9.3

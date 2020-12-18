@@ -58,6 +58,16 @@ class ChangePasswordFormState extends State<ChangePasswordForm> {
     return count >= 3;
   }
 
+  OutlineInputBorder inputBorder = new OutlineInputBorder(
+    borderRadius: const BorderRadius.all(
+      const Radius.circular(0.0),
+    ),
+    borderSide: new BorderSide(
+      color: Colors.black,
+      width: 1.0,
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
     TextEditingController _passController = new TextEditingController();
@@ -76,9 +86,9 @@ class ChangePasswordFormState extends State<ChangePasswordForm> {
                       TextFormField(
                         obscureText: true,
                         decoration: InputDecoration(
-                          icon: Icon(Icons.lock),
-                          hintText: 'Enter your current password',
-                          labelText: 'Current Password'
+                          labelText: '현재 비밀번호 입력',
+                          border: inputBorder,
+                          focusedBorder: inputBorder,
                         ),
                         validator: (value) {
                           if (value.isEmpty) {
@@ -91,9 +101,9 @@ class ChangePasswordFormState extends State<ChangePasswordForm> {
                         controller: _passController,
                         obscureText: true,
                         decoration: InputDecoration(
-                          icon: Icon(Icons.lock),
-                          hintText: 'Enter your new password',
-                          labelText: 'New Password'
+                          labelText: '새 비밀번호 입력',
+                          border: inputBorder,
+                          focusedBorder: inputBorder,
                         ),
                         validator: (value) {
                           if (value.isEmpty) {
@@ -108,9 +118,9 @@ class ChangePasswordFormState extends State<ChangePasswordForm> {
                       TextFormField(
                         obscureText: true,
                         decoration: InputDecoration(
-                          icon: Icon(Icons.lock),
-                          hintText: 'Enter your new password again',
-                          labelText: 'Password Confirm'
+                          labelText: '새 비밀번호 확인',
+                          border: inputBorder,
+                          focusedBorder: inputBorder,
                         ),
                         validator: (value) {
                           if (value.isEmpty) {

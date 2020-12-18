@@ -4,7 +4,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:kakao_flutter_sdk/auth.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:revault_app/addProfile.dart';
 import 'package:revault_app/auctionList.dart';
 import 'package:revault_app/changeAddress.dart';
 import 'package:revault_app/changePassword.dart';
@@ -31,10 +33,14 @@ import 'myAuctionInfo.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  KakaoContext.clientId = "44aa73adaa28262915db9e87bc41c37e";
+  KakaoContext.javascriptClientId = "7a6b2ff76e0ab4769383c627f832f6df";
+
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -56,15 +62,21 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           title: 'Welcome to REVAULT',
           theme: ThemeData(
-            primarySwatch: Colors.green,
+            //primarySwatch: Colors.green,
+            primaryColor: Colors.white,
             visualDensity: VisualDensity.adaptivePlatformDensity,
             textTheme: Typography.blackMountainView,
+            bottomSheetTheme: BottomSheetThemeData(
+              modalBackgroundColor: Colors.white,
+              backgroundColor: Colors.white,
+            ),
             //tabBarTheme: TabBarTheme(labelColor: Colors.white),
           ),
           home: MyHomePage(title: 'REVAULT Start Page'),
           routes: {
             '/login': (context) => Login(),
             '/signup': (context) => SignUp(),
+            '/addprofile': (context) => AddProfile(),
             '/verifyemail': (context) => EmailVerify(),
             '/passwordreset': (context) => ResetPassword(),
             '/auctionlist': (context) => AuctionList(),
@@ -113,21 +125,23 @@ class _MyHomePageState extends State<MyHomePage> {
 
   static final storage = new FlutterSecureStorage();
   String currSession = "";
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
 
   _checkLogged() async {
     currSession = await storage.read(key: "session");
     print(currSession);
     // FCM Token 받기 및 알림 수신 준비
-    _firebaseMessaging.requestNotificationPermissions();
-    var fcmToken = await _firebaseMessaging.getToken();
-    print(fcmToken);
-    storage.write(key: "fcm", value: fcmToken);
     if (Platform.isIOS) {
+      _firebaseMessaging.requestNotificationPermissions();
       _firebaseMessaging.onIosSettingsRegistered.listen((IosNotificationSettings settings) {
         print("Settings registered: $settings");
       });
     }
+
+    var fcmToken = await _firebaseMessaging.getToken();
+    print(fcmToken);
+    storage.write(key: "fcm", value: fcmToken);
+
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");

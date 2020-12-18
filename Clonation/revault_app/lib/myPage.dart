@@ -131,7 +131,6 @@ class MyPageDetailsState extends State<MyPageDetails> {
                                   user.profile
                                 )
                               ),
-                              // TODO: 프로필 사진 변경
                               backgroundColor: Colors.black,
                               child: Icon(Icons.photo_camera_outlined)
                             )

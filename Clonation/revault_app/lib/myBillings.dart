@@ -13,7 +13,7 @@ class MyBillings extends StatelessWidget {
       brand: 'NIKE ACG',
       goodName: 'Black Hoodie',
       price: 230000,
-      aucState: '진행중'
+      aucState: 1
     ),
     AuctionGood(
       auctionID: 2,
@@ -25,7 +25,7 @@ class MyBillings extends StatelessWidget {
       brand: 'NIKE ACG',
       goodName: 'Jacket With Gloves',
       price: 200000,
-      aucState: '진행중'
+      aucState: 1
     ),
   ];
 

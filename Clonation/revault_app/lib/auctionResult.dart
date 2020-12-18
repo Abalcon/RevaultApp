@@ -47,12 +47,15 @@ class AuctionResult {
       }
     }
 
+    String brandAndTitle = json['title'];
+    var nameDivisor = brandAndTitle.indexOf(']');
+
     return AuctionResult(
       ref: json['ref'],
       userID: json['user_id'],
       auctionID: json['auction_id'],
-      brand: json['title'],
-      name: json['title'],
+      brand: brandAndTitle.substring(1, nameDivisor),
+      name: brandAndTitle.substring(nameDivisor + 1),
       price: json['price'],
       endDate: (json['add_time'] == null)
         ? DateTime.fromMillisecondsSinceEpoch(100000000)

@@ -22,25 +22,11 @@ class HelpDeskDetails extends StatefulWidget {
 }
 
 class HelpDeskDetailsState extends State<HelpDeskDetails> {
-  // SessionNamePair currUser;
-  // _checkUser() async {
-  //   currUser = await isLogged();
-  //   print(currUser);
-  //   if (currUser.getName() == null) {
-  //     ScaffoldMessenger.of(context)
-  //       .showSnackBar(SnackBar(content: Text('로그인 정보가 만료되었습니다. 다시 로그인하시기 바랍니다')));
-  //     Navigator.pushReplacementNamed(context, '/login');
-  //   }
-  // }
   Future<SessionNamePair> currUser;
 
   @override
   void initState() {
     currUser = isLogged();
-
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   _checkUser();
-    // });
 
     super.initState();
   }
@@ -186,12 +172,36 @@ class RequestFormState extends State<RequestForm> {
             ),
             ToggleButtons(
               children: [
-                Text('상품'),
-                Text('결제'),
-                Text('배송'),
-                Text('교환'),
-                Text('환불'),
-                Text('기타'),
+                Container(
+                  alignment: Alignment.center,
+                  width: (MediaQuery.of(context).size.width - 27) / 6,
+                  child: Text('상품', style: TextStyle(fontSize: 16),),
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  width: (MediaQuery.of(context).size.width - 27) / 6,
+                  child: Text('결제', style: TextStyle(fontSize: 16),),
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  width: (MediaQuery.of(context).size.width - 27) / 6,
+                  child: Text('배송', style: TextStyle(fontSize: 16),),
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  width: (MediaQuery.of(context).size.width - 27) / 6,
+                  child: Text('교환', style: TextStyle(fontSize: 16),),
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  width: (MediaQuery.of(context).size.width - 27) / 6,
+                  child: Text('환불', style: TextStyle(fontSize: 16),),
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  width: (MediaQuery.of(context).size.width - 27) / 6,
+                  child: Text('기타', style: TextStyle(fontSize: 16),),
+                ),
               ],
               isSelected: _selections,
               onPressed: (index) {
@@ -255,7 +265,7 @@ class RequestFormState extends State<RequestForm> {
                   padding: EdgeInsets.all(8.0),
                   splashColor: Colors.greenAccent,
                   onPressed: () async {
-                    if (_formKey.currentState.validate()) {
+                    if (_formKey.currentState.validate() && _selections.any((sel) => sel)) {
                       http.Response response = await addQuestion(_helpController.text);
                       if (response.statusCode == 200 || response.statusCode == 201) {
                         ScaffoldMessenger.of(context)
@@ -265,6 +275,10 @@ class RequestFormState extends State<RequestForm> {
                         ScaffoldMessenger.of(context)
                           .showSnackBar(SnackBar(content: Text('문의 접수에 실패했습니다. 다시 시도해주세요')));
                       }
+                    }
+                    else if (_selections.every((sel) => !sel)) {
+                      ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text('문의 유형을 선택하세요')));
                     }
                   },
                   child: Text(
