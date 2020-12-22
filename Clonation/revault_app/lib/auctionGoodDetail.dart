@@ -352,33 +352,111 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
     if (good.waitingCount < 1) {
       return Text('이 상품의 경매를 기다리는 회원이 아직 없습니다\n지금 예약하세요!');
     }
+    else if (good.waitingCount == 1) {
+      return Row(
+        children: [
+          CircleAvatar(
+            radius: 20.0,
+            backgroundImage:
+              NetworkImage(
+                good.waitingProfileList[0],
+              ),
+            backgroundColor: Colors.transparent,
+          ),
+          Text('를 비롯한 ${good.waitingCount}명의 회원들이 경매를 기다리고 있습니다',
+            style: TextStyle(
+              fontSize: 14,
+            )
+          ),
+        ],
+      );
+    }
+    else if (good.waitingCount == 2) {
+      return Row(
+        children: [
+          Stack(
+            children: [
+              Container(
+                width: 60.0,
+                height: 40.0,
+                alignment: Alignment.centerLeft,
+                child: CircleAvatar(
+                  radius: 20.0,
+                  backgroundImage:
+                    NetworkImage(
+                      good.waitingProfileList[0],
+                    ),
+                  backgroundColor: Colors.transparent,
+                ),
+              ),
+              Container(
+                width: 60.0,
+                height: 40.0,
+                alignment: Alignment.centerRight,
+                child: CircleAvatar(
+                  radius: 20.0,
+                  backgroundImage:
+                    NetworkImage(
+                      good.waitingProfileList[1],
+                    ),
+                  backgroundColor: Colors.transparent,
+                ),
+              ),
+            ],
+          ),
+          Text('를 비롯한 ${good.waitingCount}명의 회원들이 경매를 기다리고 있습니다',
+            style: TextStyle(
+              fontSize: 14,
+            )
+          ),
+        ],
+      );
+    }
 
     return Row(
       children: [
-        // TODO: Stack
-        CircleAvatar(
-          radius: 20.0,
-          backgroundImage:
-            AssetImage(
-              'images/revault_square_logo.jpg',
+        Stack(
+          children: [
+            Container(
+              width: 80.0,
+              height: 40.0,
+              alignment: Alignment.centerLeft,
+              child: CircleAvatar(
+                radius: 20.0,
+                backgroundImage:
+                  NetworkImage(
+                    good.waitingProfileList[0],
+                  ),
+                backgroundColor: Colors.transparent,
+              ),
             ),
-          backgroundColor: Colors.transparent,
-        ),
-        CircleAvatar(
-          radius: 20.0,
-          backgroundImage:
-            AssetImage(
-              'images/revault_square_logo.jpg',
+            Container(
+              width: 80.0,
+              height: 40.0,
+              alignment: Alignment.center,
+              child: CircleAvatar(
+                radius: 20.0,
+                backgroundImage:
+                  NetworkImage(
+                    good.waitingProfileList[1],
+                  ),
+                backgroundColor: Colors.transparent,
+              ),
             ),
-          backgroundColor: Colors.transparent,
-        ),
-        CircleAvatar(
-          radius: 20.0,
-          backgroundImage:
-            AssetImage(
-              'images/revault_square_logo.jpg',
+            Container(
+              width: 80.0,
+              height: 40.0,
+              alignment: Alignment.centerRight,
+              child: CircleAvatar(
+                radius: 20.0,
+                backgroundImage:
+                  NetworkImage(
+                    good.waitingProfileList[2],
+                  ),
+                backgroundColor: Colors.transparent,
+              ),
             ),
-          backgroundColor: Colors.transparent,
+          ],
         ),
         Text('를 비롯한 ${good.waitingCount}명의 회원들이 경매를 기다리고 있습니다',
           style: TextStyle(
@@ -519,9 +597,6 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                                 AssetImage(
                                   'images/revault_square_logo.jpg',
                                 ),
-                                // NetworkImage(
-                                //   'https://revault.co.kr/web/upload/NNEditor/20201210/94b9ab77d43e7672ba4d14e021235d0e.jpg'
-                                // ),
                               backgroundColor: Colors.transparent,
                               ),
                               VerticalDivider(),
@@ -579,6 +654,145 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
             ),
           ),
         ),
+      ]
+    );
+  }
+
+  Future<http.Response> setAuctionAlarm(int id) async {
+    var map = new Map<String, dynamic>();
+    map['auction_id'] = id.toString();
+
+    return http.post(
+      'https://ibsoft.site/revault/addAlarmAuction',
+      headers: <String, String>{
+        'Cookie': currUser.getSession(),
+      },
+      body: map,
+    );
+  }
+
+  Widget commentSection(AuctionGood good) {
+    if (good.aucState == 0) {
+      var isWaiting = good.waitingUserList.any((user)
+        => currUser.getName() == user);
+
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20.0),
+        child: isWaiting
+        ? SizedBox(
+          width: double.infinity,
+          child: RaisedButton(
+            color: Colors.black,
+            textColor: Colors.white,
+            disabledColor: Colors.grey,
+            disabledTextColor: Colors.black,
+            padding: EdgeInsets.all(15.0),
+            splashColor: Colors.greenAccent,
+            onPressed: () async {
+              // TODO: 알림 해제하는 API 호출
+            },
+            child: Text(
+              "알림 해제하기",
+              style: TextStyle(fontSize: 18.0),
+            ),
+          ),
+        )
+        : SizedBox(
+          width: double.infinity,
+          child: RaisedButton(
+            color: Colors.green,
+            textColor: Colors.black,
+            disabledColor: Colors.grey,
+            disabledTextColor: Colors.white,
+            padding: EdgeInsets.all(8.0),
+            splashColor: Colors.greenAccent,
+            onPressed: () async {
+              http.Response response = await setAuctionAlarm(widget.goodID);
+              if (response.statusCode == 200 && response.body == "1") {
+                ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text('알림을 설정했습니다. 낙찰을 기원합니다')));
+                setState(() {
+                  currentGood = fetchGood(widget.goodID);
+                });
+              }
+              else {
+                ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text('오류가 발생했습니다. 다시 시도해주세요')));
+              }
+            },
+            child: Text(
+              "경매 시작시 알림 받기",
+              style: TextStyle(fontSize: 18.0),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Column(
+      children: [
+        Container(
+          width: MediaQuery.of(context).size.width,
+          child: FlatButton(
+            shape: Border(
+              top: BorderSide(color: Colors.grey, width: 1.0),
+              bottom: BorderSide(color: Colors.grey, width: 1.0),
+            ),
+            color: Colors.white,
+            textColor: Colors.black,
+            disabledColor: Colors.grey,
+            disabledTextColor: Colors.white,
+            child: Icon(Icons.keyboard_arrow_up),
+            onPressed: () => {
+              _showCommentsModal(good.commentList)
+            },
+          ),
+        ),
+        Row(
+          children: [
+            CircleAvatar(
+              radius: 20.0,
+              backgroundImage: good.commentList.length > 0
+                ? NetworkImage(good.commentList[0].profile)
+                : NetworkImage('https://ibsoft.site/profile/default_profile.jpg'),
+              backgroundColor: Colors.transparent,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                good.commentList.length > 0 ?
+                Row(
+                  children: [
+                    Text(
+                      '${good.commentList[0].username}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      )
+                    ),
+                    VerticalDivider(),
+                    Text(
+                      commentTimeTextFromDate(good.commentList[0].date),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      )
+                    ),
+                  ]
+                )
+                : Text('이 상품에 대한 반응이 아직 없습니다'),
+                good.commentList.length > 0 ?
+                Text('${good.commentList[0].content}',
+                  style: TextStyle(
+                    fontSize: 14,
+                  )
+                )
+                : Text('첫 반응을 작성하세요!'),
+              ],
+            ),
+          ],
+        ),
+        Divider(),
       ]
     );
   }
@@ -726,67 +940,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                     items: _sliderItems(good.imageUrlList),
                   ),
                   interactingSection(good),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    child: FlatButton(
-                      shape: Border(
-                        top: BorderSide(color: Colors.grey, width: 1.0),
-                        bottom: BorderSide(color: Colors.grey, width: 1.0),
-                      ),
-                      color: Colors.white,
-                      textColor: Colors.black,
-                      disabledColor: Colors.grey,
-                      disabledTextColor: Colors.white,
-                      child: Icon(Icons.keyboard_arrow_up),
-                      onPressed: () => {
-                        _showCommentsModal(good.commentList)
-                      },
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 20.0,
-                        backgroundImage:
-                          NetworkImage(good.commentList[0].profile),
-                        backgroundColor: Colors.transparent,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          good.commentList.length > 0 ?
-                          Row(
-                            children: [
-                              Text(
-                                '${good.commentList[0].username}',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                )
-                              ),
-                              VerticalDivider(),
-                              Text(
-                                commentTimeTextFromDate(good.commentList[0].date),
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey,
-                                )
-                              ),
-                            ]
-                          )
-                          : Text('이 상품에 대한 반응이 아직 없습니다'),
-                          good.commentList.length > 0 ?
-                          Text('${good.commentList[0].content}',
-                            style: TextStyle(
-                              fontSize: 14,
-                            )
-                          )
-                          : Text('첫 반응을 작성하세요!'),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Divider()
+                  commentSection(good),
                 ],
               );
             }

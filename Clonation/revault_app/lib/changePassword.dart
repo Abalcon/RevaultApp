@@ -76,6 +76,7 @@ class ChangePasswordFormState extends State<ChangePasswordForm> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               // Start of password Change
@@ -83,6 +84,15 @@ class ChangePasswordFormState extends State<ChangePasswordForm> {
                 key: _formKey1,
                   child: Column(
                     children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 5),
+                        child: Text(
+                          '기존 비밀번호 입력',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold
+                          )
+                        ),
+                      ),
                       TextFormField(
                         obscureText: true,
                         decoration: InputDecoration(
@@ -96,6 +106,15 @@ class ChangePasswordFormState extends State<ChangePasswordForm> {
                           }
                           return null;
                         },
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 20, bottom: 5),
+                        child: Text(
+                          '새 비밀번호 입력',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold
+                          )
+                        ),
                       ),
                       TextFormField(
                         controller: _passController,
@@ -115,6 +134,15 @@ class ChangePasswordFormState extends State<ChangePasswordForm> {
                           return null;
                         },
                       ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 20, bottom: 5),
+                        child: Text(
+                          '새 비밀번호 확인',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold
+                          )
+                        ),
+                      ),
                       TextFormField(
                         obscureText: true,
                         decoration: InputDecoration(
@@ -133,15 +161,15 @@ class ChangePasswordFormState extends State<ChangePasswordForm> {
                         },
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        padding: const EdgeInsets.symmetric(vertical: 30.0),
                         child: SizedBox(
                           width: double.infinity,
                           child: RaisedButton(
-                            color: Colors.green,
+                            color: Colors.black,
                             textColor: Colors.white,
                             disabledColor: Colors.grey,
                             disabledTextColor: Colors.black,
-                            padding: EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(16.0),
                             splashColor: Colors.greenAccent,
                             onPressed: () async {
                               if (_formKey1.currentState.validate()) {
@@ -166,7 +194,7 @@ class ChangePasswordFormState extends State<ChangePasswordForm> {
                               }
                             },
                             child: Text(
-                              "Change Password",
+                              "비밀번호 변경",
                               style: TextStyle(fontSize: 20.0),
                             ),
                           ),

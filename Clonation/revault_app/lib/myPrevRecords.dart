@@ -12,6 +12,21 @@ List<AuctionGood> parseGoodList(String responseBody) {
   return parsed.map<AuctionGood>((json) => AuctionGood.fromJson(json)).toList();
 }
 
+Future<List<AuctionGood>> fetchWinningsFromRecords(String session) async {
+  final response = await http.get(
+    'https://ibsoft.site/revault/getAuctionList?status=2&isWin=1',
+    headers: <String, String>{
+      'Cookie': session,
+    },
+  );
+  if (response.statusCode == 200) {
+    return compute(parseGoodList, response.body);
+  }
+  else {
+    return [];
+  }
+}
+
 Future<List<AuctionGood>> fetchPreviousRecords(String session) async {
   final response = await http.get(
     'https://ibsoft.site/revault/getAuctionList?status=2',
@@ -60,77 +75,107 @@ class MyPrevRecordsDetailState extends State<MyPrevRecordsDetail> {
     }
     else {
       setState(() {
+        winningList = fetchWinningsFromRecords(currUser.getSession());
         auctionList = fetchPreviousRecords(currUser.getSession());
       });
     }
   }
 
+  Future<List<AuctionGood>> winningList;
   Future<List<AuctionGood>> auctionList;
   Widget _buildWithList() {
-    return FutureBuilder<List<AuctionGood>>(
-      future: auctionList,
+    return FutureBuilder(
+      future: Future.wait([winningList, auctionList]),
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          if (snapshot.data.length > 0) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+          case ConnectionState.waiting:
+            return Center(child: CircularProgressIndicator());
+          default:
+            if (snapshot.hasError) {
+              debugPrint("${snapshot.error}");
+              return Text("${snapshot.error}");
+            }
+            var win = snapshot.data[0].map((good) => good.auctionID).toList();
+            var all = snapshot.data[1];
+
+            if (all.length == 0) {
+              return Text(
+                "이전에 참여한 경매가 없습니다",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              );
+            }
+
             return ListView.builder(
               shrinkWrap: true,
               padding: const EdgeInsets.all(10),
-              itemCount: snapshot.data.length,
+              itemCount: all.length,
               itemBuilder: (BuildContext _context, int i) {
+                var good = all[i];
                 return Column(
                   children: [
-                    Row(
-                      children: [
-                        // image section
-                        Image.asset(
-                          'images/nike_black_hoodie1.jpeg',
-                          height: 60.0,
-                          width: 60.0, 
-                          fit: BoxFit.cover,
-                        ),
-                        // text section
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '${snapshot.data[i].brand}',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                )
-                              ),
-                              Text('${snapshot.data[i].goodName}',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                )
-                              ),
-                              Text('${snapshot.data[i].price}원',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                  color: Colors.red
-                                )
-                              ),
-                            ],
+                    Container(
+                      color: win.contains(good.auctionID) ?
+                        Colors.transparent : Colors.grey,
+                      child: Row(
+                        children: [
+                          // image section
+                          Image.asset(
+                            'images/nike_black_hoodie1.jpeg',
+                            height: 60.0,
+                            width: 60.0, 
+                            fit: BoxFit.cover,
+                            color: win.contains(good.auctionID) ?
+                              Colors.white : Colors.grey,
+                            colorBlendMode: BlendMode.darken,
                           ),
-                        ),
-                        Container(
-                          width: 60.0,
-                          height: 60.0,
-                          child: (currUser.getName() == snapshot.data[i].winner) ?
-                            Icon(
-                              Icons.block,
-                              size: 40,
-                              color: Colors.grey[400]
-                            ) :
-                            Icon(
-                              Icons.verified,
-                              size: 40,
-                              color: Colors.yellow
+                          // text section
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '[${good.brand}]${good.goodName}',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                  )
+                                ),
+                                Text('Size ${good.size}  Condition ${good.condition}',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                  )
+                                ),
+                                Text('${good.price}원',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                    color: Colors.red
+                                  )
+                                ),
+                              ],
                             ),
-                        )
-                      ],
+                          ),
+                          Container(
+                            width: 60.0,
+                            height: 60.0,
+                            child: win.contains(good.auctionID) ?
+                              Icon(
+                                Icons.verified,
+                                size: 40,
+                                color: Colors.yellow
+                              ) :
+                              Icon(
+                                Icons.block,
+                                size: 40,
+                                color: Colors.grey[400]
+                              ),
+                          )
+                        ],
+                      ),
                     ),
                     Divider()
                   ]
@@ -138,20 +183,6 @@ class MyPrevRecordsDetailState extends State<MyPrevRecordsDetail> {
               }
             );
           }
-          
-          return Text(
-            "이전에 참여한 경매가 없습니다",
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          );
-        }
-        else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
-        }
-
-        return Center(child: CircularProgressIndicator());
       }
     );
   }

@@ -153,6 +153,12 @@ class RequestFormState extends State<RequestForm> {
 
   Widget build(BuildContext context) {
     TextEditingController _helpController = new TextEditingController();
+    var size = MediaQuery.of(context).size;
+    final double itemWidth = size.width / 3;
+    final double itemHeight = size.width * 4 / 27;
+    final double textLength = 19.35;
+    var counter = 0;
+
     return Form(
       key: _formKey,
       child: SingleChildScrollView(
@@ -162,7 +168,7 @@ class RequestFormState extends State<RequestForm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(bottom: 8),
+              padding: EdgeInsets.only(bottom: 1),
               child: Text(
                 '문의 유형',
                 style: TextStyle(
@@ -170,59 +176,71 @@ class RequestFormState extends State<RequestForm> {
                 )
               ),
             ),
-            ToggleButtons(
+            GridView.count(
+              shrinkWrap: true,
+              crossAxisCount: 3,
+              childAspectRatio: (itemWidth / itemHeight),
               children: [
                 Container(
                   alignment: Alignment.center,
-                  width: (MediaQuery.of(context).size.width - 27) / 6,
+                  padding: EdgeInsets.symmetric(horizontal: itemWidth / 2 - textLength),
                   child: Text('상품', style: TextStyle(fontSize: 16),),
                 ),
                 Container(
                   alignment: Alignment.center,
-                  width: (MediaQuery.of(context).size.width - 27) / 6,
+                  padding: EdgeInsets.symmetric(horizontal: itemWidth / 2 - textLength),
                   child: Text('결제', style: TextStyle(fontSize: 16),),
                 ),
                 Container(
                   alignment: Alignment.center,
-                  width: (MediaQuery.of(context).size.width - 27) / 6,
+                  padding: EdgeInsets.symmetric(horizontal: itemWidth / 2 - textLength),
                   child: Text('배송', style: TextStyle(fontSize: 16),),
                 ),
                 Container(
                   alignment: Alignment.center,
-                  width: (MediaQuery.of(context).size.width - 27) / 6,
+                  padding: EdgeInsets.symmetric(horizontal: itemWidth / 2 - textLength),
                   child: Text('교환', style: TextStyle(fontSize: 16),),
                 ),
                 Container(
                   alignment: Alignment.center,
-                  width: (MediaQuery.of(context).size.width - 27) / 6,
+                  padding: EdgeInsets.symmetric(horizontal: itemWidth / 2 - textLength),
                   child: Text('환불', style: TextStyle(fontSize: 16),),
                 ),
                 Container(
                   alignment: Alignment.center,
-                  width: (MediaQuery.of(context).size.width - 27) / 6,
+                  padding: EdgeInsets.symmetric(horizontal: itemWidth / 2 - textLength),
                   child: Text('기타', style: TextStyle(fontSize: 16),),
                 ),
-              ],
-              isSelected: _selections,
-              onPressed: (index) {
-                setState(() {
-                  for (int btnIndex = 0; btnIndex < _selections.length; btnIndex++) {
-                    if (btnIndex == index)
-                      _selections[btnIndex] = true;
-                    else
-                      _selections[btnIndex] = false;
-                  }
-                });
-              },
-              fillColor: Colors.green,
-              selectedColor: Colors.black,
+              ].map((widget) {
+                final index = ++counter - 1;
+                
+                return ToggleButtons(
+                  children: [widget],
+                  isSelected: [_selections[index]],
+                  onPressed: (_) {
+                    setState(() {
+                      for (int btnIndex = 0; btnIndex < _selections.length; btnIndex++) {
+                        if (btnIndex == index)
+                          _selections[btnIndex] = true;
+                        else
+                          _selections[btnIndex] = false;
+                      }
+                    });
+                  },
+                  fillColor: Colors.green,
+                  selectedColor: Colors.black,
+                );
+              }).toList(),
             ),
             Divider(),
-            Text(
-              '문의 내용',
-              style: TextStyle(
-                fontWeight: FontWeight.bold
-              )
+            Padding(
+              padding: EdgeInsets.only(bottom: 8),
+              child: Text(
+                '문의 내용',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold
+                )
+              ),
             ),
             TextFormField(
               controller: _helpController,
@@ -231,6 +249,8 @@ class RequestFormState extends State<RequestForm> {
               decoration: InputDecoration(
                 hintText: '문의 내용을 입력하세요',
                 fillColor: Colors.grey,
+                border: inputBorder,
+                focusedBorder: inputBorder,
               ),
               validator: (content) {
                 if (content.isEmpty) {

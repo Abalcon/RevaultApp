@@ -26,7 +26,8 @@ class AuctionGood {
   String autoUser;
 
   int waitingCount;
-  List<String> waitingList;
+  List<String> waitingProfileList;
+  List<String> waitingUserList;
 
   AuctionGood({
     @required this.auctionID,
@@ -48,7 +49,8 @@ class AuctionGood {
     this.imageUrlList,
     this.autoPrice,
     this.autoUser,
-    this.waitingList,
+    this.waitingProfileList,
+    this.waitingUserList,
     this.waitingCount,
   });
 
@@ -65,6 +67,9 @@ class AuctionGood {
     var waitUrlPart = json['wait_user_profile'] as List;
     List<String> waitUrlList = (waitUrlPart == null) ?
       [] : waitUrlPart.map<String>((val) => val.toString()).toList();
+    var waitUserPart = json['wait_user_id'] as List;
+    List<String> waitUserList = (waitUrlPart == null) ?
+      [] : waitUserPart.map<String>((val) => val.toString()).toList();
 
     String brandAndTitle = json['title'];
     var nameDivisor = brandAndTitle.indexOf(']');
@@ -90,12 +95,15 @@ class AuctionGood {
       autoPrice: json['auto_price'],
       autoUser: json['auto_user'],
       waitingCount: json['wait_user_cnt'] == null ? 0 : json['wait_user_cnt'],
-      waitingList: waitUrlList,
+      waitingProfileList: waitUrlList,
+      waitingUserList: waitUserList,
       // 2020-11-17 추가분
       // auction_id_arr, auction_id_list, isBid, isWin, isLose
     );
   }
 }
+
+
 
 class Bidding {
   String username;

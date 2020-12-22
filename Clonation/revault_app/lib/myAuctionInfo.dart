@@ -125,6 +125,63 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
     );
   }
 
+  Widget _getTotalDonation() {
+    return FutureBuilder<List<AuctionResult>>(
+      future: winningList,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          var donation = 0;
+          var list = snapshot.data;
+          list.forEach((good) => donation += (good.price * 0.1).toInt());
+
+          return Container(
+            padding: EdgeInsets.symmetric(vertical: 15),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '누적 기부금액 ',
+                      style: TextStyle(
+                        fontSize: 16, 
+                      )
+                    ),
+                    Text(
+                      '${donation}원',
+                      style: TextStyle(
+                        fontSize: 16, 
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red,
+                      )
+                    )
+                  ],
+                ),
+                RichText(
+                  text: TextSpan(
+                    text: '자세히 보기',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      decoration: TextDecoration.underline
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () => Navigator.pushNamed(context, '/mydonations')
+                  ),
+                ),
+              ]
+            )
+          );
+        }
+
+        else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+
+        return Center(child: CircularProgressIndicator());
+      }
+    );
+  }
+
   Widget _buildWithList() {
     return FutureBuilder<List<AuctionResult>>(
       future: winningList,
@@ -398,79 +455,7 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
               ]
             ),
             Divider(),
-            Stack(
-              children: [
-                Container(
-                  height: 100.0,
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    width: 80.0,
-                    height: 80.0,
-                    child: Icon(
-                      Icons.monetization_on_outlined,
-                      size: 60,
-                      color: Colors.grey[300]
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 15),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            '나의 충전금 ',
-                            style: TextStyle(
-                              fontSize: 16, 
-                            )
-                          ),
-                          Text(
-                            '210,000원',
-                            style: TextStyle(
-                              fontSize: 16, 
-                              fontWeight: FontWeight.bold,
-                              color: Colors.red,
-                            )
-                          )
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            '누적 기부금액 ',
-                            style: TextStyle(
-                              fontSize: 16, 
-                            )
-                          ),
-                          Text(
-                            '80,000원',
-                            style: TextStyle(
-                              fontSize: 16, 
-                              fontWeight: FontWeight.bold,
-                              color: Colors.red,
-                            )
-                          )
-                        ],
-                      ),
-                      RichText(
-                        text: TextSpan(
-                          text: '충전금 사용내역 보기',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            decoration: TextDecoration.underline
-                          ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () => Navigator.pushNamed(context, '/mystackinfo')
-                        ),
-                      ),
-                    ]
-                  )
-                ),
-              ]
-            ),
+            _getTotalDonation(),
             Container(
               color: Colors.grey[350],
               padding: EdgeInsets.only(left: 10, top: 50),

@@ -17,13 +17,12 @@ import 'package:revault_app/languageSelect.dart';
 import 'package:revault_app/models/cart.dart';
 import 'package:revault_app/models/catalog.dart';
 import 'package:revault_app/models/user.dart';
-import 'package:revault_app/myBillings.dart';
+import 'package:revault_app/myFailures.dart';
 import 'package:revault_app/myDonations.dart';
 import 'package:revault_app/myParticipations.dart';
 import 'package:revault_app/myPrevRecords.dart';
 import 'package:revault_app/myProceedings.dart';
 import 'package:revault_app/mySettings.dart';
-import 'package:revault_app/myStackInfo.dart';
 import 'package:revault_app/resetPassword.dart';
 import 'package:revault_app/signup.dart';
 import 'auctionGoodDetail.dart';
@@ -87,8 +86,7 @@ class MyApp extends StatelessWidget {
             '/myparticipations': (context) => MyParticipations(),
             '/myprevrecords': (context) => MyPrevRecords(),
             '/mysettings': (context) => MySettings(),
-            '/mystackinfo': (context) => MyStackInfo(),
-            '/mybillings': (context) => MyBillings(),
+            '/myfailures': (context) => MyFailures(),
             '/mydonations': (context) => MyDonations(),
             '/helpdesk': (context) => HelpDesk(),
             '/changeaddress': (context) => ChangeAddress(),

@@ -112,7 +112,6 @@ class AddProfileDetailState extends State<AddProfileDetail> {
                       : () async {
                         ScaffoldMessenger.of(context)
                           .showSnackBar(SnackBar(content: Text('프로필 사진 변경에 성공했습니다')));
-                        // TODO: 회원가입 페이지로 저장한 이미지를 보내기
                         Navigator.pop(context, selectedImage);
                     },
                     child: Text(

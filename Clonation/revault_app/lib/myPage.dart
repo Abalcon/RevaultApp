@@ -397,26 +397,6 @@ class MyPageDetailsState extends State<MyPageDetails> {
                       child: FlatButton(
                         color: Colors.white,
                         textColor: Colors.grey[600],
-                        onPressed: () => Navigator.pushNamed(context, '/mystackinfo'),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "충전금 관리",
-                            style: TextStyle(
-                              fontSize: 14.0,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Divider(
-                      height: 1,
-                    ),
-                    SizedBox(
-                      width: double.infinity,
-                      child: FlatButton(
-                        color: Colors.white,
-                        textColor: Colors.grey[600],
                         onPressed: () => Navigator.pushNamed(context, '/mysettings'),
                         child: Align(
                           alignment: Alignment.centerLeft,

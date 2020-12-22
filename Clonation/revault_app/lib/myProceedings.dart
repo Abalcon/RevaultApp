@@ -97,7 +97,7 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                good.brand,
+                                '[${good.brand}]${good.name}',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
@@ -242,12 +242,17 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
                     VerticalDivider(
                       width: 33
                     ),
-                    Text(
-                      user.address,
-                      style: TextStyle(
-                        fontSize: 14, 
-                      )
-                    )
+                    new Container(
+                      constraints: new BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width * 2 / 3
+                      ),
+                      child: Text(
+                        user.address,
+                        style: TextStyle(
+                          fontSize: 14, 
+                        )
+                      ),
+                    ),
                   ],
                 ),
               ]

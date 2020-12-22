@@ -150,31 +150,10 @@ class _AuctionGoodsState extends State<AuctionGoods> {
   Widget _buildItem(AuctionGood good) {
     return Column(
       children: [
-        sellerSection(good),
-        Divider(thickness: 2),
         imageSection(good),
         Divider(thickness: 2),
         detailSection(good),
         Divider(thickness: 5,),
-      ],
-    );
-  }
-
-  Widget sellerSection(AuctionGood good) {
-    return Row(
-      children: [
-        Expanded(
-          child: Row(
-            children: [
-              Icon(Icons.person),
-              Text(good.seller != null ? good.seller : 'empty')
-            ],
-          ),
-        ),
-        Icon(Icons.verified),
-        Text(good.condition != null ? good.condition: 'F'),
-        Icon(Icons.checkroom),
-        Text(good.size != null ? good.size: 'Free')
       ],
     );
   }
@@ -319,25 +298,60 @@ class _AuctionGoodsState extends State<AuctionGoods> {
                 Container(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Text(
-                    good.brand != null ? good.brand : 'empty',
+                    '[${good.brand}]${good.goodName}',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     )
                   ),
                 ),
-                Text(
-                  good.goodName != null ? good.goodName : 'empty',
-                  style: TextStyle(
-                    fontSize: 16,
-                  )
+                Row(
+                  children: [
+                    Icon(Icons.person_outline_outlined, size: 16),
+                    Text(good.seller),
+                    VerticalDivider(width: 10),
+                    Text('SIZE : '),
+                    Text(good.condition != null ? good.condition: 'F'),
+                    VerticalDivider(width: 10),
+                    Text('CONDITION : '),
+                    Text(good.size != null ? good.size: 'Free')
+                  ],
                 ),
-                Text(
-                  good.price != null ? '${good.price}원' : 'priceless',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  )
+                Row(
+                  children: [
+                    Text(
+                      good.price != null ? '${good.price}원' : 'priceless',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      )
+                    ),
+                    VerticalDivider(width: 5),
+                    ClipRect(
+                      child: DecoratedBox(
+                        decoration: ShapeDecoration(
+                          color: Colors.black,
+                          shape: RoundedRectangleBorder(
+                            side: BorderSide.none,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(5),
+                            )
+                          )
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+                          child: Text(
+                            '10% 기부',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            )
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -347,7 +361,7 @@ class _AuctionGoodsState extends State<AuctionGoods> {
             textColor: Colors.white,
             disabledColor: Colors.grey,
             disabledTextColor: Colors.black,
-            padding: EdgeInsets.all(8.0),
+            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 14.0),
             splashColor: Colors.greenAccent,
             onPressed: () => Navigator.pushNamed(
               context, '/auctiongooddetail',
@@ -355,7 +369,7 @@ class _AuctionGoodsState extends State<AuctionGoods> {
             ),
             child: Text(
               "자세히 보기",
-              style: TextStyle(fontSize: 20.0),
+              style: TextStyle(fontSize: 18.0),
             ),
           )
         ]
