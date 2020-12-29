@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           title: 'Welcome to REVAULT',
           theme: ThemeData(
-            //primarySwatch: Colors.green,
+            //primarySwatch: Color(0xFF80F208),
             primaryColor: Colors.white,
             visualDensity: VisualDensity.adaptivePlatformDensity,
             textTheme: Typography.blackMountainView,
@@ -69,7 +69,13 @@ class MyApp extends StatelessWidget {
               modalBackgroundColor: Colors.white,
               backgroundColor: Colors.white,
             ),
-            //tabBarTheme: TabBarTheme(labelColor: Colors.white),
+            tabBarTheme: TabBarTheme(
+              labelColor: Colors.black,
+              labelPadding: EdgeInsets.all(0),
+              labelStyle: Theme.of(context).textTheme.headline6
+                .copyWith(fontSize: 18,),
+              unselectedLabelStyle: TextStyle(color: Colors.grey),
+            )
           ),
           home: MyHomePage(title: 'REVAULT Start Page'),
           routes: {

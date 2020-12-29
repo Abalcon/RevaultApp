@@ -64,12 +64,35 @@ class AuctionList extends StatelessWidget {
               SliverPersistentHeader(
                 delegate: _SliverAppBarDelegate(
                   TabBar(
-                    labelColor: Colors.blue,
-                    unselectedLabelColor: Colors.white,
+                    indicatorColor: Color(0xFF80F208),
                     tabs: [
-                      Tab(child: Text("LIVE", style: Theme.of(context).textTheme.headline6)),
-                      Tab(child: Text("UPCOMING", style: Theme.of(context).textTheme.headline6)),
-                      Tab(child: Text("ENDED", style: Theme.of(context).textTheme.headline6)),
+                      Tab(
+                        child: SizedBox.expand(
+                          child: Container(
+                            alignment: Alignment.center,
+                            color: Colors.white,
+                            child: Text("LIVE",),
+                          ),
+                        ),
+                      ),
+                      Tab(
+                        child: SizedBox.expand(
+                          child: Container(
+                            alignment: Alignment.center,
+                            color: Colors.white,
+                            child: Text("UPCOMING",),
+                          ),
+                        ),
+                      ),
+                      Tab(
+                        child: SizedBox.expand(
+                          child: Container(
+                            alignment: Alignment.center,
+                            color: Colors.white,
+                            child: Text("ENDED",),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -238,13 +261,13 @@ class _AuctionGoodsState extends State<AuctionGoods> {
                     Icon(
                       Icons.schedule,
                       color: Colors.white,
-                      size: 18
+                      size: 16
                     ),
                     Text(
                       remainingTimeTextFromDate(good.endDate),
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 14
+                        fontSize: 12
                       ),
                     ),
                   ],
@@ -258,9 +281,9 @@ class _AuctionGoodsState extends State<AuctionGoods> {
           height: 90.0,
           alignment: Alignment.bottomLeft,
           child: new SemiRoundedBorderButton(
-            borderSide: const BorderSide(color: Colors.green, width: 0),
+            borderSide: const BorderSide(color: Color(0xFF80F208), width: 0),
             radius: const Radius.circular(20.0),
-            background: Colors.green,
+            background: Color(0xFF80F208),
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
               child: Row(
@@ -268,13 +291,13 @@ class _AuctionGoodsState extends State<AuctionGoods> {
                   Icon(
                     Icons.military_tech,
                     color: Colors.white,
-                    size: 18
+                    size: 16
                   ),
                   Text(
                     '100개 한정',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 14
+                      fontSize: 12
                     ),
                   ),
                 ],
@@ -357,7 +380,7 @@ class _AuctionGoodsState extends State<AuctionGoods> {
             ),
           ),
           RaisedButton(
-            color: Colors.green,
+            color: Color(0xFF80F208),
             textColor: Colors.white,
             disabledColor: Colors.grey,
             disabledTextColor: Colors.black,
@@ -369,7 +392,7 @@ class _AuctionGoodsState extends State<AuctionGoods> {
             ),
             child: Text(
               "자세히 보기",
-              style: TextStyle(fontSize: 18.0),
+              style: TextStyle(fontSize: 16.0),
             ),
           )
         ]

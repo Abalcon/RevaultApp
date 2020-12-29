@@ -177,7 +177,7 @@ class MySettingsBodyState extends State<MySettingsBody> {
                             });
                           },
                           activeTrackColor: Colors.lightGreenAccent,
-                          activeColor: Colors.green,
+                          activeColor: Color(0xFF80F208),
                         ),
                       ]
                     ),
@@ -204,7 +204,7 @@ class MySettingsBodyState extends State<MySettingsBody> {
                             });
                           },
                           activeTrackColor: Colors.lightGreenAccent,
-                          activeColor: Colors.green,
+                          activeColor: Color(0xFF80F208),
                         ),
                       ]
                     ),
@@ -231,7 +231,7 @@ class MySettingsBodyState extends State<MySettingsBody> {
                             });
                           },
                           activeTrackColor: Colors.lightGreenAccent,
-                          activeColor: Colors.green,
+                          activeColor: Color(0xFF80F208),
                         ),
                       ]
                     ),
@@ -241,7 +241,7 @@ class MySettingsBodyState extends State<MySettingsBody> {
                     child: SizedBox(
                       width: double.infinity,
                       child: RaisedButton(
-                        color: Colors.green,
+                        color: Color(0xFF80F208),
                         textColor: Colors.white,
                         disabledColor: Colors.grey,
                         disabledTextColor: Colors.black,

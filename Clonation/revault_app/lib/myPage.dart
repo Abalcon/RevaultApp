@@ -187,7 +187,7 @@ class MyPageDetailsState extends State<MyPageDetails> {
                             child: Text(
                               "자세히 보기",
                               style: TextStyle(
-                                fontSize: 16.0,
+                                fontSize: 14.0,
                                 fontWeight: FontWeight.bold
                               ),
                             ),
@@ -221,7 +221,7 @@ class MyPageDetailsState extends State<MyPageDetails> {
                                 style: TextStyle(
                                   fontSize: 24, 
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.green,
+                                  color: Color(0xFF80F208),
                                 )
                               )
                             ]
@@ -251,7 +251,7 @@ class MyPageDetailsState extends State<MyPageDetails> {
                                 style: TextStyle(
                                   fontSize: 24, 
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.green,
+                                  color: Color(0xFF80F208),
                                 )
                               )
                             ]
@@ -281,7 +281,7 @@ class MyPageDetailsState extends State<MyPageDetails> {
                                 style: TextStyle(
                                   fontSize: 24, 
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.green,
+                                  color: Color(0xFF80F208),
                                 )
                               )
                             ]
@@ -311,7 +311,7 @@ class MyPageDetailsState extends State<MyPageDetails> {
                                 style: TextStyle(
                                   fontSize: 24, 
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.green,
+                                  color: Color(0xFF80F208),
                                 )
                               )
                             ]
@@ -341,7 +341,7 @@ class MyPageDetailsState extends State<MyPageDetails> {
                                 style: TextStyle(
                                   fontSize: 24, 
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.green,
+                                  color: Color(0xFF80F208),
                                 )
                               )
                             ]

@@ -109,7 +109,7 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
               style: TextStyle(
                 fontSize: 40, 
                 fontWeight: FontWeight.bold,
-                color: Colors.green,
+                color: Color(0xFF80F208),
               ),
               recognizer: TapGestureRecognizer()
                 ..onTap = () => Navigator.pushNamed(context, route)

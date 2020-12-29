@@ -74,7 +74,6 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
           child: Center(
             child: Column(
               children: [
-                Icon(Icons.verified, size: 100, color: Colors.green),
                 Text(
                   '원하시는 입찰가를 입력하세요',
                   style: TextStyle(
@@ -498,7 +497,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
             borderRadius: BorderRadius.circular(18.0),
             side: BorderSide(color: Colors.green)
           ),
-          color: Colors.green,
+          color: Color(0xFF80F208),
           textColor: Colors.white,
           disabledColor: Colors.grey,
           disabledTextColor: Colors.black,
@@ -524,7 +523,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
           children: [
             Icon(
               Icons.cached,
-              color: Colors.green,
+              color: Color(0xFF80F208),
             ),
             Text(
               "${good.autoPrice}원 까지 자동입찰 중",
@@ -677,7 +676,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
         => currUser.getName() == user);
 
       return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20.0),
+        padding: const EdgeInsets.only(top: 40),
         child: isWaiting
         ? SizedBox(
           width: double.infinity,
@@ -686,25 +685,25 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
             textColor: Colors.white,
             disabledColor: Colors.grey,
             disabledTextColor: Colors.black,
-            padding: EdgeInsets.all(15.0),
+            padding: EdgeInsets.all(18.0),
             splashColor: Colors.greenAccent,
             onPressed: () async {
               // TODO: 알림 해제하는 API 호출
             },
             child: Text(
               "알림 해제하기",
-              style: TextStyle(fontSize: 18.0),
+              style: TextStyle(fontSize: 16.0),
             ),
           ),
         )
         : SizedBox(
           width: double.infinity,
           child: RaisedButton(
-            color: Colors.green,
+            color: Color(0xFF80F208),
             textColor: Colors.black,
             disabledColor: Colors.grey,
             disabledTextColor: Colors.white,
-            padding: EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(18.0),
             splashColor: Colors.greenAccent,
             onPressed: () async {
               http.Response response = await setAuctionAlarm(widget.goodID);
@@ -722,7 +721,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
             },
             child: Text(
               "경매 시작시 알림 받기",
-              style: TextStyle(fontSize: 18.0),
+              style: TextStyle(fontSize: 16.0),
             ),
           ),
         ),
@@ -1034,7 +1033,7 @@ class BiddingFormState extends State<BiddingForm> {
                         borderRadius: BorderRadius.circular(18.0),
                         side: BorderSide(color: Colors.green)
                       ),
-                      color: Colors.green,
+                      color: Color(0xFF80F208),
                       textColor: Colors.white,
                       disabledColor: Colors.grey,
                       disabledTextColor: Colors.black,
@@ -1056,7 +1055,7 @@ class BiddingFormState extends State<BiddingForm> {
                         borderRadius: BorderRadius.circular(18.0),
                         side: BorderSide(color: Colors.green)
                       ),
-                      color: Colors.green,
+                      color: Color(0xFF80F208),
                       textColor: Colors.white,
                       disabledColor: Colors.grey,
                       disabledTextColor: Colors.black,
@@ -1230,7 +1229,7 @@ class AutoBiddingFormState extends State<AutoBiddingForm> {
                         borderRadius: BorderRadius.circular(18.0),
                         side: BorderSide(color: Colors.green)
                       ),
-                      color: Colors.green,
+                      color: Color(0xFF80F208),
                       textColor: Colors.white,
                       disabledColor: Colors.grey,
                       disabledTextColor: Colors.black,
@@ -1254,7 +1253,7 @@ class AutoBiddingFormState extends State<AutoBiddingForm> {
                         borderRadius: BorderRadius.circular(18.0),
                         side: BorderSide(color: Colors.green)
                       ),
-                      color: Colors.green,
+                      color: Color(0xFF80F208),
                       textColor: Colors.white,
                       disabledColor: Colors.grey,
                       disabledTextColor: Colors.black,
@@ -1278,7 +1277,7 @@ class AutoBiddingFormState extends State<AutoBiddingForm> {
                         borderRadius: BorderRadius.circular(18.0),
                         side: BorderSide(color: Colors.green)
                       ),
-                      color: Colors.green,
+                      color: Color(0xFF80F208),
                       textColor: Colors.white,
                       disabledColor: Colors.grey,
                       disabledTextColor: Colors.black,
@@ -1303,7 +1302,7 @@ class AutoBiddingFormState extends State<AutoBiddingForm> {
                         borderRadius: BorderRadius.circular(18.0),
                         side: BorderSide(color: Colors.green)
                       ),
-                      color: Colors.green,
+                      color: Color(0xFF80F208),
                       textColor: Colors.white,
                       disabledColor: Colors.grey,
                       disabledTextColor: Colors.black,
@@ -1332,7 +1331,7 @@ class AutoBiddingFormState extends State<AutoBiddingForm> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 RaisedButton(
-                  color: Colors.green,
+                  color: Color(0xFF80F208),
                   textColor: Colors.white,
                   disabledColor: Colors.transparent,
                   disabledTextColor: Colors.grey,
@@ -1350,7 +1349,7 @@ class AutoBiddingFormState extends State<AutoBiddingForm> {
                 ),
                 VerticalDivider(),
                 RaisedButton(
-                  color: Colors.green,
+                  color: Color(0xFF80F208),
                   textColor: Colors.white,
                   disabledColor: Colors.transparent,
                   disabledTextColor: Colors.grey,

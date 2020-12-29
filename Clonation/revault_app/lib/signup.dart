@@ -5,7 +5,6 @@ import 'dart:typed_data';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:http/http.dart' as http;
 import 'package:revault_app/common/aux.dart';
 
 usernameValidation(String value) {
@@ -59,6 +58,7 @@ class SignUpFormState extends State<SignUpForm> {
   TextEditingController _idController = new TextEditingController();
   TextEditingController _passController = new TextEditingController();
   TextEditingController _mailController = new TextEditingController();
+  TextEditingController _phoneController = new TextEditingController();
 
   File selectedImage;
   Widget currentProfile() {
@@ -67,7 +67,7 @@ class SignUpFormState extends State<SignUpForm> {
         width: 120.0,
         height: 120.0,
         decoration: BoxDecoration(
-          color: Colors.green,
+          color: Color(0xFF80F208),
           shape: BoxShape.circle,
         ),
         child: CircleAvatar(
@@ -76,7 +76,7 @@ class SignUpFormState extends State<SignUpForm> {
             Icons.camera_alt_outlined,
             size: 60.0,
           ),
-          foregroundColor: Colors.green,
+          foregroundColor: Color(0xFF80F208),
         ),
       );
     }
@@ -89,7 +89,7 @@ class SignUpFormState extends State<SignUpForm> {
       width: 120.0,
       height: 120.0,
       decoration: BoxDecoration(
-        color: Colors.green,
+        color: Color(0xFF80F208),
         shape: BoxShape.circle,
       ),
       child: CircleAvatar(
@@ -101,22 +101,6 @@ class SignUpFormState extends State<SignUpForm> {
   }
 
   static final storage = new FlutterSecureStorage();
-
-  Future<http.Response> trySignUp(String id, String pw, String email) async {
-    var map = new Map<String, dynamic>();
-    map['user_id'] = id;
-    map['passwd'] = pw;
-    map['email'] = email;
-
-    http.Response response = await http.post(
-      'https://ibsoft.site/revault/addUser',
-      body: map,
-    );
-
-    print(response.headers); // set-cookie: JSESSIONID=blahblah
-    print(response.body); // string: "1" or "-1"
-    return response;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -233,20 +217,7 @@ class SignUpFormState extends State<SignUpForm> {
               ),
               Divider(color: Colors.white),
               TextFormField(
-                decoration: InputDecoration(
-                  labelText: '이름 입력',
-                  border: inputBorder,
-                  focusedBorder: inputBorder,
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter your name';
-                  }
-                  return null;
-                },
-              ),
-              Divider(color: Colors.white),
-              TextFormField(
+                controller: _phoneController,
                 decoration: InputDecoration(
                   labelText: '전화번호 입력',
                   border: inputBorder,
@@ -263,21 +234,20 @@ class SignUpFormState extends State<SignUpForm> {
               Padding(
                 padding: const EdgeInsets.symmetric(
                   vertical: 16.0,
-                  horizontal: 10.0
                 ),
                 child: SizedBox(
                   width: double.infinity,
                   child: RaisedButton(
-                    color: Colors.green,
+                    color: Colors.black,
                     textColor: Colors.white,
                     disabledColor: Colors.grey,
                     disabledTextColor: Colors.black,
-                    padding: EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(15.0),
                     splashColor: Colors.greenAccent,
                     onPressed: () async {
                       if (_formKey.currentState.validate()) {
                         var signupResponse = await trySignUp(
-                          _idController.text, _passController.text, _mailController.text);
+                          _idController.text, _passController.text, _mailController.text, _phoneController.text);
 
                         if ((signupResponse.statusCode == 200 || signupResponse.statusCode == 201)
                           && (signupResponse.body == "-1" || signupResponse.body == "-2")) {
@@ -306,7 +276,7 @@ class SignUpFormState extends State<SignUpForm> {
                       }
                     },
                     child: Text(
-                      'Register',
+                      '회원가입',
                       style: TextStyle(fontSize: 20.0)
                     ),
                   ),

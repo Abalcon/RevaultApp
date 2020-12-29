@@ -47,6 +47,27 @@ Future<SessionNamePair> isLogged() async {
   return SessionNamePair(null, null);
 }
 
+Future<http.Response> trySignUp(String id, String pw,
+  String email, String phone, {int snsCode = 0, String address = ''}) async {
+  // snsCode: 0은 직접 가입, 1은 페이스북, 2는 카카오
+  var map = new Map<String, dynamic>();
+  map['user_id'] = id;
+  map['passwd'] = pw;
+  map['email'] = email;
+  map['tel'] = phone;
+  map['sns_code'] = snsCode.toString();
+  map['address'] = address;
+
+  http.Response response = await http.post(
+    'https://ibsoft.site/revault/addUser',
+    body: map,
+  );
+
+  print(response.headers); // set-cookie: JSESSIONID=blahblah
+  print(response.body); // string: "1" or "-1"
+  return response;
+}
+
 UserInfo parseInfo(String responseBody) {
   return UserInfo.fromJson(jsonDecode(responseBody));
 }
@@ -291,6 +312,23 @@ Future<http.Response> tryModifyUserAlarms(
   map['alarm_price'] = boolToString(price);
   map['alarm_comment'] = boolToString(comment);
   map['alarm_status'] = boolToString(status);
+
+  http.Response response = await http.post(
+    'https://ibsoft.site/revault/modUserInfo',
+    headers: <String, String>{
+      'Cookie': session,
+    },
+    body: map,
+  );
+
+  print(response.statusCode); // 200 or 201
+  print(response.body); // string: "1" or "-1"
+  return response;
+}
+
+Future<http.Response> tryModifyUserPhone(String session, String phone) async {
+  var map = new Map<String, dynamic>();
+  map['tel'] = phone;
 
   http.Response response = await http.post(
     'https://ibsoft.site/revault/modUserInfo',
