@@ -27,9 +27,11 @@
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>clonation.revault.revaultapp</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>kakao44aa73adaa28262915db9e87bc41c37e</string>
+				<string>bootpayRevault</string>
 			</array>
 		</dict>
 	</array>
@@ -67,34 +69,10 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<!--
-		<dict>
-		... Some other CFBundleURLTypes definition.
-		</dict>
-		-->
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<!--
-				Replace "000000000000" with your Facebook App ID here.
-				**NOTE**: The scheme needs to start with `fb` and then your ID.
-				-->
-				<string>fb428084888378651</string>
-			</array>
-		</dict>
-	</array>
-
 	<key>FacebookAppID</key>
-
-	<!-- Replace "000000000000" with your Facebook App ID here. -->
 	<string>428084888378651</string>
 	<key>FacebookDisplayName</key>
-
-	<!-- Replace "YOUR_APP_NAME" with your Facebook App name. -->
 	<string>RevaultApp</string>
-
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
@@ -102,5 +80,10 @@
 		<string>fbauth2</string>
 		<string>fbshareextension</string>
 	</array>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 </dict>
 </plist>

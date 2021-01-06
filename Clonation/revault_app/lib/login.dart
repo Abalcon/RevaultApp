@@ -461,7 +461,6 @@ class LoginFormState extends State<LoginForm> {
                   padding: EdgeInsets.all(8.0),
                   splashColor: Colors.blueAccent,
                   onPressed: () async {
-                    // TODO: Implement Kakao Login Attempt
                     try {
                       if (_isKakaoTalkInstalled) {
                         var token = await AccessTokenStore.instance.fromStore();

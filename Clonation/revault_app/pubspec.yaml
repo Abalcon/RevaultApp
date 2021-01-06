@@ -47,6 +47,7 @@ dependencies:
   flutter_launcher_icons: ^0.8.1
   flip_panel: ^1.0.1
   flutter_facebook_login: ^3.0.0
+  bootpay_api: ^2.0.7
 
 flutter_icons:
   image_path: images/20201215_app_icon_1024.jpg

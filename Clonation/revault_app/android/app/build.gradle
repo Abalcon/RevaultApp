@@ -39,7 +39,7 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "clonation.revault.revault_app"
-        minSdkVersion 19 // 2020-11-16 djkim: flutter_secure_storage, 2020-12-14 djkim: kakao_flutter_sdk
+        minSdkVersion 23 // 2021-01-05 djkim: bootpay_api
         targetSdkVersion 29
         multiDexEnabled true
         versionCode flutterVersionCode.toInteger()

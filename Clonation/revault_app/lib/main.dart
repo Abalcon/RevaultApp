@@ -23,6 +23,7 @@ import 'package:revault_app/myParticipations.dart';
 import 'package:revault_app/myPrevRecords.dart';
 import 'package:revault_app/myProceedings.dart';
 import 'package:revault_app/mySettings.dart';
+import 'package:revault_app/purchaseWindow.dart';
 import 'package:revault_app/resetPassword.dart';
 import 'package:revault_app/signup.dart';
 import 'auctionGoodDetail.dart';
@@ -98,7 +99,8 @@ class MyApp extends StatelessWidget {
             '/changeaddress': (context) => ChangeAddress(),
             '/changepassword': (context) => ChangePassword(),
             '/changeprofile': (context) => ChangeProfile(),
-            '/languageselect': (context) => LanguageSelect()
+            '/languageselect': (context) => LanguageSelect(),
+            '/purchasewindow': (context) => PurchaseWindow(),
           },
           // Error 처리용 페이지
           onUnknownRoute: (RouteSettings settings) {

@@ -352,3 +352,17 @@ OutlineInputBorder inputBorder = new OutlineInputBorder(
     width: 1.0,
   ),
 );
+
+class PurchaseArguments {
+  final String session;
+  final int id;
+  final String name;
+  final double price;
+
+  PurchaseArguments(
+    this.session,
+    this.id,
+    this.name,
+    this.price,
+  );
+}
