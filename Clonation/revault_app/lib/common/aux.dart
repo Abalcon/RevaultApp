@@ -355,7 +355,7 @@ OutlineInputBorder inputBorder = new OutlineInputBorder(
 
 class PurchaseArguments {
   final String session;
-  final int id;
+  final int id; // AuctionResult의 ref
   final String name;
   final double price;
 
@@ -364,5 +364,36 @@ class PurchaseArguments {
     this.id,
     this.name,
     this.price,
+  );
+}
+
+Future<http.Response> tryCheckBilling(String session, int resID, String receiptID) async {
+  var map = new Map<String, dynamic>();
+  map['ar_ref'] = resID.toString();
+  map['receipt_id'] = receiptID;
+
+  http.Response response = await http.post(
+    'https://ibsoft.site/revault/verify',
+    headers: <String, String>{
+      'Cookie': session,
+    },
+    body: map,
+  );
+
+  print(response.statusCode); // 200 or 201
+  print(response.body); // string: "1" or "-1" or "-2"
+  return response;
+}
+
+class PhoneVerifyArguments {
+  // 결제할 때는 최초 한번만 - session, username 값이 존재
+  // 아이디를 찾을 때는 항상 - session, username 모두 null
+  // 비번을 찾을 때에도 항상 - username만 값이 존재
+  final String session;
+  final String username;
+
+  PhoneVerifyArguments(
+    this.session,
+    this.username,
   );
 }

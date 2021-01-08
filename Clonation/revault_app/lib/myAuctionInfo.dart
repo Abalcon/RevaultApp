@@ -376,12 +376,11 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
                                       )
                                     ),
                                     onPressed: () async {
-                                      // TODO: 낙찰 상품 결제창 만들기
                                       await Navigator.pushNamed(
                                         context, '/purchasewindow',
                                         arguments: PurchaseArguments(
                                           currUser.getSession(),
-                                          good.auctionID,
+                                          good.ref,
                                           good.name,
                                           good.price * 1.0,
                                         )
