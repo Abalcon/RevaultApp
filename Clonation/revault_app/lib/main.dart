@@ -23,6 +23,7 @@ import 'package:revault_app/myParticipations.dart';
 import 'package:revault_app/myPrevRecords.dart';
 import 'package:revault_app/myProceedings.dart';
 import 'package:revault_app/mySettings.dart';
+import 'package:revault_app/phoneVerify.dart';
 import 'package:revault_app/purchaseWindow.dart';
 import 'package:revault_app/resetPassword.dart';
 import 'package:revault_app/signup.dart';
@@ -74,8 +75,9 @@ class MyApp extends StatelessWidget {
               labelColor: Colors.black,
               labelPadding: EdgeInsets.all(0),
               labelStyle: Theme.of(context).textTheme.headline6
-                .copyWith(fontSize: 18,),
-              unselectedLabelStyle: TextStyle(color: Colors.grey),
+                .copyWith(fontSize: 18, fontWeight: FontWeight.bold,),
+              unselectedLabelStyle: Theme.of(context).textTheme.headline6
+                .copyWith(fontSize: 18, color: Colors.grey[100], fontWeight: FontWeight.bold,),
             )
           ),
           home: MyHomePage(title: 'REVAULT Start Page'),
@@ -101,6 +103,7 @@ class MyApp extends StatelessWidget {
             '/changeprofile': (context) => ChangeProfile(),
             '/languageselect': (context) => LanguageSelect(),
             '/purchasewindow': (context) => PurchaseWindow(),
+            '/phoneverify': (context) => PhoneVerify(),
           },
           // Error 처리용 페이지
           onUnknownRoute: (RouteSettings settings) {

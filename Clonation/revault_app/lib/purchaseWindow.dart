@@ -274,7 +274,6 @@ class PurchaseWindowDetailState extends State<PurchaseWindowDetail> {
       items: itemList,
       onDone: (String json) async {
         print('onDone: $json');
-        // TODO: 결제 검증 요청 보내기
         await verifyBilling(json);
         Navigator.pop(context);
       },

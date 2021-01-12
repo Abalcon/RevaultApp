@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:revault_app/common/aux.dart';
 import 'resetPassword.dart';
 
 // Reset Password - E-mail Verify
@@ -6,11 +7,119 @@ class EmailVerify extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text("E-mail Verification"),
+      body: DefaultTabController(
+        length: 2,
+        child: NestedScrollView(
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              SliverAppBar(
+                expandedHeight: 50.0,
+                floating: false,
+                pinned: true,
+                flexibleSpace: FlexibleSpaceBar(
+                  centerTitle: true,
+                  title: Text("계정찾기"),
+                ),
+              ),
+              SliverPersistentHeader(
+                delegate: _SliverAppBarDelegate(
+                  TabBar(
+                    indicatorColor: Color(0xFF80F208),
+                    tabs: [
+                      Tab(
+                        child: SizedBox.expand(
+                          child: Container(
+                            alignment: Alignment.center,
+                            color: Colors.white,
+                            child: Text("아이디",),
+                          ),
+                        ),
+                      ),
+                      Tab(
+                        child: SizedBox.expand(
+                          child: Container(
+                            alignment: Alignment.center,
+                            color: Colors.white,
+                            child: Text("비밀번호",),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                pinned: true,
+              ),
+            ];
+          },
+          body: TabBarView(
+            children: <Widget> [
+              Center(child: FindUsername()),
+              Center(child: EmailVerifyForm()),
+            ],
+          )
+        ),
       ),
-      body: EmailVerifyForm()
+    );
+  }
+}
+
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+  _SliverAppBarDelegate(this._tabBar);
+
+  final TabBar _tabBar;
+
+  @override
+  double get minExtent => _tabBar.preferredSize.height;
+  @override
+  double get maxExtent => _tabBar.preferredSize.height;
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return new Container(
+      child: _tabBar,
+    );
+  }
+
+  @override
+  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
+    return false;
+  }
+}
+
+class FindUsername extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          '본인인증을 통해 아이디(이메일) 확인 및'
+          + '\n비밀번호를 변경하실 수 있습니다.'
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20.0),
+          child: SizedBox(
+            width: double.infinity,
+            child: RaisedButton(
+              color: Colors.black,
+              textColor: Colors.white,
+              disabledColor: Colors.grey,
+              disabledTextColor: Colors.black,
+              padding: EdgeInsets.all(15.0),
+              onPressed: () {
+                Navigator.pushNamed(
+                  context,
+                  '/phoneverify',
+                  //arguments: PhoneVerifyArguments('forgot', 'forgot'),
+                );
+              },
+              child: Text(
+                "본인인증하기",
+                style: TextStyle(fontSize: 20.0),
+              ),
+            ),
+          )
+        ),
+      ],
     );
   }
 }
@@ -57,7 +166,6 @@ class EmailVerifyFormState extends State<EmailVerifyForm> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              // Start of E-mail input Form
               Form(
                 key: _formKey1,
                   child: Column(
@@ -104,7 +212,6 @@ class EmailVerifyFormState extends State<EmailVerifyForm> {
                     ]
                 )
               ),
-              // End of E-mail input
               divider,
               Text(
                 'Confirmation Code',
@@ -156,7 +263,6 @@ class EmailVerifyFormState extends State<EmailVerifyForm> {
                     ]
                 )
               ),
-              // End of confirmation code input
             ],
           ),
         )

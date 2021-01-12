@@ -34,8 +34,8 @@ class LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
 
   final divider = Divider(
-    color: Colors.grey,
-    height: 20,
+    color: Colors.transparent,
+    height: 30,
     thickness: 3,
     indent: 0,
     endIndent: 0,
@@ -161,7 +161,6 @@ class LoginFormState extends State<LoginForm> {
                           if (response.statusCode == 200 && response.body == "1") {
                             ScaffoldMessenger.of(context)
                               .showSnackBar(SnackBar(content: Text('전화번호가 등록되었습니다')));
-                            //Navigator.pushReplacementNamed(context, '/auctionList');
                             Navigator.pop(context);
                           }
                           else {
@@ -200,7 +199,6 @@ class LoginFormState extends State<LoginForm> {
       var token = await AuthApi.instance.issueAccessToken(authCode);
       AccessTokenStore.instance.toStore(token);
       print(token);
-      //Navigator.pushReplacementNamed(context, '/auctionlist');
       return token;
     }
     catch (e) {
@@ -260,9 +258,7 @@ class LoginFormState extends State<LoginForm> {
                       TextFormField(
                         controller: _idController,
                         decoration: InputDecoration(
-                          //icon: Icon(Icons.person),
-                          //hintText: 'Enter your username',
-                          labelText: '아이디 입력',
+                          hintText: '아이디 입력',
                           border: inputBorder,
                           focusedBorder: inputBorder,
                         ),
@@ -278,9 +274,7 @@ class LoginFormState extends State<LoginForm> {
                         controller: _pwController,
                         obscureText: true,
                         decoration: InputDecoration(
-                          //icon: Icon(Icons.lock),
-                          //hintText: 'Enter your password',
-                          labelText: '비밀번호 입력',
+                          hintText: '비밀번호 입력',
                           border: inputBorder,
                           focusedBorder: inputBorder,
                         ),
@@ -292,7 +286,7 @@ class LoginFormState extends State<LoginForm> {
                         },
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        padding: const EdgeInsets.only(top: 50.0, bottom: 12.0),
                         child: SizedBox(
                           width: double.infinity,
                           child: RaisedButton(
@@ -300,7 +294,7 @@ class LoginFormState extends State<LoginForm> {
                             textColor: Colors.white,
                             disabledColor: Colors.grey,
                             disabledTextColor: Colors.black,
-                            padding: EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(12.0),
                             splashColor: Colors.black,
                             onPressed: () async {
                               if (_formKey.currentState.validate()) {
@@ -333,10 +327,7 @@ class LoginFormState extends State<LoginForm> {
                     ]
                 )
               ),
-              // divider,
-              // Text(
-              //   'Login with Social Accounts',
-              // ),
+              //divider,
               SizedBox(
                 width: double.infinity,
                 child: RaisedButton(
@@ -344,7 +335,7 @@ class LoginFormState extends State<LoginForm> {
                   textColor: Colors.white,
                   disabledColor: Colors.grey,
                   disabledTextColor: Colors.black,
-                  padding: EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(12.0),
                   splashColor: Colors.blueAccent,
                   onPressed: () async {
                     final facebookLogin = FacebookLogin();
@@ -450,99 +441,101 @@ class LoginFormState extends State<LoginForm> {
                   ),
                 ),
               ),
-              Divider(color: Colors.white),
-              SizedBox(
-                width: double.infinity,
-                child: RaisedButton(
-                  color: Color(0xFFFEE500),
-                  textColor: Colors.black,
-                  disabledColor: Colors.grey,
-                  disabledTextColor: Colors.white,
-                  padding: EdgeInsets.all(8.0),
-                  splashColor: Colors.blueAccent,
-                  onPressed: () async {
-                    try {
-                      if (_isKakaoTalkInstalled) {
-                        var token = await AccessTokenStore.instance.fromStore();
-                        if (token.refreshToken == null) {
-                          var result = await _loginWithTalk();
-                          //print(result.toJson());
-                          print(result.accessToken);
+              Padding(
+                padding: EdgeInsets.only(top: 12.0),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: RaisedButton(
+                    color: Color(0xFFFEE500),
+                    textColor: Colors.black,
+                    disabledColor: Colors.grey,
+                    disabledTextColor: Colors.white,
+                    padding: EdgeInsets.all(12.0),
+                    splashColor: Colors.blueAccent,
+                    onPressed: () async {
+                      try {
+                        if (_isKakaoTalkInstalled) {
+                          var token = await AccessTokenStore.instance.fromStore();
+                          if (token.refreshToken == null) {
+                            var result = await _loginWithTalk();
+                            //print(result.toJson());
+                            print(result.accessToken);
+                          }
                         }
-                      }
-                      else {
-                        //AuthCodeClient.instance.retrieveAuthCode();
-                        var token = await AccessTokenStore.instance.fromStore();
-                        if (token.refreshToken == null) {
-                          var result = await _loginWithKakao();
-                          //print(result.toJson());
-                          print(result.accessToken);
+                        else {
+                          //AuthCodeClient.instance.retrieveAuthCode();
+                          var token = await AccessTokenStore.instance.fromStore();
+                          if (token.refreshToken == null) {
+                            var result = await _loginWithKakao();
+                            //print(result.toJson());
+                            print(result.accessToken);
+                          }
                         }
-                      }
-                      User currUser = await UserApi.instance.me();
-                      print(currUser.toString());
-                      var currUserJson = currUser.toJson();
-                      String email = currUserJson['kakao_account']['email'];
-                      String id = currUserJson['id'].toString();
+                        User currUser = await UserApi.instance.me();
+                        print(currUser.toString());
+                        var currUserJson = currUser.toJson();
+                        String email = currUserJson['kakao_account']['email'];
+                        String id = currUserJson['id'].toString();
 
-                      final signupResult = await trySignUp(
-                        email, id, email, '');
-                        String session = signupResult.headers['set-cookie'].split(';')[0];
-                        await storage.write(
-                          key: "session",
-                          value: session
-                        );
+                        final signupResult = await trySignUp(
+                          email, id, email, '');
+                          String session = signupResult.headers['set-cookie'].split(';')[0];
+                          await storage.write(
+                            key: "session",
+                            value: session
+                          );
 
-                      if (signupResult.statusCode == 200 || signupResult.statusCode == 200) {
-                        // 이미 카카오 계정으로 가입했을 경우
-                        if (signupResult.body == "-1") {
-                          var fcmToken = await storage.read(key: "fcm");
-                          var loginResponse = await tryLogin(email, id, fcmToken);
-                          setState(() {
-                            loginResult = loginResponse.body;
-                          });
-                          if(loginResult == "-1") {
-                            ScaffoldMessenger.of(context)
-                              .showSnackBar(SnackBar(content: Text('아이디 또는 비밀번호가 일치하지 않습니다')));
+                        if (signupResult.statusCode == 200 || signupResult.statusCode == 200) {
+                          // 이미 카카오 계정으로 가입했을 경우
+                          if (signupResult.body == "-1") {
+                            var fcmToken = await storage.read(key: "fcm");
+                            var loginResponse = await tryLogin(email, id, fcmToken);
+                            setState(() {
+                              loginResult = loginResponse.body;
+                            });
+                            if(loginResult == "-1") {
+                              ScaffoldMessenger.of(context)
+                                .showSnackBar(SnackBar(content: Text('아이디 또는 비밀번호가 일치하지 않습니다')));
+                              return;
+                            }
+
+                            await storage.write(
+                              key: "session",
+                              value: loginResponse.headers['set-cookie'].split(';')[0]
+                            );
+                            
+                            Navigator.pushReplacementNamed(context, '/auctionlist');
                             return;
                           }
 
-                          await storage.write(
-                            key: "session",
-                            value: loginResponse.headers['set-cookie'].split(';')[0]
-                          );
-                          
+                          // 신규 가입했을 경우
+                          await _showEnterPhoneModal(session);
                           Navigator.pushReplacementNamed(context, '/auctionlist');
                           return;
                         }
 
-                        // 신규 가입했을 경우
-                        await _showEnterPhoneModal(session);
-                        Navigator.pushReplacementNamed(context, '/auctionlist');
-                        return;
+                        throw Exception('서비스 로그인에 실패했습니다. 다시 시도해주세요');
                       }
-
-                      throw Exception('서비스 로그인에 실패했습니다. 다시 시도해주세요');
-                    }
-                    catch (e) {
-                      ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBar(content: Text('카카오 로그인 실패: $e')));
-                    }
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        'images/kakao_login_icon.png',
-                        width: 28.0,
-                        fit: BoxFit.cover,
-                      ),
-                      VerticalDivider(width: 12.0),
-                      Text(
-                        "카카오 계정으로 로그인",
-                        style: TextStyle(fontSize: 18.0),
-                      ),
-                    ],
+                      catch (e) {
+                        ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text('카카오 로그인 실패: $e')));
+                      }
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          'images/kakao_login_icon.png',
+                          width: 28.0,
+                          fit: BoxFit.cover,
+                        ),
+                        VerticalDivider(width: 12.0),
+                        Text(
+                          "카카오 계정으로 로그인",
+                          style: TextStyle(fontSize: 18.0),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

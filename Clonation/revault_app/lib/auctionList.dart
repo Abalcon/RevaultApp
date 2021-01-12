@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:revault_app/common/aux.dart';
-import 'semiRoundedButton.dart';
 import 'auctionGood.dart';
 
 List<AuctionGood> parseGoodList(String responseBody) {
@@ -56,7 +55,7 @@ class AuctionList extends StatelessWidget {
                     )
                   ),
                   IconButton(
-                    icon: Icon(Icons.shopping_cart),
+                    icon: Icon(Icons.person_outline_outlined),
                     onPressed: () => Navigator.pushNamed(context, '/mypage'),
                   ),
                 ],
@@ -64,6 +63,7 @@ class AuctionList extends StatelessWidget {
               SliverPersistentHeader(
                 delegate: _SliverAppBarDelegate(
                   TabBar(
+                    indicatorWeight: 3,
                     indicatorColor: Color(0xFF80F208),
                     tabs: [
                       Tab(
@@ -248,14 +248,59 @@ class _AuctionGoodsState extends State<AuctionGoods> {
           height: 90.0,
           alignment: Alignment.topLeft,
           child: Container(
-            width: 90.0,
-            height: 40.0,
-            child: new SemiRoundedBorderButton(
-              borderSide: const BorderSide(color: Colors.red, width: 0),
-              radius: const Radius.circular(20.0),
-              background: Colors.red,
+            width: 80.0,
+            height: 33.0,
+            child: ClipRect(
+              child: DecoratedBox(
+                decoration: ShapeDecoration(
+                  color: Color(0xFFE92D2D),
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide.none,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(8),
+                    )
+                  )
+                ),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.schedule,
+                        color: Colors.white,
+                        size: 16
+                      ),
+                      Text(
+                        remainingTimeTextFromDate(good.endDate),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        Container(
+          width: 80.0,
+          height: 90.0,
+          alignment: Alignment.bottomLeft,
+          child: ClipRect(
+            child: DecoratedBox(
+              decoration: ShapeDecoration(
+                color: Color(0xFF2C4FDE),
+                shape: RoundedRectangleBorder(
+                  side: BorderSide.none,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(8),
+                  )
+                )
+              ),
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                padding: EdgeInsets.symmetric(horizontal: 6, vertical: 8),
                 child: Row(
                   children: [
                     Icon(
@@ -272,41 +317,91 @@ class _AuctionGoodsState extends State<AuctionGoods> {
                     ),
                   ],
                 ),
-              )
+              ),
             ),
-          ),
-        ),
-        Container(
-          width: 100.0,
-          height: 90.0,
-          alignment: Alignment.bottomLeft,
-          child: new SemiRoundedBorderButton(
-            borderSide: const BorderSide(color: Color(0xFF80F208), width: 0),
-            radius: const Radius.circular(20.0),
-            background: Color(0xFF80F208),
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.military_tech,
-                    color: Colors.white,
-                    size: 16
-                  ),
-                  Text(
-                    '100개 한정',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12
-                    ),
-                  ),
-                ],
-              )
-            )
           ),
         ),
       ]
     );
+  }
+
+  Widget makeDetailButton(AuctionGood good) {
+    switch (good.aucState) {
+      case 0:
+        return RaisedButton(
+          color: Color(0xFF80F208),
+          textColor: Colors.black,
+          disabledColor: Colors.grey,
+          disabledTextColor: Colors.grey[700],
+          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 14.0),
+          splashColor: Colors.greenAccent,
+          onPressed: () => Navigator.pushNamed(
+            context, '/auctiongooddetail',
+            arguments: good.auctionID // 2020-11-17 djkim: 상품 ID 가져오기
+          ),
+          child: Text(
+            "시작시 알림",
+            style: TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        );
+      case 1: 
+        return RaisedButton(
+          color: Color(0xFF80F208),
+          textColor: Colors.black,
+          disabledColor: Colors.grey,
+          disabledTextColor: Colors.grey[700],
+          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 14.0),
+          splashColor: Colors.greenAccent,
+          onPressed: () => Navigator.pushNamed(
+            context, '/auctiongooddetail',
+            arguments: good.auctionID // 2020-11-17 djkim: 상품 ID 가져오기
+          ),
+          child: Text(
+            "경매 참여",
+            style: TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        );
+      case 2:
+        return RaisedButton(
+          color: Colors.black,
+          textColor: Colors.white,
+          disabledColor: Colors.grey,
+          disabledTextColor: Colors.grey[700],
+          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 14.0),
+          splashColor: Colors.greenAccent,
+          onPressed: () => Navigator.pushNamed(
+            context, '/auctiongooddetail',
+            arguments: good.auctionID // 2020-11-17 djkim: 상품 ID 가져오기
+          ),
+          child: Text(
+            "기록 보기",
+            style: TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        );
+      default:
+        return RaisedButton(
+          color: Color(0xFF80F208),
+          textColor: Colors.black,
+          disabledColor: Colors.grey,
+          disabledTextColor: Colors.grey[700],
+          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 14.0),
+          splashColor: Colors.greenAccent,
+          onPressed: () {},
+          child: Text(
+            "잘못된 정보",
+            style: TextStyle(fontSize: 16.0),
+          ),
+        );
+    }
   }
 
   Widget detailSection(AuctionGood good) {
@@ -346,7 +441,7 @@ class _AuctionGoodsState extends State<AuctionGoods> {
                       good.price != null ? '${good.price}원' : 'priceless',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 18,
+                        fontSize: 16,
                       )
                     ),
                     VerticalDivider(width: 5),
@@ -362,11 +457,11 @@ class _AuctionGoodsState extends State<AuctionGoods> {
                           )
                         ),
                         child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+                          padding: EdgeInsets.fromLTRB(5, 1, 5, 2),
                           child: Text(
                             '10% 기부',
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 11,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             )
@@ -379,22 +474,7 @@ class _AuctionGoodsState extends State<AuctionGoods> {
               ],
             ),
           ),
-          RaisedButton(
-            color: Color(0xFF80F208),
-            textColor: Colors.white,
-            disabledColor: Colors.grey,
-            disabledTextColor: Colors.black,
-            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 14.0),
-            splashColor: Colors.greenAccent,
-            onPressed: () => Navigator.pushNamed(
-              context, '/auctiongooddetail',
-              arguments: good.auctionID // 2020-11-17 djkim: 상품 ID 가져오기
-            ),
-            child: Text(
-              "자세히 보기",
-              style: TextStyle(fontSize: 16.0),
-            ),
-          )
+          makeDetailButton(good),
         ]
       )
     );

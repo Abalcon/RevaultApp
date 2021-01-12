@@ -468,95 +468,99 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
 
   Widget biddingSection(AuctionGood good) {
     //final singleDigitWidget = SingleDigit();
-    return Column(
-      children: [
-        FlipPanel.stream(
-          itemStream: channel.stream,
-          itemBuilder: (context, value) => Container(
-            color: Colors.black,
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
-            child: Text(
-              (value != "connected") ? '$value' : '${good.price}',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 30.0,
-                color: Colors.white
-              ),
-            ),
-          ),
-          initValue: good.price,
-        ),
-        Text(
-          good.biddingList.length > 0 ?
-          '${good.biddingList[0].username} 님께서 최근 입찰하셨습니다.'
-          : '아직 입찰한 사람이 없습니다. 지금 입찰해보세요!'
-        ),
-        // 말풍선 넣고 싶다 Icon(Icons.talk),
-        RaisedButton(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(18.0),
-            side: BorderSide(color: Colors.green)
-          ),
-          color: Color(0xFF80F208),
-          textColor: Colors.white,
-          disabledColor: Colors.grey,
-          disabledTextColor: Colors.black,
-          padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 80.0),
-          splashColor: Colors.greenAccent,
-          onPressed: () {
-            if (currentPrice > 0)
-              _showBiddingModal(currentPrice, good.unitPrice);
-            else
-              _showBiddingModal(good.price, good.unitPrice);
-          },
-          child: Text(
-            "BID UP",
-            style: TextStyle(
-              fontSize: 20.0,
-              fontWeight: FontWeight.bold
-            ),
-          ),
-        ),
-        (currUser.getName() == good.autoUser && good.autoPrice > good.price) ?
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.cached,
-              color: Color(0xFF80F208),
-            ),
-            Text(
-              "${good.autoPrice}원 까지 자동입찰 중",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            )
-          ]
-        )
-        : RichText(
-          text: TextSpan(
-            text: '자동입찰 설정하기',
-            style: TextStyle(
+    if (channel != null) {
+      return Column(
+        children: [
+          FlipPanel.stream(
+            itemStream: channel.stream,
+            itemBuilder: (context, value) => Container(
               color: Colors.black,
-              decoration: TextDecoration.underline
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
+              child: Text(
+                (value != "connected") ? '$value' : '${good.price}',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30.0,
+                  color: Colors.white
+                ),
+              ),
             ),
-            recognizer: TapGestureRecognizer()
-              ..onTap = () {
-                showModalBottomSheet(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return Container(
-                      height: MediaQuery.of(context).size.height * 3 / 5,
-                      child: AutoBiddingForm(goodID: widget.goodID, price: good.price,
-                        unit: good.unitPrice, session: currUser.getSession(), parent: this),
-                    );
-                  }
-                );
-              }
+            initValue: good.price,
           ),
-        ),
-      ],
-    );
+          Text(
+            good.biddingList.length > 0 ?
+            '${good.biddingList[0].username} 님께서 최근 입찰하셨습니다.'
+            : '아직 입찰한 사람이 없습니다. 지금 입찰해보세요!'
+          ),
+          // 말풍선 넣고 싶다 Icon(Icons.talk),
+          RaisedButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18.0),
+              side: BorderSide(color: Colors.green)
+            ),
+            color: Color(0xFF80F208),
+            textColor: Colors.white,
+            disabledColor: Colors.grey,
+            disabledTextColor: Colors.black,
+            padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 80.0),
+            splashColor: Colors.greenAccent,
+            onPressed: () {
+              if (currentPrice > 0)
+                _showBiddingModal(currentPrice, good.unitPrice);
+              else
+                _showBiddingModal(good.price, good.unitPrice);
+            },
+            child: Text(
+              "BID UP",
+              style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold
+              ),
+            ),
+          ),
+          (currUser.getName() == good.autoUser && good.autoPrice > good.price) ?
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.cached,
+                color: Color(0xFF80F208),
+              ),
+              Text(
+                "${good.autoPrice}원 까지 자동입찰 중",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              )
+            ]
+          )
+          : RichText(
+            text: TextSpan(
+              text: '자동입찰 설정하기',
+              style: TextStyle(
+                color: Colors.black,
+                decoration: TextDecoration.underline
+              ),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Container(
+                        height: MediaQuery.of(context).size.height * 3 / 5,
+                        child: AutoBiddingForm(goodID: widget.goodID, price: good.price,
+                          unit: good.unitPrice, session: currUser.getSession(), parent: this),
+                      );
+                    }
+                  );
+                }
+            ),
+          ),
+        ],
+      );
+    }
+
+    return CircularProgressIndicator();
   }
 
   Widget recordSection(List<Bidding> bidRecord) {

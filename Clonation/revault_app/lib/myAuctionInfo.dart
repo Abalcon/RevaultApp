@@ -148,7 +148,7 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
                       )
                     ),
                     Text(
-                      '${donation}원',
+                      '$donation원',
                       style: TextStyle(
                         fontSize: 16, 
                         fontWeight: FontWeight.bold,
