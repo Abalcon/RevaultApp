@@ -74,17 +74,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
           child: Center(
             child: Column(
               children: [
-                Text(
-                  '원하시는 입찰가를 입력하세요',
-                  style: TextStyle(
-                    fontSize: 22, 
-                    fontWeight: FontWeight.bold
-                  )
-                ),
-                Divider(
-                  indent: 50,
-                  endIndent: 50,
-                ),
+                Icon(Icons.verified_outlined, size: 100, color: Colors.black),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -92,16 +82,16 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                     Text(
                       ' 현재 입찰가: $currPrice' + '원',
                       style: TextStyle(
-                        fontSize: 16, 
+                        fontSize: 18, 
                         fontWeight: FontWeight.bold
                       )
                     )
                   ],
                 ),
                 Text(
-                  '입찰가는 $unitPrice' + '원 단위로 올릴 수 있습니다',
+                  '${currPrice + unitPrice}원으로 입찰하시겠습니까?',
                   style: TextStyle(
-                    fontSize: 16, 
+                    fontSize: 18, 
                     fontWeight: FontWeight.bold
                   )
                 ),
@@ -278,11 +268,14 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                           children: [
                             Row(
                               children: [
-                                CircleAvatar(
-                                  radius: 20.0,
-                                  backgroundImage:
-                                    NetworkImage(comments[i].profile),
-                                  backgroundColor: Colors.transparent,
+                                Padding(
+                                  padding: EdgeInsets.only(left: 12.0, right: 5.0),
+                                  child: CircleAvatar(
+                                    radius: 20.0,
+                                    backgroundImage:
+                                      NetworkImage(comments[i].profile),
+                                    backgroundColor: Colors.transparent,
+                                  ),
                                 ),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -475,12 +468,12 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
             itemStream: channel.stream,
             itemBuilder: (context, value) => Container(
               color: Colors.black,
-              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
               child: Text(
                 (value != "connected") ? '$value' : '${good.price}',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 30.0,
+                  fontSize: 40.0,
                   color: Colors.white
                 ),
               ),
@@ -499,9 +492,9 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
               side: BorderSide(color: Colors.green)
             ),
             color: Color(0xFF80F208),
-            textColor: Colors.white,
+            textColor: Colors.black,
             disabledColor: Colors.grey,
-            disabledTextColor: Colors.black,
+            disabledTextColor: Colors.grey[600],
             padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 80.0),
             splashColor: Colors.greenAccent,
             onPressed: () {
@@ -511,7 +504,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                 _showBiddingModal(good.price, good.unitPrice);
             },
             child: Text(
-              "BID UP",
+              "BIDS UP",
               style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold
@@ -595,12 +588,12 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                           child: Row(
                             children: [
                               CircleAvatar(
-                              radius: 20.0,
-                              backgroundImage:
-                                AssetImage(
-                                  'images/revault_square_logo.jpg',
-                                ),
-                              backgroundColor: Colors.transparent,
+                                radius: 20.0,
+                                backgroundImage:
+                                  AssetImage(
+                                    'images/revault_square_logo.jpg',
+                                  ),
+                                backgroundColor: Colors.transparent,
                               ),
                               VerticalDivider(),
                               Text(
@@ -753,12 +746,15 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
         ),
         Row(
           children: [
-            CircleAvatar(
-              radius: 20.0,
-              backgroundImage: good.commentList.length > 0
-                ? NetworkImage(good.commentList[0].profile)
-                : NetworkImage('https://ibsoft.site/profile/default_profile.jpg'),
-              backgroundColor: Colors.transparent,
+            Padding(
+              padding: EdgeInsets.only(left: 12.0, right: 5.0),
+              child: CircleAvatar(
+                radius: 20.0,
+                backgroundImage: good.commentList.length > 0
+                  ? NetworkImage(good.commentList[0].profile)
+                  : NetworkImage('https://ibsoft.site/profile/default_profile.jpg'),
+                backgroundColor: Colors.transparent,
+              ),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -976,8 +972,6 @@ class BiddingForm extends StatefulWidget {
 }
 
 class BiddingFormState extends State<BiddingForm> {
-  
-  final _formKey = GlobalKey<FormState>();
   int selectedPrice;
 
   Future<http.Response> addBidding(int id, int price) async {
@@ -1003,120 +997,37 @@ class BiddingFormState extends State<BiddingForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  children: [
-                    Text(
-                      '희망 입찰가',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold
-                      ),
-                    ),
-                    Text(
-                      selectedPrice.toString(),
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold
-                      ),
-                    ),
-                  ]
-                ),
-                VerticalDivider(),
-                Column(
-                  children: [
-                    RaisedButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                        side: BorderSide(color: Colors.green)
-                      ),
-                      color: Color(0xFF80F208),
-                      textColor: Colors.white,
-                      disabledColor: Colors.grey,
-                      disabledTextColor: Colors.black,
-                      padding: EdgeInsets.all(8.0),
-                      splashColor: Colors.transparent,
-                      onPressed: () {
-                        // (selectedPrice == widget.price + widget.unit)
-                        setState(() {
-                          selectedPrice += widget.unit;
-                        });
-                      },
-                      child: Text(
-                        '+${widget.unit}원',
-                        style: TextStyle(fontSize: 16.0)
-                      ),
-                    ),
-                    RaisedButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                        side: BorderSide(color: Colors.green)
-                      ),
-                      color: Color(0xFF80F208),
-                      textColor: Colors.white,
-                      disabledColor: Colors.grey,
-                      disabledTextColor: Colors.black,
-                      padding: EdgeInsets.all(8.0),
-                      splashColor: Colors.transparent,
-                      onPressed: (selectedPrice == widget.price + widget.unit) ? null
-                        : () {
-                        setState(() {
-                          selectedPrice -= widget.unit;
-                        });
-                      },
-                      child: Text(
-                        '-${widget.unit}원',
-                        style: TextStyle(fontSize: 16.0)
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            RaisedButton(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18.0),
-                side: BorderSide(color: Colors.black)
-              ),
-              color: Colors.black,
-              textColor: Colors.white,
-              disabledColor: Colors.grey,
-              disabledTextColor: Colors.black,
-              padding: EdgeInsets.all(8.0),
-              splashColor: Colors.transparent,
-              onPressed: () async {
-                if (_formKey.currentState.validate()) {
-                  http.Response response = await addBidding(widget.goodID, selectedPrice);
-                  if (response.statusCode == 200 && response.body == "1") {
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBar(content: Text('입찰가 제출에 성공했습니다')));
-                    this.widget.parent.setState(() {
-                      this.widget.parent.currentGood = fetchGood(widget.goodID);
-                      this.widget.parent.currentPrice = selectedPrice;
-                    });
-                    Navigator.pop(context, "Changed");
-                  }
-                  else {
-                    ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text('오류가 발생했습니다. 다시 시도해주세요')));
-                  }
-                }
-              },
-              child: Text(
-                '입찰가 제출',
-                style: TextStyle(fontSize: 16.0)
-              ),
-            ),
-          ]
-        )
-      )
+    return RaisedButton(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(25.0),
+        side: BorderSide(color: Colors.black)
+      ),
+      color: Colors.black,
+      textColor: Colors.white,
+      disabledColor: Colors.grey,
+      disabledTextColor: Colors.black,
+      padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 50.0),
+      splashColor: Colors.transparent,
+      onPressed: () async {
+        http.Response response = await addBidding(widget.goodID, selectedPrice);
+        if (response.statusCode == 200 && response.body == "1") {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('입찰가 제출에 성공했습니다')));
+          this.widget.parent.setState(() {
+            this.widget.parent.currentGood = fetchGood(widget.goodID);
+            this.widget.parent.currentPrice = selectedPrice;
+          });
+          Navigator.pop(context, "Changed");
+        }
+        else {
+          ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('오류가 발생했습니다. 다시 시도해주세요')));
+        }
+      },
+      child: Text(
+        '입찰가 제출',
+        style: TextStyle(fontSize: 18.0)
+      ),
     );
   }
 }
@@ -1136,13 +1047,24 @@ class AutoBiddingForm extends StatefulWidget {
   }
 }
 
-class AutoBiddingFormState extends State<AutoBiddingForm> {
+class PriceSelectPair {
+  int price;
+  bool isSelected;
 
+  PriceSelectPair(
+    this.price,
+    this.isSelected,
+  );
+}
+
+class AutoBiddingFormState extends State<AutoBiddingForm> {
   final _formKey = GlobalKey<FormState>();
   int selectedPrice;
 
+  List<PriceSelectPair> _priceList = <PriceSelectPair>[];
+
   Future<http.Response> addAutoBidding(int id, int price) async {
-    print("자동 입찰: " + id.toString() + "번 상품에 " + price.toString() + "원");
+    //print("자동 입찰: " + id.toString() + "번 상품에 " + price.toString() + "원");
     var map = new Map<String, dynamic>();
     map['auction_id'] = id.toString();
     map['price'] = price.toString();
@@ -1156,8 +1078,64 @@ class AutoBiddingFormState extends State<AutoBiddingForm> {
     );
   }
 
-  @override void initState() {
+  Widget _buildRow(PriceSelectPair psPair, int index) {
+    return GestureDetector(
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 5,),
+        color: _priceList[index].isSelected ?
+          Color(0xFF80F208) : Colors.transparent,
+        child: Center(
+          child: Text(
+            '${psPair.price}원',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+      onTap: () {
+        var selIndex = _priceList.indexWhere((element) => element.isSelected);
+        if (selIndex > -1) {
+          setState(() {
+            _priceList[selIndex].isSelected = false;
+          });
+        }
+        setState(() {
+          _priceList[index].isSelected = true;
+          selectedPrice = _priceList[index].price;
+        });
+      }
+    );
+  }
+
+  Widget _buildAvailablePrices() {
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemBuilder: (BuildContext _context, int i) {
+        if (i.isOdd) {
+          return Divider(
+            height: 1,
+            thickness: 1,
+          );
+        }
+
+        final int index = i ~/ 2;
+        if (index >= _priceList.length) {
+          for (int i = 0; i < 10; i++) {
+            int newPrice = _priceList[_priceList.length - 1].price + widget.unit;
+            _priceList.add(PriceSelectPair(newPrice, false));
+          }
+        }
+        return _buildRow(_priceList[index], index);
+      },
+    );
+  }
+
+  @override
+  void initState() {
     selectedPrice = widget.price + widget.unit;
+    _priceList.add(PriceSelectPair(selectedPrice, false));
     super.initState();
   }
 
@@ -1204,132 +1182,9 @@ class AutoBiddingFormState extends State<AutoBiddingForm> {
               indent: 50,
               endIndent: 50,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  children: [
-                    Text(
-                      '희망 입찰가',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold
-                      ),
-                    ),
-                    Text(
-                      selectedPrice.toString(),
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold
-                      ),
-                    ),
-                  ]
-                ),
-                VerticalDivider(),
-                Column(
-                  children: [
-                    RaisedButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                        side: BorderSide(color: Colors.green)
-                      ),
-                      color: Color(0xFF80F208),
-                      textColor: Colors.white,
-                      disabledColor: Colors.grey,
-                      disabledTextColor: Colors.black,
-                      padding: EdgeInsets.all(8.0),
-                      splashColor: Colors.transparent,
-                      onPressed: () {
-                        setState(() {
-                          selectedPrice += 10 * widget.unit;
-                        });
-                      },
-                      child: Transform.rotate(
-                        angle: 270 * pi / 180,
-                        child: Icon(
-                            Icons.fast_forward,
-                            color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    RaisedButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                        side: BorderSide(color: Colors.green)
-                      ),
-                      color: Color(0xFF80F208),
-                      textColor: Colors.white,
-                      disabledColor: Colors.grey,
-                      disabledTextColor: Colors.black,
-                      padding: EdgeInsets.all(8.0),
-                      splashColor: Colors.transparent,
-                      onPressed: () {
-                        setState(() {
-                          selectedPrice += widget.unit;
-                        });
-                      },
-                      child: Transform.rotate(
-                        angle: 270 * pi / 180,
-                        child: Icon(
-                          Icons.play_arrow,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    RaisedButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                        side: BorderSide(color: Colors.green)
-                      ),
-                      color: Color(0xFF80F208),
-                      textColor: Colors.white,
-                      disabledColor: Colors.grey,
-                      disabledTextColor: Colors.black,
-                      padding: EdgeInsets.all(8.0),
-                      splashColor: Colors.transparent,
-                      onPressed: (selectedPrice == widget.price + widget.unit) ? null
-                        : () {
-                        setState(() {
-                          selectedPrice -= widget.unit;
-                        });
-                      },
-                      child: Transform.rotate(
-                        angle: 90 * pi / 180,
-                        child: Icon(
-                          Icons.play_arrow,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    RaisedButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                        side: BorderSide(color: Colors.green)
-                      ),
-                      color: Color(0xFF80F208),
-                      textColor: Colors.white,
-                      disabledColor: Colors.grey,
-                      disabledTextColor: Colors.black,
-                      padding: EdgeInsets.all(8.0),
-                      splashColor: Colors.transparent,
-                      onPressed: (selectedPrice >= widget.price + 10 * widget.unit)
-                        ? () {
-                          setState(() {
-                            selectedPrice -= 10 * widget.unit;
-                          });
-                        }
-                      : null,
-                      child: Transform.rotate(
-                        angle: 90 * pi / 180,
-                        child: Icon(
-                          Icons.fast_forward,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+            Container(
+              height: 160,
+              child: _buildAvailablePrices(),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -1360,11 +1215,11 @@ class AutoBiddingFormState extends State<AutoBiddingForm> {
                   padding: EdgeInsets.all(8.0),
                   splashColor: Colors.transparent,
                   onPressed: () async {
-                    if (_formKey.currentState.validate()) {
+                    if (selectedPrice != null) {
                       http.Response response = await addAutoBidding(widget.goodID, selectedPrice);
                       if (response.statusCode == 200 && response.body == "1") {
                         ScaffoldMessenger.of(context)
-                            .showSnackBar(SnackBar(content: Text('자동 입찰 등록에 성공했습니다')));
+                          .showSnackBar(SnackBar(content: Text('자동 입찰 등록에 성공했습니다')));
                         this.widget.parent.setState(() {
                           this.widget.parent.currentGood = fetchGood(widget.goodID);
                         });
@@ -1372,8 +1227,12 @@ class AutoBiddingFormState extends State<AutoBiddingForm> {
                       }
                       else {
                         ScaffoldMessenger.of(context)
-                            .showSnackBar(SnackBar(content: Text('오류가 발생했습니다. 다시 시도해주세요')));
+                          .showSnackBar(SnackBar(content: Text('오류가 발생했습니다. 다시 시도해주세요')));
                       }
+                    }
+                    else {
+                      ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text('원하는 가격을 선택하세요')));
                     }
                   },
                   child: Text(

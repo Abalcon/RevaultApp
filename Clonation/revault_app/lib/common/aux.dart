@@ -102,10 +102,10 @@ Future<UserInfo> getInfo(String session) async {
   );
 }
 
-// Duration remainingTime(DateTime deadline) {
-//   DateTime now = DateTime.now();
-//   return deadline.difference(now);
-// }
+Duration remainingTime(DateTime deadline) {
+  DateTime now = DateTime.now();
+  return deadline.difference(now);
+}
 
 // 2020-11-20 시간 표기 통합 함수
 String timeTextBuilder(DateTime date, bool isReverse, String dayText, String hourText,
@@ -126,20 +126,17 @@ String timeTextBuilder(DateTime date, bool isReverse, String dayText, String hou
   return otherwise;
 }
 
-String remainingTimeTextFromDate(DateTime deadline) {
-  DateTime now = DateTime.now();
-  Duration timeLeft = deadline.difference(now);
-
+String remainingTimeTextFromDuration(Duration timeLeft) {
   if (timeLeft.inDays > 0) 
-    return timeLeft.inDays.toString() + '일 남음';
+    return timeLeft.inDays.toString() + 'd ' + timeLeft.inHours.toString() + 'h';
   else if (timeLeft.inHours > 0) 
-    return timeLeft.inHours.toString() + '시간 ' + timeLeft.inMinutes.toString() + '분 남음';
+    return timeLeft.inHours.toString() + 'h ' + timeLeft.inMinutes.toString() + 'm';
   else if (timeLeft.inMinutes > 0) 
-    return timeLeft.inMinutes.toString() + '분 남음';
+    return timeLeft.inMinutes.toString() + 'm';
   else if (timeLeft.inSeconds > 0)
-    return timeLeft.inSeconds.toString() + '초 남음';
+    return timeLeft.inSeconds.toString() + 's';
 
-  return '입찰 마감';
+  return 'Ended';
 }
 
 // 댓글 작성일 ago 형으로 표시

@@ -235,6 +235,8 @@ class _AuctionGoodsState extends State<AuctionGoods> {
       );
     }
 
+    var rt = remainingTime(good.endDate);
+
     return Stack(
       children: [
         Image.asset(
@@ -248,12 +250,13 @@ class _AuctionGoodsState extends State<AuctionGoods> {
           height: 90.0,
           alignment: Alignment.topLeft,
           child: Container(
-            width: 80.0,
+            width: 75.0,
             height: 33.0,
             child: ClipRect(
               child: DecoratedBox(
                 decoration: ShapeDecoration(
-                  color: Color(0xFFE92D2D),
+                  color: (rt.inDays > 2) ?
+                    Color(0xFF2C4FDE) : Color(0xFFE92D2D),
                   shape: RoundedRectangleBorder(
                     side: BorderSide.none,
                     borderRadius: BorderRadius.all(
@@ -271,7 +274,7 @@ class _AuctionGoodsState extends State<AuctionGoods> {
                         size: 16
                       ),
                       Text(
-                        remainingTimeTextFromDate(good.endDate),
+                        remainingTimeTextFromDuration(rt),
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 12
@@ -284,43 +287,43 @@ class _AuctionGoodsState extends State<AuctionGoods> {
             ),
           ),
         ),
-        Container(
-          width: 80.0,
-          height: 90.0,
-          alignment: Alignment.bottomLeft,
-          child: ClipRect(
-            child: DecoratedBox(
-              decoration: ShapeDecoration(
-                color: Color(0xFF2C4FDE),
-                shape: RoundedRectangleBorder(
-                  side: BorderSide.none,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(8),
-                  )
-                )
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 6, vertical: 8),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.schedule,
-                      color: Colors.white,
-                      size: 16
-                    ),
-                    Text(
-                      remainingTimeTextFromDate(good.endDate),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
+        // Container(
+        //   width: 75.0,
+        //   height: 90.0,
+        //   alignment: Alignment.bottomLeft,
+        //   child: ClipRect(
+        //     child: DecoratedBox(
+        //       decoration: ShapeDecoration(
+        //         color: Color(0xFF2C4FDE),
+        //         shape: RoundedRectangleBorder(
+        //           side: BorderSide.none,
+        //           borderRadius: BorderRadius.all(
+        //             Radius.circular(8),
+        //           )
+        //         )
+        //       ),
+        //       child: Padding(
+        //         padding: EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+        //         child: Row(
+        //           children: [
+        //             Icon(
+        //               Icons.schedule,
+        //               color: Colors.white,
+        //               size: 16
+        //             ),
+        //             Text(
+        //               remainingTimeTextFromDuration(rt),
+        //               style: TextStyle(
+        //                 color: Colors.white,
+        //                 fontSize: 12
+        //               ),
+        //             ),
+        //           ],
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+        // ),
       ]
     );
   }
