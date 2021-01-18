@@ -76,8 +76,8 @@ class ChangeAddressFormState extends State<ChangeAddressForm> {
     _nameCtrl.text = widget.name;
     _phoneCtrl.text = widget.phone;
     // Example: "[06530] 서울시 서초구 신반포로45길 54 경미빌딩 지하1층"
-    _zipCtrl.text = widget.address.substring(1, 6);
-    _addrCtrl.text = widget.address.substring(8);
+    _zipCtrl.text = (widget.address == null) ? '' : widget.address.substring(1, 6);
+    _addrCtrl.text = (widget.address == null) ? '' : widget.address.substring(8);
     print("주소 로드 성공");
 
     super.initState();

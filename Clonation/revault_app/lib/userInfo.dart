@@ -16,6 +16,7 @@ class UserInfo {
   bool alarmPrice;
   bool alarmStatus;
   bool alarmComment;
+  int snsCode;
 
   UserInfo({
     @required this.ref,
@@ -31,6 +32,7 @@ class UserInfo {
     @required this.alarmPrice,
     @required this.alarmStatus,
     @required this.alarmComment,
+    @required this.snsCode,
   });
 
   factory UserInfo.fromJson(Map<String, dynamic> json) {
@@ -55,6 +57,7 @@ class UserInfo {
       alarmPrice: json['alarm_price'],
       alarmStatus: json['alarm_status'],
       alarmComment: json['alarm_comment'],
+      snsCode: json['sns_code'],
     );
   }
 }

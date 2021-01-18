@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:revault_app/common/aux.dart';
 import 'resetPassword.dart';
 
-// Reset Password - E-mail Verify
 class EmailVerify extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -89,37 +88,58 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 class FindUsername extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          '본인인증을 통해 아이디(이메일) 확인 및'
-          + '\n비밀번호를 변경하실 수 있습니다.'
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0),
-          child: SizedBox(
-            width: double.infinity,
-            child: RaisedButton(
-              color: Colors.black,
-              textColor: Colors.white,
-              disabledColor: Colors.grey,
-              disabledTextColor: Colors.black,
-              padding: EdgeInsets.all(15.0),
-              onPressed: () {
-                Navigator.pushNamed(
-                  context,
-                  '/phoneverify',
-                  arguments: PhoneVerifyArguments('forgot', 'forgot'),
-                );
-              },
-              child: Text(
-                "본인인증하기",
-                style: TextStyle(fontSize: 20.0),
+    return Padding(
+      padding: EdgeInsets.fromLTRB(10, 40, 10, 0),
+      child: Column(
+        children: [
+          Text(
+            '본인인증을 통해 아이디(이메일) 확인 및'
+            + '\n비밀번호를 변경하실 수 있습니다.',
+            style: TextStyle(
+              fontSize: 16,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 36.0),
+            child: SizedBox(
+              width: double.infinity,
+              child: RaisedButton(
+                color: Colors.black,
+                textColor: Colors.white,
+                disabledColor: Colors.grey,
+                disabledTextColor: Colors.black,
+                padding: EdgeInsets.all(15.0),
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    '/phoneverify',
+                    arguments: PhoneVerifyArguments('forgot', 'forgot'),
+                  );
+                },
+                child: Text(
+                  "본인인증하기",
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            )
+          ),
+          Divider(height: 20.0),
+          Container(
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width * 0.9 - 20,
+            ),
+            child: Text(
+              '본인인증 내역이 없어 계정을 찾을 수 없는 경우 고객센터(1544-1544)로 문의하시기 바랍니다.',
+              style: TextStyle(
+                color: Colors.grey,
               ),
             ),
-          )
-        ),
-      ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -133,7 +153,8 @@ class EmailVerifyForm extends StatefulWidget {
 
 class EmailVerifyFormState extends State<EmailVerifyForm> {
   final _formKey1 = GlobalKey<FormState>();
-  final _formKey2 = GlobalKey<FormState>();
+  //final _formKey2 = GlobalKey<FormState>();
+  TextEditingController _emailController = new TextEditingController();
   bool isCodeEnabled = false;
 
   final divider = Divider(
@@ -144,130 +165,147 @@ class EmailVerifyFormState extends State<EmailVerifyForm> {
     endIndent: 0,
   );
 
-  _enableCode() {
-    setState(() => isCodeEnabled = true);
-  }
-
-  _letsReset(context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: ((BuildContext context) => ResetPassword()),
-      ),
-    );
-  }
+  // _letsReset(context) {
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: ((BuildContext context) => ResetPassword()),
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Form(
-                key: _formKey1,
-                  child: Column(
-                    children: <Widget>[
-                      TextFormField(
-                        decoration: InputDecoration(
-                          icon: Icon(Icons.mail),
-                          hintText: 'Enter your e-mail address',
-                          labelText: 'E-mail'
+    return Padding(
+      padding: EdgeInsets.fromLTRB(10, 40, 10, 0),
+      child: Column(
+        children: <Widget>[
+          Form(
+            key: _formKey1,
+            child: Column(
+              children: <Widget>[
+                Text(
+                  '본인인증을 통해 아이디(이메일) 확인 및'
+                  + '\n비밀번호를 변경하실 수 있습니다.',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 24),
+                  child: TextFormField(
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                      hintText: '아이디 / 이메일 주소 입력',
+                      border: inputBorder,
+                      focusedBorder: inputBorder,
+                    ),
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return '아이디 또는 이메일을 입력하세요';
+                      }
+
+                      return null;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 32.0),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: RaisedButton(
+                      color: Colors.black,
+                      textColor: Colors.white,
+                      disabledColor: Colors.grey,
+                      disabledTextColor: Colors.black,
+                      padding: EdgeInsets.all(15.0),
+                      onPressed: () {
+                        if (_formKey1.currentState.validate()) {
+                          Navigator.pushNamed(
+                            context,
+                            '/phoneverify',
+                            arguments: PhoneVerifyArguments('forgot', 'forgot'),
+                          );
+                        }
+                      },
+                      child: Text(
+                        "본인인증하기",
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
                         ),
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Please enter your username';
-                          }
-                          // TODO: 이메일이 등록되어있는지 확인하기
-                          return null;
-                        },
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: RaisedButton(
-                            color: Color(0xFF80F208),
-                            textColor: Colors.white,
-                            disabledColor: Colors.grey,
-                            disabledTextColor: Colors.black,
-                            padding: EdgeInsets.all(8.0),
-                            splashColor: Colors.greenAccent,
-                            onPressed: () {
-                              if (_formKey1.currentState.validate()) {
-                                _enableCode();
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(content: Text('Flying Confirmation Code')));
-                              }
-                            },
-                            child: Text(
-                              "Send Confirmation Code",
-                              style: TextStyle(fontSize: 20.0),
-                            ),
-                          ),
-                        )
-                      ),
-                    ]
-                )
-              ),
-              divider,
-              Text(
-                'Confirmation Code',
-              ),
-              Form(
-                key: _formKey2,
-                  child: Column(
-                    children: <Widget>[
-                      TextFormField(
-                        decoration: InputDecoration(
-                          icon: Icon(Icons.lock_outline),
-                          hintText: 'Enter your confirmation code',
-                          labelText: 'Confirmation Code'
-                        ),
-                        enabled: isCodeEnabled,
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Please enter your confirmation code';
-                          }
-                          // TODO: 인증 코드가 맞는지 확인하기
-                          return null;
-                        },
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: RaisedButton(
-                            color: Colors.blue,
-                            textColor: Colors.white,
-                            disabledColor: Colors.grey,
-                            disabledTextColor: Colors.black,
-                            padding: EdgeInsets.all(8.0),
-                            splashColor: Colors.blueAccent,
-                            
-                            onPressed: isCodeEnabled ? () {
-                              if (_formKey2.currentState.validate()) {
-                                _letsReset(context);
-                              }
-                            } : null,
-                            child: Text(
-                              "Verify Code",
-                              style: TextStyle(fontSize: 20.0),
-                            ),
-                          ),
-                        )
-                      ),
-                    ]
-                )
-              ),
-            ],
+                    ),
+                  )
+                ),
+                Divider(height: 20.0),
+                Container(
+                  constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width * 0.9 - 20,
+                  ),
+                  child: Text(
+                    '본인인증 내역이 없어 계정을 찾을 수 없는 경우 고객센터(1544-1544)로 문의하시기 바랍니다.',
+                    style: TextStyle(
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+              ]
+            )
           ),
-        )
-      )
+          // divider,
+          // Text(
+          //   'Confirmation Code',
+          // ),
+          // Form(
+          //   key: _formKey2,
+          //   child: Column(
+          //     children: <Widget>[
+          //       TextFormField(
+          //         decoration: InputDecoration(
+          //           icon: Icon(Icons.lock_outline),
+          //           hintText: 'Enter your confirmation code',
+          //           labelText: 'Confirmation Code'
+          //         ),
+          //         enabled: isCodeEnabled,
+          //         keyboardType: TextInputType.number,
+          //         validator: (value) {
+          //           if (value.isEmpty) {
+          //             return 'Please enter your confirmation code';
+          //           }
+          //           // TODO: 인증 코드가 맞는지 확인하기
+          //           return null;
+          //         },
+          //       ),
+          //       Padding(
+          //         padding: const EdgeInsets.symmetric(vertical: 16.0),
+          //         child: SizedBox(
+          //           width: double.infinity,
+          //           child: RaisedButton(
+          //             color: Colors.blue,
+          //             textColor: Colors.white,
+          //             disabledColor: Colors.grey,
+          //             disabledTextColor: Colors.black,
+          //             padding: EdgeInsets.all(8.0),
+          //             splashColor: Colors.blueAccent,
+                      
+          //             onPressed: isCodeEnabled ? () {
+          //               if (_formKey2.currentState.validate()) {
+          //                 _letsReset(context);
+          //               }
+          //             } : null,
+          //             child: Text(
+          //               "Verify Code",
+          //               style: TextStyle(fontSize: 20.0),
+          //             ),
+          //           ),
+          //         )
+          //       ),
+          //     ]
+          //   )
+          // ),
+        ],
+      ),
     );
   }
-
 }

@@ -203,7 +203,7 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
                       width: 20
                     ),
                     Text(
-                      user.name,
+                      (user.name == null) ? '미입력' : user.name,
                       style: TextStyle(
                         fontSize: 14, 
                       )
@@ -223,7 +223,7 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
                       width: 20
                     ),
                     Text(
-                      user.phone,
+                      (user.phone == null) ? '미입력' : user.phone,
                       style: TextStyle(
                         fontSize: 14, 
                       )
@@ -247,7 +247,7 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
                         maxWidth: MediaQuery.of(context).size.width * 2 / 3
                       ),
                       child: Text(
-                        user.address,
+                        (user.address == null) ? '미입력' : user.address,
                         style: TextStyle(
                           fontSize: 14, 
                         )

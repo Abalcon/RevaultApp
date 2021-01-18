@@ -171,7 +171,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                     style: TextStyle(
                       fontSize: 16, 
                       fontWeight: FontWeight.bold
-                    )
+                    ),
                   ),
                   Divider(),
                   Text(
@@ -179,7 +179,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                     style: TextStyle(
                       fontSize: 18, 
                       fontWeight: FontWeight.bold
-                    )
+                    ),
                   ),
                   Container(
                     padding: EdgeInsets.only(bottom: 50),
@@ -191,7 +191,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                           style: TextStyle(
                             fontSize: 18, 
                             fontWeight: FontWeight.bold
-                          )
+                          ),
                         ),
                         Text(
                           '115,000원',
@@ -199,7 +199,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                             fontSize: 18, 
                             fontWeight: FontWeight.bold,
                             color: Colors.red,
-                          )
+                          ),
                         )
                       ],
                     ),
@@ -399,7 +399,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
           Text('를 비롯한 ${good.waitingCount}명의 회원들이 경매를 기다리고 있습니다',
             style: TextStyle(
               fontSize: 14,
-            )
+            ),
           ),
         ],
       );
@@ -453,7 +453,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
         Text('를 비롯한 ${good.waitingCount}명의 회원들이 경매를 기다리고 있습니다',
           style: TextStyle(
             fontSize: 14,
-          )
+          ),
         ),
       ],
     );
@@ -474,7 +474,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 40.0,
-                  color: Colors.white
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -507,7 +507,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
               "BIDS UP",
               style: TextStyle(
                 fontSize: 20.0,
-                fontWeight: FontWeight.bold
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
@@ -532,7 +532,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
               text: '자동입찰 설정하기',
               style: TextStyle(
                 color: Colors.black,
-                decoration: TextDecoration.underline
+                decoration: TextDecoration.underline,
               ),
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
@@ -601,7 +601,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
-                                )
+                                ),
                               ),
                               VerticalDivider(),
                               Text(
@@ -609,7 +609,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.grey,
-                                )
+                                ),
                               ),
                             ]
                           ),
@@ -636,14 +636,14 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
-                                )
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ],
                     ),
-                    Divider()
+                    Divider(),
                   ]
                 );
               }
@@ -767,7 +767,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
-                      )
+                      ),
                     ),
                     VerticalDivider(),
                     Text(
@@ -775,7 +775,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey,
-                      )
+                      ),
                     ),
                   ]
                 )
@@ -807,7 +807,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
               placeholder: 'images/revault_square_logo.jpg',
               image: url,
               fit: BoxFit.cover,
-            )
+            ),
           );
         },
       )

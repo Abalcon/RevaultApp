@@ -11,7 +11,7 @@ class ChangePassword extends StatelessWidget {
         centerTitle: true,
         title: Text("비밀번호 변경"),
       ),
-      body: ChangePasswordForm(session: session)
+      body: ChangePasswordForm(session: session),
     );
   }
 }
@@ -43,7 +43,7 @@ class ChangePasswordFormState extends State<ChangePasswordForm> {
       RegExp digit = RegExp(r"\d");
       RegExp uppercase = RegExp(r"[A-Z]");
       RegExp lowercase = RegExp(r"[a-z]");
-      RegExp special = RegExp(r"[*.!@#$%^&(){}\[\]:'<>,.?/~`_+-=|\\]");
+      RegExp special = RegExp(r"[*.!@#$%^&(){}\[\]:'<>,.?/~`_+=|\\-]");
 
       if (digit.hasMatch(value))
         count++;
@@ -57,16 +57,6 @@ class ChangePasswordFormState extends State<ChangePasswordForm> {
 
     return count >= 3;
   }
-
-  OutlineInputBorder inputBorder = new OutlineInputBorder(
-    borderRadius: const BorderRadius.all(
-      const Radius.circular(0.0),
-    ),
-    borderSide: new BorderSide(
-      color: Colors.black,
-      width: 1.0,
-    ),
-  );
 
   @override
   Widget build(BuildContext context) {

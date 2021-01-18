@@ -99,6 +99,38 @@ Future<UserInfo> getInfo(String session) async {
     alarmPrice: null,
     alarmStatus: null,
     alarmComment: null,
+    snsCode: null,
+  );
+}
+
+Future<UserInfo> findUserInfo(String phone) async {
+  var map = new Map<String, dynamic>();
+  map['tel'] = phone;
+  http.Response response = await http.post(
+    'https://ibsoft.site/revault/findUser',
+    body: map,
+  );
+
+  if (response.statusCode == 200 && response.body != null && response.body != "") {
+    print("User Found: ${response.body}");
+    return compute(parseInfo, response.body);
+  }
+  print("User Not Found");
+  return UserInfo(
+    ref: null,
+    userID: null,
+    email: null,
+    name: null,
+    phone: null,
+    address: null,
+    profile: null,
+    auctionList: null,
+    commentList: null,
+    fcmToken: null,
+    alarmPrice: null,
+    alarmStatus: null,
+    alarmComment: null,
+    snsCode: null,
   );
 }
 
@@ -393,4 +425,19 @@ class PhoneVerifyArguments {
     this.session,
     this.username,
   );
+}
+
+Future<http.Response> tryResetUserPassword(String userID, String newPass) async {
+  var map = new Map<String, dynamic>();
+  map['user_id'] = userID;
+  map['passwd'] = newPass;
+
+  http.Response response = await http.post(
+    'https://ibsoft.site/revault/modUserPasswd',
+    body: map,
+  );
+
+  print(response.statusCode); // 200 or 201
+  print(response.body); // string: "1" or "-1"
+  return response;
 }

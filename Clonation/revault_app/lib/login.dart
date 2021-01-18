@@ -294,7 +294,7 @@ class LoginFormState extends State<LoginForm> {
                             textColor: Colors.white,
                             disabledColor: Colors.grey,
                             disabledTextColor: Colors.black,
-                            padding: EdgeInsets.all(12.0),
+                            padding: EdgeInsets.all(14.0),
                             splashColor: Colors.black,
                             onPressed: () async {
                               if (_formKey.currentState.validate()) {
@@ -378,7 +378,7 @@ class LoginFormState extends State<LoginForm> {
                         print(userInfo);
                         
                         final signupResult = await trySignUp(
-                          userInfo['email'], userInfo['id'], userInfo['email'], '');
+                          userInfo['email'], userInfo['id'], userInfo['email'], '', snsCode: 1);
                         String session = signupResult.headers['set-cookie'].split(';')[0];
                         await storage.write(
                           key: "session",
@@ -478,7 +478,7 @@ class LoginFormState extends State<LoginForm> {
                         String id = currUserJson['id'].toString();
 
                         final signupResult = await trySignUp(
-                          email, id, email, '');
+                          email, id, email, '', snsCode: 2);
                           String session = signupResult.headers['set-cookie'].split(';')[0];
                           await storage.write(
                             key: "session",

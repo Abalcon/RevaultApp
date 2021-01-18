@@ -18,7 +18,7 @@ passwordValidation(String value) {
     RegExp digit = RegExp(r"\d");
     RegExp uppercase = RegExp(r"[A-Z]");
     RegExp lowercase = RegExp(r"[a-z]");
-    RegExp special = RegExp(r"[*.!@#$%^&(){}\[\]:'<>,.?/~`_+-=|\\]");
+    RegExp special = RegExp(r"[*.!@#$%^&(){}\[\]:'<>,.?/~`_+=|\\-]");
 
     if (digit.hasMatch(value))
       count++;
