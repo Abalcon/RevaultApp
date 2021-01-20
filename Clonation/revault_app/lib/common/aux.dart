@@ -38,11 +38,11 @@ Future<SessionNamePair> isLogged() async {
   );
 
   if (response.statusCode == 200 && response.body != null && response.body != "") {
-    print("Logged In: ${response.body}");
+    debugPrint("Logged In: ${response.body}");
     return SessionNamePair(currSession, response.body);
   }
   // 사용자 정보가 만료
-  print("Session Expired");
+  debugPrint("Session Expired");
   await storage.delete(key: "session",);
   return SessionNamePair(null, null);
 }
@@ -241,6 +241,20 @@ Widget remainingTimeDisplay(DateTime deadline, int entries) {
       )
     ],
   );
+}
+
+class TriangleClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    final path = Path();
+    path.lineTo(size.width, 0.0);
+    path.lineTo(size.width / 2, size.height);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(TriangleClipper oldClipper) => false;
 }
 
 class ReceiverArguments {

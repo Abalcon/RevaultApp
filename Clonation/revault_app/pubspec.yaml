@@ -49,7 +49,7 @@ dependencies:
   flutter_facebook_login: ^3.0.0
   bootpay_api: ^2.0.7
   sms: ^0.2.4
-  flutter_sms: ^2.1.1
+  url_launcher: ^5.7.10
 
 flutter_icons:
   image_path: images/20201215_app_icon_1024.jpg

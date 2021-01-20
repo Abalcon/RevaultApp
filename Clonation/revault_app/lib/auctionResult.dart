@@ -12,6 +12,9 @@ class AuctionResult {
   String address;
   String phone;
   String receiver;
+  String receiptID;
+  String receiptURL;
+  String trackNumber;
 
   AuctionResult({
     @required this.ref,
@@ -24,7 +27,10 @@ class AuctionResult {
     @required this.status,
     @required this.address,
     @required this.phone,
-    @required this.receiver
+    @required this.receiver,
+    this.receiptID,
+    this.receiptURL,
+    this.trackNumber,
   });
 
   factory AuctionResult.fromJson(Map<String, dynamic> json) {
@@ -43,7 +49,7 @@ class AuctionResult {
         case -1:
           return '취소';
         default:
-          return '해킹당함';
+          return '알수없음';
       }
     }
 
@@ -70,6 +76,13 @@ class AuctionResult {
       receiver: (json['recipient'] == null)
         ? 'Unknown'
         : json['recipient'],
+      receiptID: (json['receipt_id'] == null)
+        ? 'Unknown'
+        : json['receipt_id'],
+      receiptURL: (json['receipt_url'] == null)
+        ? 'Unknown'
+        : json['receipt_url'],
+      trackNumber: json['waybill'],
     );
   }
 }

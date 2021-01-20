@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:revault_app/common/aux.dart';
-import 'resetPassword.dart';
 
 class EmailVerify extends StatelessWidget {
   @override
@@ -253,57 +252,6 @@ class EmailVerifyFormState extends State<EmailVerifyForm> {
               ]
             )
           ),
-          // divider,
-          // Text(
-          //   'Confirmation Code',
-          // ),
-          // Form(
-          //   key: _formKey2,
-          //   child: Column(
-          //     children: <Widget>[
-          //       TextFormField(
-          //         decoration: InputDecoration(
-          //           icon: Icon(Icons.lock_outline),
-          //           hintText: 'Enter your confirmation code',
-          //           labelText: 'Confirmation Code'
-          //         ),
-          //         enabled: isCodeEnabled,
-          //         keyboardType: TextInputType.number,
-          //         validator: (value) {
-          //           if (value.isEmpty) {
-          //             return 'Please enter your confirmation code';
-          //           }
-          //           // TODO: 인증 코드가 맞는지 확인하기
-          //           return null;
-          //         },
-          //       ),
-          //       Padding(
-          //         padding: const EdgeInsets.symmetric(vertical: 16.0),
-          //         child: SizedBox(
-          //           width: double.infinity,
-          //           child: RaisedButton(
-          //             color: Colors.blue,
-          //             textColor: Colors.white,
-          //             disabledColor: Colors.grey,
-          //             disabledTextColor: Colors.black,
-          //             padding: EdgeInsets.all(8.0),
-          //             splashColor: Colors.blueAccent,
-                      
-          //             onPressed: isCodeEnabled ? () {
-          //               if (_formKey2.currentState.validate()) {
-          //                 _letsReset(context);
-          //               }
-          //             } : null,
-          //             child: Text(
-          //               "Verify Code",
-          //               style: TextStyle(fontSize: 20.0),
-          //             ),
-          //           ),
-          //         )
-          //       ),
-          //     ]
-          //   )
-          // ),
         ],
       ),
     );

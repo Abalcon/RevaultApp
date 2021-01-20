@@ -146,6 +146,7 @@ class PhoneVerifyDetailState extends State<PhoneVerifyDetail> {
                       padding: EdgeInsets.all(20.0),
                       onPressed: () async {
                         if (_formKey1.currentState.validate()) {
+                          // TODO: 실제 적용은 백엔드와 연동
                           otp.sendOtp(_phoneController.text.substring(1));
                           _enableCode();
                         }

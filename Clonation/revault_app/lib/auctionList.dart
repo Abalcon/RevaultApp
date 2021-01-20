@@ -185,6 +185,15 @@ class _AuctionGoodsState extends State<AuctionGoods> {
     if (good.aucState == 2) {
       return Stack(
         children: [
+          (good.imageUrlList != null && good.imageUrlList.length > 0) ?
+          Image.network(
+            good.imageUrlList[0],
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.width,
+            fit: BoxFit.cover,
+            color: Colors.grey,
+            colorBlendMode: BlendMode.darken,
+          ) :
           Image.asset(
             'images/nike_black_hoodie1.jpeg',
             width: MediaQuery.of(context).size.width,
@@ -239,6 +248,13 @@ class _AuctionGoodsState extends State<AuctionGoods> {
 
     return Stack(
       children: [
+        (good.imageUrlList != null && good.imageUrlList.length > 0) ?
+        Image.network(
+          good.imageUrlList[0],
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.width,
+          fit: BoxFit.cover,
+        ) :
         Image.asset(
           'images/nike_black_hoodie1.jpeg',
           width: MediaQuery.of(context).size.width,

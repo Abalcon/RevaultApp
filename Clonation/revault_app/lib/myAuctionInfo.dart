@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:revault_app/auctionGood.dart';
 import 'package:revault_app/auctionResult.dart';
 import 'package:revault_app/common/aux.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 List<AuctionGood> parseGoodList(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
@@ -194,6 +195,8 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
               autoPlay: false
             ),
             items: snapshot.data.map((good) {
+              bool isBillingRequired = (good.status == '입금대기');
+
               return Builder(
                 builder: (BuildContext context) {
                   return Container(
@@ -226,6 +229,7 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
                           children: [
                             Row(
                               children: [
+                                // TODO: 낙찰된 상품의 경우 Image URL에 해당하는 항목이 없다
                                 Image.asset(
                                   'images/nike_black_hoodie1.jpeg',
                                   height: 60.0,
@@ -277,7 +281,7 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
                                   width: MediaQuery.of(context).size.width / 4.0,
                                   alignment: Alignment.center,
                                   child: Text(
-                                    '배송지 입력',
+                                    isBillingRequired ? '배송지 입력' : '배송 조회',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14,
@@ -288,7 +292,7 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
                                   width: MediaQuery.of(context).size.width / 4.0,
                                   alignment: Alignment.center,
                                   child: Text(
-                                    '잔금 처리',
+                                    isBillingRequired ? '잔금 처리' : '결제 완료',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14,
@@ -324,19 +328,20 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
                                   child: RaisedButton(
                                     color: Colors.white,
                                     textColor: Colors.grey,
-                                    disabledColor: Colors.white,
-                                    disabledTextColor: Colors.white,
+                                    disabledColor: Colors.transparent,
+                                    disabledTextColor: Colors.transparent,
                                     splashColor: Colors.grey,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.all(Radius.circular(3.0))
                                     ),
                                     padding: EdgeInsets.all(10),
-                                    child: Text('입력하기',
+                                    child: Text(
+                                      isBillingRequired ? '입력하기' : '조회하기',
                                       style: TextStyle(
                                         fontSize: 14,
                                       )
                                     ),
-                                    onPressed: () async {
+                                    onPressed: isBillingRequired ? () async {
                                       await Navigator.pushNamed(
                                         context, '/changeaddress',
                                         arguments: ReceiverArguments(
@@ -354,6 +359,21 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
                                           winningList = fetchResultList(currUser.getSession());
                                         });
                                       //}
+                                    } : () async {
+                                      if (good.trackNumber == null) {
+                                        ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(content: Text('아직 송장번호가 등록되지 않았습니다')));
+                                      }
+                                      else {
+                                        final String url = 'https://www.cjlogistics.com/ko/tool/parcel/tracking?gnbInvcNo=${good.trackNumber}';
+                                        if (await canLaunch(url)) {
+                                          await launch(url);
+                                        }
+                                        else {
+                                           ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(content: Text('현재 배송 조회를 할수 없습니다. 나중에 다시 시도해주세요')));
+                                        }
+                                      }
                                     },
                                   ),
                                 ),
@@ -375,7 +395,7 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
                                         fontSize: 14,
                                       )
                                     ),
-                                    onPressed: () async {
+                                    onPressed: isBillingRequired ? () async {
                                       await Navigator.pushNamed(
                                         context, '/purchasewindow',
                                         arguments: PurchaseArguments(
@@ -385,7 +405,13 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
                                           good.price * 1.0,
                                         )
                                       );
-                                    },
+
+                                      setState(() {
+                                        ongoingList = fetchGoodList(currUser.getSession(), 1, 'Bid');
+                                        recordList = fetchGoodList(currUser.getSession(), 2, '');
+                                        winningList = fetchResultList(currUser.getSession());
+                                      });
+                                    } : null,
                                   ),
                                 )
                               ]

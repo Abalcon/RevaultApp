@@ -54,9 +54,27 @@ class HelpDeskDetailsState extends State<HelpDeskDetails> {
                   SliverPersistentHeader(
                     delegate: _SliverAppBarDelegate(
                       TabBar(
+                        indicatorWeight: 3,
+                        indicatorColor: Color(0xFF80F208),
                         tabs: [
-                          Tab(child: Text("1:1 문의하기", style: Theme.of(context).textTheme.headline6)),
-                          Tab(child: Text("1:1 문의내역", style: Theme.of(context).textTheme.headline6)),
+                          Tab(
+                            child: SizedBox.expand(
+                              child: Container(
+                                alignment: Alignment.center,
+                                color: Colors.white,
+                                child: Text("1:1 문의하기"),
+                              ),
+                            ),
+                          ),
+                          Tab(
+                            child: SizedBox.expand(
+                              child: Container(
+                                alignment: Alignment.center,
+                                color: Colors.white,
+                                child: Text("1:1 문의내역"),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -67,7 +85,7 @@ class HelpDeskDetailsState extends State<HelpDeskDetails> {
               body: TabBarView(
                 children: <Widget> [
                   Center(child: RequestForm(user: snapshot.data)),
-                  Center(child: HelpResponse(user: snapshot.data)),
+                  HelpResponse(user: snapshot.data),
                 ],
               )
             ),
@@ -329,6 +347,7 @@ Future<List<CustomerRequest>> fetchRequestList(String session) async {
   );
 
   if (response.statusCode == 200) {
+    debugPrint(response.body);
     return compute(parseRequest, response.body);
   }
   else {
@@ -373,6 +392,7 @@ class HelpResponseState extends State<HelpResponse> {
                     itemCount: snapshot.data.length,
                     itemBuilder: (BuildContext _context, int i) {
                       return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             children: [
@@ -380,19 +400,25 @@ class HelpResponseState extends State<HelpResponse> {
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      '${snapshot.data[i].status}',
-                                      style: TextStyle(
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                      )
-                                    ),
-                                    Text(' / ${snapshot.data[i].category}',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                      )
+                                    RichText(
+                                      text: TextSpan(
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                        ),
+                                        children: [
+                                          TextSpan(
+                                            text: snapshot.data[i].status,
+                                            style: TextStyle(
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text: ' / ${snapshot.data[i].category}',
+                                          )
+                                        ]
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -405,30 +431,40 @@ class HelpResponseState extends State<HelpResponse> {
                               ),
                             ],
                           ),
+                          Divider(color: Colors.transparent),
                           Text(
                             'Q: ${snapshot.data[i].content}',
+                            textAlign: TextAlign.start,
                             style: TextStyle(
                               fontSize: 14,
                             )
                           ),
-                          Text(
-                            snapshot.data[i].responseList.length > 0 
-                            ? 'A: ${snapshot.data[i].responseList[0].content}'
-                            : '아직 답변이 없습니다',
-                            style: TextStyle(
-                              fontSize: 14,
-                            )
-                          ),
-                          Text(
-                            snapshot.data[i].responseList.length > 0 
-                            ? '${snapshot.data[i].responseList[0].userID} | ${snapshot.data[i].responseList[0].responseDate}'
-                            : '좀더 기다려주세요',
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 14,
-                            )
-                          ),
-                          Divider()
+                          //Divider(color: Colors.transparent),
+                          (snapshot.data[i].responseList.length > 0) ?
+                          RichText(
+                            textAlign: TextAlign.start,
+                            text: TextSpan(
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text: 'A ',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: snapshot.data[i].responseList[0].content,
+                                ),
+                                TextSpan(
+                                  text: '${snapshot.data[i].responseList[0].userID} | ${snapshot.data[i].responseList[0].responseDate}',
+                                ),
+                              ]
+                            ),
+                          ) : Text(''),
+                          Divider(),
                         ]
                       );
                     }
@@ -449,7 +485,7 @@ class HelpResponseState extends State<HelpResponse> {
           return Text("${snapshot.error}");
         }
 
-        return CircularProgressIndicator();
+        return Center(child: CircularProgressIndicator());
       }
     );
   }

@@ -87,7 +87,7 @@ class ResetPasswordFormState extends State<ResetPasswordForm> {
                         controller: _passController,
                         obscureText: true,
                         decoration: InputDecoration(
-                          labelText: '새 비밀번호 입력',
+                          hintText: '영소문자/영대문자/숫자/특수문자 3종류 이상 포함하여 8글자 이상',
                           border: inputBorder,
                           focusedBorder: inputBorder,
                         ),
@@ -113,7 +113,7 @@ class ResetPasswordFormState extends State<ResetPasswordForm> {
                       TextFormField(
                         obscureText: true,
                         decoration: InputDecoration(
-                          labelText: '새 비밀번호 확인',
+                          hintText: '새 비밀번호 확인',
                           border: inputBorder,
                           focusedBorder: inputBorder,
                         ),

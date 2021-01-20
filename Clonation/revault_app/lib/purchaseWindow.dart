@@ -7,6 +7,7 @@ import 'package:bootpay_api/model/payload.dart';
 import 'package:bootpay_api/model/user.dart';
 import 'package:flutter/material.dart';
 import 'package:revault_app/common/aux.dart';
+import 'package:revault_app/userInfo.dart';
 
 class PurchaseWindow extends StatelessWidget {
   @override
@@ -42,8 +43,9 @@ class PurchaseWindowDetail extends StatefulWidget {
   }
 }
 
-class PurchaseWindowDetailState extends State<PurchaseWindowDetail> {
-  
+class PurchaseWindowDetailState extends State<PurchaseWindowDetail> { 
+  Future<UserInfo> currInfo;
+
   Widget billingResultBody(int result, String value) {
     if (result == 200) {
       switch (value) {
@@ -231,29 +233,21 @@ class PurchaseWindowDetailState extends State<PurchaseWindowDetail> {
     }
   }
 
-  void goBootpayRequest(BuildContext context) async {
+  void goBootpayRequest(BuildContext context, UserInfo userInfo) async {
     Payload payload = Payload();
     payload.androidApplicationId = '5ff40d4b5b294800202a0e49';
     payload.iosApplicationId = '5ff40d4b5b294800202a0e4a';
     
     payload.pg = 'toss';
-    //payload.method = 'card';
     payload.methods = ['card', /*'phone',*/ 'vbank', 'bank'];
     payload.name = widget.name;
     payload.price = widget.price;
     payload.orderId = "RV${widget.resID}${DateTime.now().millisecondsSinceEpoch.toString()}";
-//    payload.params = {
-//      "callbackParam1" : "value12",
-//      "callbackParam2" : "value34",
-//      "callbackParam3" : "value56",
-//      "callbackParam4" : "value78",
-//    };
-    // TODO: 로그인된 사용자의 정보를 가져오기
+
     User user = User();
-    user.username = "김덕주";
-    user.email = "extinbase@gmail.com";
-    user.area = "서울시";
-    user.phone = "010-3131-2806";
+    user.username = userInfo.name;
+    user.email = userInfo.email;
+    user.phone = userInfo.phone;
 
     Extra extra = Extra();
     extra.appScheme = 'bootpaySample';
@@ -290,21 +284,37 @@ class PurchaseWindowDetailState extends State<PurchaseWindowDetail> {
     );
   }
 
-
   @override
   void initState() {
+    currInfo = getInfo(widget.session);
+    
     super.initState();
   }
   
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: RaisedButton(
-        onPressed: () {
-          goBootpayRequest(context);
-        },
-        child: Text("부트페이 결제요청"),
-      ),
+    return FutureBuilder(
+      future: currInfo,
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+          case ConnectionState.waiting:
+            return Center(child: CircularProgressIndicator());
+          default:
+            if (snapshot.hasError) {
+              debugPrint("${snapshot.error}");
+              return Text("${snapshot.error}");
+            }
+
+            UserInfo userInfo = snapshot.data;
+            Future.delayed(Duration(milliseconds: 300),
+              () => goBootpayRequest(context, userInfo));
+
+            return Center(
+              child: Text("잠시 후 결제 페이지로 이동합니다"),
+            );
+        }
+      }
     );
   }
 }

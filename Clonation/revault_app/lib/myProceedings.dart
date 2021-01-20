@@ -79,19 +79,17 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
               itemCount: snapshot.data.length,
               itemBuilder: (BuildContext _context, int i) {
                 var good = snapshot.data[i];
-                bool isPayingEnabled = (good.status == '입금대기');
+                bool isBillingRequired = (good.status == '입금대기');
                 return Column(
                   children: [
                     Row(
                       children: [
-                        // image section
                         Image.asset(
                           'images/nike_black_hoodie1.jpeg',
                           height: 60.0,
                           width: 60.0, 
                           fit: BoxFit.cover,
                         ),
-                        // text section
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,11 +101,6 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
                                   fontSize: 14,
                                 )
                               ),
-                              // Text('Size ${good.size} Condition ${good.condition}',
-                              //   style: TextStyle(
-                              //     fontSize: 14,
-                              //   )
-                              // ),
                               Text(
                                 '${good.price}원',
                                 style: TextStyle(
@@ -125,7 +118,6 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
                             ],
                           ),
                         ),
-                        // buttonSection
                         RaisedButton(
                           color: Colors.white,
                           textColor: Colors.grey,
@@ -138,8 +130,16 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
                               fontSize: 14,
                             )
                           ),
-                          onPressed: isPayingEnabled ? () {
-                            // TODO: 상품 결제 부분 만들기
+                          onPressed: isBillingRequired ? () async {
+                            await Navigator.pushNamed(
+                              context, '/purchasewindow',
+                              arguments: PurchaseArguments(
+                                currUser.getSession(),
+                                good.ref,
+                                good.name,
+                                good.price * 1.0,
+                              )
+                            );
                           } : null,
                         ),
                       ],

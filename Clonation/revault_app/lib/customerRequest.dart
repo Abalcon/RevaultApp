@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CustomerRequest {
   int requestID;
   String category;
-  int status;
+  String status;
   String content;
   DateTime requestDate;
   String userID;
@@ -43,13 +43,23 @@ class CustomerRequest {
       }
     }
 
+    String getStatus(int status) {
+      if (status == null)
+        return '미답변';
+
+      if (status == 1)
+        return '답변완료';
+
+      return '알수없음';
+    }
+
     return CustomerRequest(
       requestID: json['question_id'],
       category: getCategory(json['cat_id']),
       content: json['content'],
       requestDate: DateTime.fromMillisecondsSinceEpoch(json['add_time']),
       userID: json['user_id'],
-      status: json['status'],
+      status: getStatus(json['status']),
       responseList: respList,
     );
   }

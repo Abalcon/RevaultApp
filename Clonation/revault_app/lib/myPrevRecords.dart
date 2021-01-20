@@ -122,9 +122,8 @@ class MyPrevRecordsDetailState extends State<MyPrevRecordsDetail> {
                         Colors.transparent : Colors.grey,
                       child: Row(
                         children: [
-                          // image section
-                          Image.asset(
-                            'images/nike_black_hoodie1.jpeg',
+                          Image.network(
+                            good.imageUrlList[0],
                             height: 60.0,
                             width: 60.0, 
                             fit: BoxFit.cover,
@@ -132,7 +131,6 @@ class MyPrevRecordsDetailState extends State<MyPrevRecordsDetail> {
                               Colors.white : Colors.grey,
                             colorBlendMode: BlendMode.darken,
                           ),
-                          // text section
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,

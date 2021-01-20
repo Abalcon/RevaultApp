@@ -428,7 +428,6 @@ class LoginFormState extends State<LoginForm> {
                     children: [
                       Image.asset(
                         'images/facebook_login_icon.png',
-                        //color: Color(0xFF1877F2),
                         width: 28.0,
                         fit: BoxFit.cover,
                       ),

@@ -80,14 +80,13 @@ SessionNamePair currUser;
                   children: [
                     Row(
                       children: [
-                        // image section
+                        // TODO: 낙찰된 상품의 경우 Image URL에 해당하는 항목이 없다
                         Image.asset(
                           'images/nike_black_hoodie1.jpeg',
                           height: 60.0,
                           width: 60.0, 
                           fit: BoxFit.cover,
                         ),
-                        // text section
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

@@ -10,19 +10,18 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:intl/intl.dart';
 import 'package:revault_app/auctionGood.dart';
 import 'package:revault_app/common/aux.dart';
-//import 'package:revault_app/models/singleDigit.dart';
 import 'package:video_player/video_player.dart';
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 AuctionGood parseGood(String responseBody) {
-  //print(responseBody);
   return AuctionGood.fromJson(jsonDecode(responseBody));
 }
 
 Future<AuctionGood> fetchGood(int id) async {
   final response = await http.get('https://ibsoft.site/revault/getAuctionInfo?auction_id=$id');
+  debugPrint('AGD: ${response.statusCode}');
   if (response.statusCode == 200) {
     return compute(parseGood, response.body);
   }
@@ -42,7 +41,6 @@ class AuctionGoodDetail extends StatelessWidget {
       ),
       body: AuctionGoodDetailWithVideo(
         goodID: goodID,
-        //channel: IOWebSocketChannel.connect('wss://ibsoft.site/ws/chat'),
       ),
     );
   }
@@ -346,6 +344,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
     }
     else if (good.waitingCount == 1) {
       return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CircleAvatar(
             radius: 20.0,
@@ -365,6 +364,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
     }
     else if (good.waitingCount == 2) {
       return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Stack(
             children: [
@@ -387,10 +387,9 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                 alignment: Alignment.centerRight,
                 child: CircleAvatar(
                   radius: 20.0,
-                  backgroundImage:
-                    NetworkImage(
-                      good.waitingProfileList[1],
-                    ),
+                  backgroundImage: (good.waitingProfileList.length > 1) ?
+                    NetworkImage(good.waitingProfileList[1],) :
+                    AssetImage('images/revault_square_logo.jpg',),
                   backgroundColor: Colors.transparent,
                 ),
               ),
@@ -406,6 +405,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
     }
 
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Stack(
           children: [
@@ -480,12 +480,50 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
             ),
             initValue: good.price,
           ),
-          Text(
-            good.biddingList.length > 0 ?
-            '${good.biddingList[0].username} 님께서 최근 입찰하셨습니다.'
-            : '아직 입찰한 사람이 없습니다. 지금 입찰해보세요!'
+          Padding(
+            padding: EdgeInsets.only(bottom: 12.0,),
+            child: Text(
+              good.biddingList.length > 0 ?
+              '${good.biddingList[0].username} 님께서 최근 입찰하셨습니다.'
+              : '아직 입찰한 사람이 없습니다. 지금 입찰해보세요!',
+              style: TextStyle(
+                fontSize: 15,
+              ),
+            ),
           ),
-          // 말풍선 넣고 싶다 Icon(Icons.talk),
+          Container(
+            width: 75.0,
+            height: 30.0,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                color: Color(0xFFBDBDBD),
+                width: 2,
+              ),
+              borderRadius: BorderRadius.all(
+                Radius.circular(8),
+              ),
+            ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+              child: Text(
+                '₩${good.unitPrice}',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+          ),
+          ClipPath(
+            clipper: TriangleClipper(),
+            child: Container(
+              color: Color(0xFFBDBDBD),
+              height: 6,
+              width: 12,
+            ),
+          ),
           RaisedButton(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(18.0),
@@ -496,7 +534,6 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
             disabledColor: Colors.grey,
             disabledTextColor: Colors.grey[600],
             padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 80.0),
-            splashColor: Colors.greenAccent,
             onPressed: () {
               if (currentPrice > 0)
                 _showBiddingModal(currentPrice, good.unitPrice);
@@ -797,6 +834,19 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
   }
 
   List<Widget> _sliderItems(List<String> urlList) {
+    if (urlList == null || urlList.length == 0) {
+      return [
+        Container(
+          width: MediaQuery.of(context).size.width,
+          margin: EdgeInsets.symmetric(horizontal: 5.0),
+          child: Image.asset(
+            'images/revault_square_logo.jpg',
+            fit: BoxFit.cover,
+          ),
+        ),
+      ];
+    }
+
     return urlList.map((url) =>
       Builder(
         builder: (BuildContext context) {
@@ -822,7 +872,8 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
   int currentPrice = -1;
   _checkUser() async {
     currUser = await isLogged();
-    print(currUser);
+    debugPrint(currUser.getName());
+    debugPrint(currUser.getSession());
     if (currUser.getName() == null) {
       // TODO: 회원만 상세 정보를 조회할 수 있어야할까?
     }
@@ -860,12 +911,12 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
     // );
 
     // 실시간 입찰 가격 반영용 WebSocket 연결
-    print("Connecting to WebSocket Server...");
+    debugPrint("Connecting to WebSocket Server...");
     WebSocket.connect('wss://ibsoft.site/revault/ws/chat').then((ws) {
       channel = IOWebSocketChannel(ws);
-      print("WebSocket Connected!");
-      print(channel.protocol);
-      print(widget.goodID);
+      debugPrint("WebSocket Connected!");
+      debugPrint(channel.protocol);
+      debugPrint('${widget.goodID}');
       channel.sink.add('${widget.goodID}');
     }).catchError((error) {
       print(e);
@@ -1064,7 +1115,7 @@ class AutoBiddingFormState extends State<AutoBiddingForm> {
   List<PriceSelectPair> _priceList = <PriceSelectPair>[];
 
   Future<http.Response> addAutoBidding(int id, int price) async {
-    //print("자동 입찰: " + id.toString() + "번 상품에 " + price.toString() + "원");
+    debugPrint("자동 입찰: $id번 상품에 $price원");
     var map = new Map<String, dynamic>();
     map['auction_id'] = id.toString();
     map['price'] = price.toString();

@@ -77,30 +77,29 @@ SessionNamePair currUser;
               padding: const EdgeInsets.all(10),
               itemCount: snapshot.data.length,
               itemBuilder: (BuildContext _context, int i) {
+                var good = snapshot.data[i];
                 return Column(
                   children: [
                     Row(
                       children: [
-                        // image section
-                        Image.asset(
-                          'images/nike_black_hoodie1.jpeg',
+                        Image.network(
+                          good.imageUrlList[0],
                           height: 60.0,
                           width: 60.0, 
                           fit: BoxFit.cover,
                         ),
-                        // text section
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '${snapshot.data[i].brand}',
+                                '${good.brand}',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
                                 )
                               ),
-                              Text('${snapshot.data[i].goodName}',
+                              Text('${good.goodName}',
                                 style: TextStyle(
                                   fontSize: 14,
                                 )
@@ -116,7 +115,7 @@ SessionNamePair currUser;
                                 fontSize: 14,
                               )
                             ),
-                            Text('${snapshot.data[i].price}원',
+                            Text('${good.price}원',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14,

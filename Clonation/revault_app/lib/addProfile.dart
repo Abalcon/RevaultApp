@@ -27,13 +27,53 @@ class AddProfileDetail extends StatefulWidget {
 class AddProfileDetailState extends State<AddProfileDetail> {
   File selectedImage;
 
-  Future getImage() async {
+  Future _getImageFromCamera() async {
     var imagePicker = new ImagePicker();
     var image = await imagePicker.getImage(source: ImageSource.camera);
 
     setState(() {
       selectedImage = File(image.path);
     });
+  }
+
+  Future _getImageFromGallery() async {
+    var imagePicker = new ImagePicker();
+    var image = await imagePicker.getImage(source: ImageSource.gallery);
+
+    setState(() {
+      selectedImage = File(image.path);
+    });
+  }
+
+  void _showPicker(context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext bc) {
+        return SafeArea(
+          child: Container(
+            child: new Wrap(
+              children: <Widget>[
+                new ListTile(
+                  leading: new Icon(Icons.photo_library),
+                  title: new Text('Photo Library'),
+                  onTap: () {
+                    _getImageFromGallery();
+                    Navigator.of(context).pop();
+                  }),
+                new ListTile(
+                  leading: new Icon(Icons.photo_camera),
+                  title: new Text('Camera'),
+                  onTap: () {
+                    _getImageFromCamera();
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+    );
   }
 
   ImageProvider<Object> currentImage() {
@@ -88,7 +128,9 @@ class AddProfileDetailState extends State<AddProfileDetail> {
                     disabledTextColor: Colors.black,
                     padding: EdgeInsets.all(8.0),
                     splashColor: Colors.greenAccent,
-                    onPressed: getImage,
+                    onPressed: () {
+                      _showPicker(context);
+                    },
                     child: Text(
                       "사진 선택하기",
                       style: TextStyle(fontSize: 20.0),
