@@ -97,6 +97,8 @@ PODS:
   - Protobuf (3.13.0)
   - shared_preferences (0.0.1):
     - Flutter
+  - sms (0.0.1):
+    - Flutter
   - SnapKit (5.0.1)
   - SwiftOTP (2.0.3):
     - CryptoSwift (>= 1.0.0)
@@ -107,6 +109,8 @@ PODS:
     - ObjectMapper
     - SnapKit (~> 5.0.0)
     - SwiftOTP
+  - url_launcher (0.0.1):
+    - Flutter
   - video_player (0.0.1):
     - Flutter
   - webview_flutter (0.0.1):
@@ -123,7 +127,9 @@ DEPENDENCIES:
   - kakao_flutter_sdk (from `.symlinks/plugins/kakao_flutter_sdk/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
+  - sms (from `.symlinks/plugins/sms/ios`)
   - SwiftyBootpay (~> 3.3.82)
+  - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
   - video_player (from `.symlinks/plugins/video_player/ios`)
   - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
 
@@ -171,6 +177,10 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/package_info/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
+  sms:
+    :path: ".symlinks/plugins/sms/ios"
+  url_launcher:
+    :path: ".symlinks/plugins/url_launcher/ios"
   video_player:
     :path: ".symlinks/plugins/video_player/ios"
   webview_flutter:
@@ -204,12 +214,14 @@ SPEC CHECKSUMS:
   PromisesObjC: 8c196f5a328c2cba3e74624585467a557dcb482f
   Protobuf: 3dac39b34a08151c6d949560efe3f86134a3f748
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
+  sms: 1e6c3082da09f2a4961d61bc254cc86865993ffd
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
   SwiftOTP: ce98ded1ab42e4e66c39228fcad6b0c07b98e494
   SwiftyBootpay: eb58d4709aaf96a0c3ed98887db3d5389a0c78ef
+  url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
   video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
   webview_flutter: d2b4d6c66968ad042ad94cbb791f5b72b4678a96
 
-PODFILE CHECKSUM: a5c6f8142c7adf8e1f91c4d6c2bc465019598a0d
+PODFILE CHECKSUM: 63d6b5156891a701a2bcd9b047a7dbbadc05bc7a
 
 COCOAPODS: 1.10.0

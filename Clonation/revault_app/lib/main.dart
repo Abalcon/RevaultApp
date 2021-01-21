@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:kakao_flutter_sdk/auth.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:revault_app/Policy.dart';
 import 'package:revault_app/addProfile.dart';
 import 'package:revault_app/auctionList.dart';
 import 'package:revault_app/changeAddress.dart';
@@ -104,6 +105,7 @@ class MyApp extends StatelessWidget {
             '/languageselect': (context) => LanguageSelect(),
             '/purchasewindow': (context) => PurchaseWindow(),
             '/phoneverify': (context) => PhoneVerify(),
+            '/policy': (context) => Policy(),
           },
           // Error 처리용 페이지
           onUnknownRoute: (RouteSettings settings) {

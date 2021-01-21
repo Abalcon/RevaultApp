@@ -430,6 +430,26 @@ class MyPageDetailsState extends State<MyPageDetails> {
                       ),
                     ),
                     Divider(
+                      height: 1,
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: FlatButton(
+                        color: Colors.white,
+                        textColor: Colors.grey[600],
+                        onPressed: () => Navigator.pushNamed(context, '/policy'),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "사업자 정보 확인",
+                            style: TextStyle(
+                              fontSize: 14.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Divider(
                       thickness: 12
                     ),
                     SizedBox(
