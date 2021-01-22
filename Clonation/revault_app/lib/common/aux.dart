@@ -455,3 +455,10 @@ Future<http.Response> tryResetUserPassword(String userID, String newPass) async 
   print(response.body); // string: "1" or "-1"
   return response;
 }
+
+final ButtonStyle greenButtonStyle = ElevatedButton.styleFrom(
+  onPrimary: Color(0xFF80F208),
+  primary: Colors.grey,
+  padding: EdgeInsets.all(8.0),
+  textStyle: TextStyle(color: Colors.black,),
+);

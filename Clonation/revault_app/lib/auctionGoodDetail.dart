@@ -1162,7 +1162,7 @@ class AutoBiddingFormState extends State<AutoBiddingForm> {
 
   Widget _buildAvailablePrices() {
     return ListView.builder(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(15.0),
       itemBuilder: (BuildContext _context, int i) {
         if (i.isOdd) {
           return Divider(

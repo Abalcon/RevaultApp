@@ -37,7 +37,7 @@ dependencies:
   web_socket_channel: ^1.1.0
   firebase_messaging: ^7.0.3
   image_picker: ^0.6.7+14
-  overlay_support: ^1.0.5
+  overlay_support: ^1.2.0-nullsafety.0
   kakao_flutter_sdk: ^0.5.2
   dio: ^3.0.9
   json_serializable: ^3.3.0
