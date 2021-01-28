@@ -39,6 +39,8 @@ class SignUp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         title: Text("Sign Up"),
       ),
       body: SignUpForm(),
@@ -63,20 +65,36 @@ class SignUpFormState extends State<SignUpForm> {
   File selectedImage;
   Widget currentProfile() {
     if (selectedImage == null) {
-      return Container(
-        width: 120.0,
-        height: 120.0,
-        decoration: BoxDecoration(
-          color: Color(0xFF80F208),
-          shape: BoxShape.circle,
-        ),
-        child: CircleAvatar(
-          radius: 60.0,
-          child: Icon(
-            Icons.camera_alt_outlined,
-            size: 60.0,
+      return GestureDetector(
+        onTap: () async {
+          var result = await Navigator.pushNamed(context, '/addprofile');
+          if (result != null) {
+            setState(() {
+              selectedImage = result;
+            });
+          }
+        },
+        child: Container(
+          width: 110.0,
+          height: 110.0,
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: Color(0xFF80F208),
+              width: 2, 
+            ),
           ),
-          foregroundColor: Color(0xFF80F208),
+          child: CircleAvatar(
+            radius: 55.0,
+            child: Icon(
+              Icons.camera_alt_outlined,
+              size: 50.0,
+              color: Color(0xFF80F208),
+            ),
+            backgroundColor: Colors.white,
+            //foregroundColor: Color(0xFF80F208),
+          ),
         ),
       );
     }
@@ -86,8 +104,8 @@ class SignUpFormState extends State<SignUpForm> {
     Uint8List bytes = base64Decode(base64);
 
     return Container(
-      width: 120.0,
-      height: 120.0,
+      width: 110.0,
+      height: 110.0,
       decoration: BoxDecoration(
         color: Color(0xFF80F208),
         shape: BoxShape.circle,
@@ -108,65 +126,21 @@ class SignUpFormState extends State<SignUpForm> {
       key: _formKey,
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
           child: Column(
             children: <Widget>[
-              Stack(
-                children: [
-                  currentProfile(),
-                  Container(
-                    width: 120.0,
-                    height: 120.0,
-                    color: Colors.transparent,
-                    alignment: Alignment.topRight,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black),
-                        shape: BoxShape.circle
-                      ),
-                      width: 30.0,
-                      height: 30.0,
-                      child: FloatingActionButton(
-                        onPressed: () async {
-                          var result = await Navigator.pushNamed(context, '/addprofile');
-                          if (result != null) {
-                            setState(() {
-                              selectedImage = result;
-                            });
-                          }
-                        },
-                        backgroundColor: Colors.black,
-                        child: Icon(Icons.photo_camera_outlined)
-                      )
-                    ),
-                  ),
-                ]
-              ),
+              currentProfile(),
               Divider(color: Colors.transparent),
-              TextFormField(
-                controller: _mailController,
-                decoration: InputDecoration(
-                  labelText: '이메일 주소 입력',
-                  border: inputBorder,
-                  focusedBorder: inputBorder,
-                ),
-                validator: (email) {
-                  if (email.isEmpty) {
-                    return 'Please enter your E-mail address';
-                  }
-                  else if (!EmailValidator.validate(email)) {
-                    return 'Invalid E-mail address';
-                  }
-                  return null;
-                },
-              ),
-              Divider(color: Colors.white),
               TextFormField(
                 controller: _idController,
                 decoration: InputDecoration(
-                  labelText: '아이디 입력',
-                  border: inputBorder,
-                  focusedBorder: inputBorder,
+                  hintText: '아이디 입력',
+                  hintStyle: TextStyle(
+                    color: Color(0xFFBDBDBD),
+                  ),
+                  enabledBorder: signUpBorder,  
+                  focusedBorder: signUpBorder,
+                  border: signUpBorder
                 ),
                 validator: (value) {
                   if (value.isEmpty) {
@@ -178,14 +152,60 @@ class SignUpFormState extends State<SignUpForm> {
                   return null;
                 },
               ),
-              Divider(color: Colors.white),
+              Divider(color: Colors.white, height: 12,),
+              TextFormField(
+                controller: _mailController,
+                decoration: InputDecoration(
+                  hintText: '이메일 주소 입력',
+                  hintStyle: TextStyle(
+                    color: Color(0xFFBDBDBD),
+                  ),
+                  enabledBorder: signUpBorder,  
+                  focusedBorder: signUpBorder,
+                  border: signUpBorder
+                ),
+                validator: (email) {
+                  if (email.isEmpty) {
+                    return 'Please enter your E-mail address';
+                  }
+                  else if (!EmailValidator.validate(email)) {
+                    return 'Invalid E-mail address';
+                  }
+                  return null;
+                },
+              ),
+              Divider(color: Colors.white, height: 12,),
+              TextFormField(
+                controller: _phoneController,
+                decoration: InputDecoration(
+                  hintText: '전화번호 입력',
+                  hintStyle: TextStyle(
+                    color: Color(0xFFBDBDBD),
+                  ),
+                  enabledBorder: signUpBorder,  
+                  focusedBorder: signUpBorder,
+                  border: signUpBorder
+                ),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please enter your phone number';
+                  }
+                  return null;
+                },
+              ),
+              Divider(color: Colors.white, height: 12,),
               TextFormField(
                 controller: _passController,
                 obscureText: true,
                 decoration: InputDecoration(
-                  labelText: '비밀번호 입력',
-                  border: inputBorder,
-                  focusedBorder: inputBorder,
+                  hintText: '비밀번호 입력',
+                  hintStyle: TextStyle(
+                    color: Color(0xFFBDBDBD),
+                  ),
+                  enabledBorder: signUpBorder,  
+                  focusedBorder: signUpBorder,
+                  border: signUpBorder
                 ),
                 validator: (value) {
                   if (value.isEmpty) {
@@ -197,13 +217,17 @@ class SignUpFormState extends State<SignUpForm> {
                   return null;
                 },
               ),
-              Divider(color: Colors.white),
+              Divider(color: Colors.white, height: 12,),
               TextFormField(
                 obscureText: true,
                 decoration: InputDecoration(
-                  labelText: '비밀번호 확인',
-                  border: inputBorder,
-                  focusedBorder: inputBorder,
+                  hintText: '비밀번호 확인',
+                  hintStyle: TextStyle(
+                    color: Color(0xFFBDBDBD),
+                  ),
+                  enabledBorder: signUpBorder,  
+                  focusedBorder: signUpBorder,
+                  border: signUpBorder
                 ),
                 validator: (value) {
                   if (value.isEmpty) {
@@ -215,34 +239,62 @@ class SignUpFormState extends State<SignUpForm> {
                   return null;
                 },
               ),
-              Divider(color: Colors.white),
-              TextFormField(
-                controller: _phoneController,
-                decoration: InputDecoration(
-                  labelText: '전화번호 입력',
-                  border: inputBorder,
-                  focusedBorder: inputBorder,
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 24),
+                child: RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    style: TextStyle(
+                      color: Color(0xFF828282),
+                      fontSize: 13,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: 'By tapping to register, you agree to our ',
+                      ),
+                      TextSpan(
+                        text: 'Terms & Conditions',
+                        style: TextStyle(
+                          color: Colors.red,
+                        ),
+                      ),
+                      TextSpan(
+                        text: ', ',
+                      ),
+                      TextSpan(
+                        text: 'Privacy Policy',
+                        style: TextStyle(
+                          color: Colors.red,
+                        ),
+                      ),
+                      TextSpan(
+                        text: ', and ',
+                      ),
+                      TextSpan(
+                        text: 'Revault Account Agreement',
+                        style: TextStyle(
+                          color: Colors.red,
+                        ),
+                      ),
+                      TextSpan(
+                        text: '.',
+                      ),
+                    ]
+                  ),
                 ),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter your phone number';
-                  }
-                  return null;
-                },
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(
-                  vertical: 16.0,
+                  vertical: 16,
                 ),
                 child: SizedBox(
                   width: double.infinity,
                   child: RaisedButton(
-                    color: Colors.black,
+                    color: Color(0xFF333333),
                     textColor: Colors.white,
                     disabledColor: Colors.grey,
                     disabledTextColor: Colors.black,
-                    padding: EdgeInsets.all(15.0),
+                    padding: EdgeInsets.all(20),
                     splashColor: Colors.greenAccent,
                     onPressed: () async {
                       if (_formKey.currentState.validate()) {
@@ -276,8 +328,11 @@ class SignUpFormState extends State<SignUpForm> {
                       }
                     },
                     child: Text(
-                      '회원가입',
-                      style: TextStyle(fontSize: 20.0)
+                      '가입하기',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 )

@@ -15,8 +15,16 @@ class Login extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
         centerTitle: true,
-        title: Text("로그인"),
+        title: Text(
+          "로그인",
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        elevation: 0,
       ),
       body: LoginForm()
     );
@@ -244,344 +252,355 @@ class LoginFormState extends State<LoginForm> {
   Widget build(BuildContext context) {
     TextEditingController _idController = new TextEditingController();
     TextEditingController _pwController = new TextEditingController();
-    return Center(
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Form(
-                key: _formKey,
-                  child: Column(
-                    children: <Widget>[
-                      TextFormField(
-                        controller: _idController,
-                        decoration: InputDecoration(
-                          hintText: '아이디 입력',
-                          border: inputBorder,
-                          focusedBorder: inputBorder,
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Form(
+              key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    TextFormField(
+                      controller: _idController,
+                      decoration: InputDecoration(
+                        hintText: '아이디 입력',
+                        hintStyle: TextStyle(
+                          color: Color(0xFFBDBDBD),
                         ),
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Please enter your username';
-                          }
-                          return null;
-                        },
+                        border: inputBorder,
+                        enabledBorder: inputBorder,
+                        focusedBorder: inputBorder,
                       ),
-                      Divider(color: Colors.white),
-                      TextFormField(
-                        controller: _pwController,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          hintText: '비밀번호 입력',
-                          border: inputBorder,
-                          focusedBorder: inputBorder,
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter your username';
+                        }
+                        return null;
+                      },
+                    ),
+                    Divider(color: Colors.white),
+                    TextFormField(
+                      controller: _pwController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        hintText: '비밀번호 입력',
+                        hintStyle: TextStyle(
+                          color: Color(0xFFBDBDBD),
                         ),
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Please enter your password';
-                          }
-                          return null;
-                        },
+                        border: inputBorder,
+                        enabledBorder: inputBorder,
+                        focusedBorder: inputBorder,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 50.0, bottom: 12.0),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: RaisedButton(
-                            color: Colors.black,
-                            textColor: Colors.white,
-                            disabledColor: Colors.grey,
-                            disabledTextColor: Colors.black,
-                            padding: EdgeInsets.all(14.0),
-                            splashColor: Colors.black,
-                            onPressed: () async {
-                              if (_formKey.currentState.validate()) {
-                                var fcmToken = await storage.read(key: "fcm");
-                                var loginResponse = await tryLogin(_idController.text, _pwController.text, fcmToken);
-                                setState(() {
-                                  loginResult = loginResponse.body;
-                                });
-                                if(loginResult == "-1") {
-                                  ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(content: Text('아이디 또는 비밀번호가 일치하지 않습니다')));
-                                  return;
-                                }
-
-                                await storage.write(
-                                  key: "session",
-                                  value: loginResponse.headers['set-cookie'].split(';')[0]
-                                );
-
-                                Navigator.pushReplacementNamed(context, '/auctionlist');
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter your password';
+                        }
+                        return null;
+                      },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 50.0, bottom: 14.0),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: RaisedButton(
+                          color: Color(0xFF333333),
+                          textColor: Colors.white,
+                          disabledColor: Colors.grey,
+                          disabledTextColor: Colors.black,
+                          padding: EdgeInsets.only(top: 17, bottom: 19),
+                          splashColor: Colors.black,
+                          onPressed: () async {
+                            if (_formKey.currentState.validate()) {
+                              var fcmToken = await storage.read(key: "fcm");
+                              var loginResponse = await tryLogin(_idController.text, _pwController.text, fcmToken);
+                              setState(() {
+                                loginResult = loginResponse.body;
+                              });
+                              if(loginResult == "-1") {
+                                ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(content: Text('아이디 또는 비밀번호가 일치하지 않습니다')));
+                                return;
                               }
-                            },
-                            child: Text(
-                              "로그인",
-                              style: TextStyle(fontSize: 18.0),
+
+                              await storage.write(
+                                key: "session",
+                                value: loginResponse.headers['set-cookie'].split(';')[0]
+                              );
+
+                              Navigator.pushReplacementNamed(context, '/auctionlist');
+                            }
+                          },
+                          child: Text(
+                            "로그인하기",
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                        )
-                      ),
-                    ]
-                )
-              ),
-              //divider,
-              SizedBox(
-                width: double.infinity,
-                child: RaisedButton(
-                  color: Color(0xFF1877F2),
-                  textColor: Colors.white,
-                  disabledColor: Colors.grey,
-                  disabledTextColor: Colors.black,
-                  padding: EdgeInsets.all(12.0),
-                  splashColor: Colors.blueAccent,
-                  onPressed: () async {
-                    final facebookLogin = FacebookLogin();
-                    facebookLogin.loginBehavior = FacebookLoginBehavior.webViewOnly;
+                        ),
+                      )
+                    ),
+                  ]
+              )
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: RaisedButton(
+                color: Color(0xFF3A5CA9), // 개편 이후의 색상: 0xFF1877F2
+                textColor: Colors.white,
+                disabledColor: Colors.grey,
+                disabledTextColor: Colors.black,
+                padding: EdgeInsets.only(top: 15, bottom: 15),
+                splashColor: Colors.blueAccent,
+                onPressed: () async {
+                  final facebookLogin = FacebookLogin();
+                  facebookLogin.loginBehavior = FacebookLoginBehavior.webViewOnly;
 
-                    final isLogged = await facebookLogin.isLoggedIn;
-                    if (isLogged) {
-                      final currToken = await facebookLogin.currentAccessToken;
-                      final userInfo = await getFacebookInfo(currToken.token);
-                      print(userInfo);
-                      // 여기는 로그인만
-                      var fcmToken = await storage.read(key: "fcm");
-                      var loginResponse = await tryLogin(userInfo['email'], userInfo['id'], fcmToken);
-                      setState(() {
-                        loginResult = loginResponse.body;
-                      });
-                      if(loginResult == "-1") {
-                        ScaffoldMessenger.of(context)
-                          .showSnackBar(SnackBar(content: Text('아이디 또는 비밀번호가 일치하지 않습니다')));
-                        return;
-                      }
-
-                      await storage.write(
-                        key: "session",
-                        value: loginResponse.headers['set-cookie'].split(';')[0]
-                      );
-                      
-                      Navigator.pushReplacementNamed(context, '/auctionlist');
+                  final isLogged = await facebookLogin.isLoggedIn;
+                  if (isLogged) {
+                    final currToken = await facebookLogin.currentAccessToken;
+                    final userInfo = await getFacebookInfo(currToken.token);
+                    print(userInfo);
+                    // 여기는 로그인만
+                    var fcmToken = await storage.read(key: "fcm");
+                    var loginResponse = await tryLogin(userInfo['email'], userInfo['id'], fcmToken);
+                    setState(() {
+                      loginResult = loginResponse.body;
+                    });
+                    if(loginResult == "-1") {
+                      ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text('아이디 또는 비밀번호가 일치하지 않습니다')));
                       return;
                     }
 
-                    final result = await facebookLogin.logIn(['email']);
-                    // accessToken errorMessage status
-                    switch (result.status) {
-                      case FacebookLoginStatus.loggedIn:
-                        final token = result.accessToken;
-                        final userInfo = await getFacebookInfo(token.token);
-                        ScaffoldMessenger.of(context)
-                          .showSnackBar(SnackBar(content: Text('페이스북 로그인 성공')));
-                        print(userInfo);
-                        
-                        final signupResult = await trySignUp(
-                          userInfo['email'], userInfo['id'], userInfo['email'], '', snsCode: 1);
+                    await storage.write(
+                      key: "session",
+                      value: loginResponse.headers['set-cookie'].split(';')[0]
+                    );
+                    
+                    Navigator.pushReplacementNamed(context, '/auctionlist');
+                    return;
+                  }
+
+                  final result = await facebookLogin.logIn(['email']);
+                  // accessToken errorMessage status
+                  switch (result.status) {
+                    case FacebookLoginStatus.loggedIn:
+                      final token = result.accessToken;
+                      final userInfo = await getFacebookInfo(token.token);
+                      ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text('페이스북 로그인 성공')));
+                      print(userInfo);
+                      
+                      final signupResult = await trySignUp(
+                        userInfo['email'], userInfo['id'], userInfo['email'], '', snsCode: 1);
+                      String session = signupResult.headers['set-cookie'].split(';')[0];
+                      await storage.write(
+                        key: "session",
+                        value: session
+                      );
+
+                      if (signupResult.statusCode == 200 || signupResult.statusCode == 200) {
+                        // 이미 페이스북 계정으로 가입했을 경우
+                        if (signupResult.body == "-1") {
+                          var fcmToken = await storage.read(key: "fcm");
+                          var loginResponse = await tryLogin(userInfo['email'], userInfo['id'], fcmToken);
+                          setState(() {
+                            loginResult = loginResponse.body;
+                          });
+                          if(loginResult == "-1") {
+                            ScaffoldMessenger.of(context)
+                              .showSnackBar(SnackBar(content: Text('아이디 또는 비밀번호가 일치하지 않습니다')));
+                            return;
+                          }
+
+                          await storage.write(
+                            key: "session",
+                            value: loginResponse.headers['set-cookie'].split(';')[0]
+                          );
+                          
+                          Navigator.pushReplacementNamed(context, '/auctionlist');
+                          return;
+                        }
+
+                        // 신규 가입했을 경우
+                        await _showEnterPhoneModal(session);
+                        Navigator.pushReplacementNamed(context, '/auctionlist');
+                      }
+                      break;
+                    case FacebookLoginStatus.cancelledByUser:
+                      ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text('페이스북 로그인 취소')));
+                      break;
+                    case FacebookLoginStatus.error:
+                      ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text('페이스북 로그인 실패: ${result.errorMessage}')));
+                      break;
+                  }
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'images/facebook_login_icon.png',
+                      width: 28.0,
+                      fit: BoxFit.cover,
+                    ),
+                    VerticalDivider(width: 10.0),
+                    Text(
+                      "페이스북으로 로그인하기",
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,  
+                      ),
+                    ),
+                  ]
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 14.0),
+              child: SizedBox(
+                width: double.infinity,
+                child: RaisedButton(
+                  color: Color(0xFFFEE500),
+                  textColor: Colors.black,
+                  disabledColor: Colors.grey,
+                  disabledTextColor: Colors.white,
+                  padding: EdgeInsets.all(15.0),
+                  splashColor: Colors.blueAccent,
+                  onPressed: () async {
+                    try {
+                      if (_isKakaoTalkInstalled) {
+                        var token = await AccessTokenStore.instance.fromStore();
+                        if (token.refreshToken == null) {
+                          var result = await _loginWithTalk();
+                          //print(result.toJson());
+                          print(result.accessToken);
+                        }
+                      }
+                      else {
+                        //AuthCodeClient.instance.retrieveAuthCode();
+                        var token = await AccessTokenStore.instance.fromStore();
+                        if (token.refreshToken == null) {
+                          var result = await _loginWithKakao();
+                          //print(result.toJson());
+                          print(result.accessToken);
+                        }
+                      }
+                      User currUser = await UserApi.instance.me();
+                      print(currUser.toString());
+                      var currUserJson = currUser.toJson();
+                      String email = currUserJson['kakao_account']['email'];
+                      String id = currUserJson['id'].toString();
+
+                      final signupResult = await trySignUp(
+                        email, id, email, '', snsCode: 2);
                         String session = signupResult.headers['set-cookie'].split(';')[0];
                         await storage.write(
                           key: "session",
                           value: session
                         );
 
-                        if (signupResult.statusCode == 200 || signupResult.statusCode == 200) {
-                          // 이미 페이스북 계정으로 가입했을 경우
-                          if (signupResult.body == "-1") {
-                            var fcmToken = await storage.read(key: "fcm");
-                            var loginResponse = await tryLogin(userInfo['email'], userInfo['id'], fcmToken);
-                            setState(() {
-                              loginResult = loginResponse.body;
-                            });
-                            if(loginResult == "-1") {
-                              ScaffoldMessenger.of(context)
-                                .showSnackBar(SnackBar(content: Text('아이디 또는 비밀번호가 일치하지 않습니다')));
-                              return;
-                            }
-
-                            await storage.write(
-                              key: "session",
-                              value: loginResponse.headers['set-cookie'].split(';')[0]
-                            );
-                            
-                            Navigator.pushReplacementNamed(context, '/auctionlist');
+                      if (signupResult.statusCode == 200 || signupResult.statusCode == 200) {
+                        // 이미 카카오 계정으로 가입했을 경우
+                        if (signupResult.body == "-1") {
+                          var fcmToken = await storage.read(key: "fcm");
+                          var loginResponse = await tryLogin(email, id, fcmToken);
+                          setState(() {
+                            loginResult = loginResponse.body;
+                          });
+                          if(loginResult == "-1") {
+                            ScaffoldMessenger.of(context)
+                              .showSnackBar(SnackBar(content: Text('아이디 또는 비밀번호가 일치하지 않습니다')));
                             return;
                           }
 
-                          // 신규 가입했을 경우
-                          await _showEnterPhoneModal(session);
+                          await storage.write(
+                            key: "session",
+                            value: loginResponse.headers['set-cookie'].split(';')[0]
+                          );
+                          
                           Navigator.pushReplacementNamed(context, '/auctionlist');
+                          return;
                         }
-                        break;
-                      case FacebookLoginStatus.cancelledByUser:
-                        ScaffoldMessenger.of(context)
-                          .showSnackBar(SnackBar(content: Text('페이스북 로그인 취소')));
-                        break;
-                      case FacebookLoginStatus.error:
-                        ScaffoldMessenger.of(context)
-                          .showSnackBar(SnackBar(content: Text('페이스북 로그인 실패: ${result.errorMessage}')));
-                        break;
+
+                        // 신규 가입했을 경우
+                        await _showEnterPhoneModal(session);
+                        Navigator.pushReplacementNamed(context, '/auctionlist');
+                        return;
+                      }
+
+                      throw Exception('서비스 로그인에 실패했습니다. 다시 시도해주세요');
+                    }
+                    catch (e) {
+                      ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text('카카오 로그인 실패: $e')));
                     }
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Image.asset(
-                        'images/facebook_login_icon.png',
+                        'images/kakao_login_icon.png',
                         width: 28.0,
                         fit: BoxFit.cover,
                       ),
                       VerticalDivider(width: 12.0),
                       Text(
-                        "페이스북으로 로그인",
+                        "카카오 계정으로 로그인",
                         style: TextStyle(fontSize: 18.0),
                       ),
-                    ]
+                    ],
                   ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 12.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: RaisedButton(
-                    color: Color(0xFFFEE500),
-                    textColor: Colors.black,
-                    disabledColor: Colors.grey,
-                    disabledTextColor: Colors.white,
-                    padding: EdgeInsets.all(12.0),
-                    splashColor: Colors.blueAccent,
-                    onPressed: () async {
-                      try {
-                        if (_isKakaoTalkInstalled) {
-                          var token = await AccessTokenStore.instance.fromStore();
-                          if (token.refreshToken == null) {
-                            var result = await _loginWithTalk();
-                            //print(result.toJson());
-                            print(result.accessToken);
-                          }
-                        }
-                        else {
-                          //AuthCodeClient.instance.retrieveAuthCode();
-                          var token = await AccessTokenStore.instance.fromStore();
-                          if (token.refreshToken == null) {
-                            var result = await _loginWithKakao();
-                            //print(result.toJson());
-                            print(result.accessToken);
-                          }
-                        }
-                        User currUser = await UserApi.instance.me();
-                        print(currUser.toString());
-                        var currUserJson = currUser.toJson();
-                        String email = currUserJson['kakao_account']['email'];
-                        String id = currUserJson['id'].toString();
-
-                        final signupResult = await trySignUp(
-                          email, id, email, '', snsCode: 2);
-                          String session = signupResult.headers['set-cookie'].split(';')[0];
-                          await storage.write(
-                            key: "session",
-                            value: session
-                          );
-
-                        if (signupResult.statusCode == 200 || signupResult.statusCode == 200) {
-                          // 이미 카카오 계정으로 가입했을 경우
-                          if (signupResult.body == "-1") {
-                            var fcmToken = await storage.read(key: "fcm");
-                            var loginResponse = await tryLogin(email, id, fcmToken);
-                            setState(() {
-                              loginResult = loginResponse.body;
-                            });
-                            if(loginResult == "-1") {
-                              ScaffoldMessenger.of(context)
-                                .showSnackBar(SnackBar(content: Text('아이디 또는 비밀번호가 일치하지 않습니다')));
-                              return;
-                            }
-
-                            await storage.write(
-                              key: "session",
-                              value: loginResponse.headers['set-cookie'].split(';')[0]
-                            );
-                            
-                            Navigator.pushReplacementNamed(context, '/auctionlist');
-                            return;
-                          }
-
-                          // 신규 가입했을 경우
-                          await _showEnterPhoneModal(session);
-                          Navigator.pushReplacementNamed(context, '/auctionlist');
-                          return;
-                        }
-
-                        throw Exception('서비스 로그인에 실패했습니다. 다시 시도해주세요');
-                      }
-                      catch (e) {
-                        ScaffoldMessenger.of(context)
-                          .showSnackBar(SnackBar(content: Text('카카오 로그인 실패: $e')));
-                      }
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          'images/kakao_login_icon.png',
-                          width: 28.0,
-                          fit: BoxFit.cover,
-                        ),
-                        VerticalDivider(width: 12.0),
-                        Text(
-                          "카카오 계정으로 로그인",
-                          style: TextStyle(fontSize: 18.0),
-                        ),
-                      ],
+            ),
+            Divider(color: Colors.white),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                RichText(
+                  text: TextSpan(
+                    text: '회원가입',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 14,
                     ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () => Navigator.pushNamed(context, '/signup')
                   ),
                 ),
-              ),
-              Divider(color: Colors.white),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  RichText(
-                    text: TextSpan(
-                      text: '회원가입',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 14,
-                      ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () => Navigator.pushNamed(context, '/signup')
+                VerticalDivider(thickness: 5, color: Colors.grey,),
+                RichText(
+                  text: TextSpan(
+                    text: '계정찾기',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 14,
                     ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () => Navigator.pushNamed(context, '/verifyemail')
                   ),
-                  VerticalDivider(thickness: 5, color: Colors.grey,),
-                  RichText(
-                    text: TextSpan(
-                      text: '계정찾기',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 14,
-                      ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () => Navigator.pushNamed(context, '/verifyemail')
+                ),
+                VerticalDivider(thickness: 5, color: Colors.grey,),
+                RichText(
+                  text: TextSpan(
+                    text: '비밀번호 재설정',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 14,
                     ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () => Navigator.pushNamed(context, '/verifyemail')
                   ),
-                  VerticalDivider(thickness: 5, color: Colors.grey,),
-                  RichText(
-                    text: TextSpan(
-                      text: '비밀번호 재설정',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 14,
-                      ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () => Navigator.pushNamed(context, '/verifyemail')
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        )
+                ),
+              ],
+            ),
+          ],
+        ),
       )
     );
   }

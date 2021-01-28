@@ -28,6 +28,8 @@ import 'package:revault_app/phoneVerify.dart';
 import 'package:revault_app/purchaseWindow.dart';
 import 'package:revault_app/resetPassword.dart';
 import 'package:revault_app/signup.dart';
+import 'package:revault_app/userIdentify.dart';
+import 'package:revault_app/userIdentifyResult.dart';
 import 'auctionGoodDetail.dart';
 import 'login.dart';
 import 'myPage.dart';
@@ -75,11 +77,17 @@ class MyApp extends StatelessWidget {
             tabBarTheme: TabBarTheme(
               labelColor: Colors.black,
               labelPadding: EdgeInsets.all(0),
-              labelStyle: Theme.of(context).textTheme.headline6
-                .copyWith(fontSize: 18, fontWeight: FontWeight.bold,),
-              unselectedLabelStyle: Theme.of(context).textTheme.headline6
-                .copyWith(fontSize: 18, color: Colors.grey[100], fontWeight: FontWeight.bold,),
-            )
+              labelStyle: Theme.of(context).textTheme.headline6.copyWith(
+                fontSize: 16,
+                color: Color(0xFF333333),
+                fontWeight: FontWeight.bold,
+              ),
+              unselectedLabelColor: Color(0xFFD7D7D7),
+              unselectedLabelStyle: Theme.of(context).textTheme.headline6.copyWith(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
           home: MyHomePage(title: 'REVAULT Start Page'),
           routes: {
@@ -106,6 +114,8 @@ class MyApp extends StatelessWidget {
             '/purchasewindow': (context) => PurchaseWindow(),
             '/phoneverify': (context) => PhoneVerify(),
             '/policy': (context) => Policy(),
+            '/useridentify': (context) => UserIdentify(),
+            '/useridentifyresult': (context) => UserIdentifyResult(),
           },
           // Error 처리용 페이지
           onUnknownRoute: (RouteSettings settings) {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:revault_app/common/aux.dart';
-import 'package:revault_app/common/simpleOtp.dart';
 
 class PhoneVerify extends StatelessWidget {
   @override
@@ -37,7 +36,6 @@ class PhoneVerifyDetailState extends State<PhoneVerifyDetail> {
   final _formKey2 = GlobalKey<FormState>();
   TextEditingController _phoneController = new TextEditingController();
   TextEditingController _putOTPController = new TextEditingController();
-  SimpleOtp otp = SimpleOtp();
   bool isCodeEnabled = false;
   int enteredOtp;
   String findUserResult;
@@ -146,9 +144,7 @@ class PhoneVerifyDetailState extends State<PhoneVerifyDetail> {
                       padding: EdgeInsets.all(20.0),
                       onPressed: () async {
                         if (_formKey1.currentState.validate()) {
-                          // TODO: 실제 적용은 백엔드와 연동
-                          otp.sendOtp(_phoneController.text.substring(1));
-                          _enableCode();
+
                         }
                       },
                       child: Text(
@@ -200,8 +196,6 @@ class PhoneVerifyDetailState extends State<PhoneVerifyDetail> {
                       padding: EdgeInsets.all(20.0),
                       onPressed: isCodeEnabled ? () async {
                         if (_formKey2.currentState.validate()) {
-                          var otpResult = otp.resultChecker(int.parse(_putOTPController.text));
-                          if (otpResult) {
                             var userResult = await findUserInfo(_phoneController.text);
                             if (userResult.userID == null) {
                               setState(() {
@@ -237,7 +231,6 @@ class PhoneVerifyDetailState extends State<PhoneVerifyDetail> {
 
                           ScaffoldMessenger.of(context)
                             .showSnackBar(SnackBar(content: Text('휴대폰 인증에 실패했습니다. 다시 시도해 주세요')));
-                        }
                       } : null,
                       child: Text(
                         "인증하기",

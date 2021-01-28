@@ -100,6 +100,52 @@ Future<UserInfo> getInfo(String session) async {
     alarmStatus: null,
     alarmComment: null,
     snsCode: null,
+    niceDI: null,
+  );
+}
+
+Future<UserInfo> userVerify(String session, String di) async {
+  var map = new Map<String, dynamic>();
+  map['nice_di'] = di;
+  http.Response response = await http.post(
+    'https://ibsoft.site/revault/findUser',
+    body: map,
+    headers: <String, String>{
+      'Cookie': session,
+    },
+  );
+
+  if (response.statusCode == 200 && response.body != null && response.body != "") {
+    print("User Found: ${response.body}");
+    return compute(parseInfo, response.body);
+  }
+  print("User Not Found");
+  return UserInfo(
+    ref: null,
+    userID: null,
+    email: null,
+    name: null,
+    phone: null,
+    address: null,
+    profile: null,
+    auctionList: null,
+    commentList: null,
+    fcmToken: null,
+    alarmPrice: null,
+    alarmStatus: null,
+    alarmComment: null,
+    snsCode: null,
+    niceDI: null,
+  );
+}
+
+class UserIdentifyArguments {
+  final int snsCode;
+  final String userID;
+
+  UserIdentifyArguments(
+    this.snsCode,
+    this.userID,
   );
 }
 
@@ -131,7 +177,25 @@ Future<UserInfo> findUserInfo(String phone) async {
     alarmStatus: null,
     alarmComment: null,
     snsCode: null,
+    niceDI: null,
   );
+}
+
+Future<http.Response> trySaveVerification(String session, String di) async {
+  var map = new Map<String, dynamic>();
+  map['nice_di'] = di;
+
+  http.Response response = await http.post(
+    'https://ibsoft.site/revault/modUserInfo',
+    headers: <String, String>{
+      'Cookie': session,
+    },
+    body: map,
+  );
+
+  print(response.statusCode); // 200 or 201
+  print(response.body); // string: "1" or "-1"
+  return response;
 }
 
 Duration remainingTime(DateTime deadline) {
@@ -211,7 +275,8 @@ Widget remainingTimeDisplay(DateTime deadline, int entries) {
       '경매가 종료된 상품입니다.',
       style: TextStyle(
         fontSize: 14,
-        color: Colors.red
+        color: Colors.red,
+        fontWeight: FontWeight.bold,
       )
     );
   }
@@ -227,16 +292,16 @@ Widget remainingTimeDisplay(DateTime deadline, int entries) {
         child: Text(
           '남은시간 : $timeString',
           style: TextStyle(
-            fontSize: 14,
+            fontSize: 13,
             color: Colors.red
           )
         ),
       ),
-      Icon(Icons.person, size: 14),
+      Icon(Icons.person_outline_rounded, size: 13),
       Text(
         '$entries' + '명 참여 중', // TODO: 같은 사람이 여러번 올린 경우를 빼야한다
         style: TextStyle(
-          fontSize: 14
+          fontSize: 13
         ),
       )
     ],
@@ -391,10 +456,29 @@ OutlineInputBorder inputBorder = new OutlineInputBorder(
     const Radius.circular(0.0),
   ),
   borderSide: new BorderSide(
-    color: Colors.black,
+    color: Color(0xFFBDBDBD),
     width: 1.0,
   ),
 );
+
+UnderlineInputBorder signUpBorder = UnderlineInputBorder(
+  borderSide: BorderSide(
+    color: Color(0xFFBDBDBD),
+  ),
+);
+
+String putComma(int price) {
+  String reversedPriceString = price.toString().split('').reversed.join();
+  int len = reversedPriceString.length;
+  String reversedCommaPriceString = reversedPriceString.replaceAllMapped(
+    RegExp(r".{3}"), (match) => "${match.group(0)},");
+  
+  String commaPriceString = reversedCommaPriceString.split('').reversed.join();
+  if (len % 3 == 0)
+    return commaPriceString.substring(1);
+
+  return commaPriceString;
+}
 
 class PurchaseArguments {
   final String session;

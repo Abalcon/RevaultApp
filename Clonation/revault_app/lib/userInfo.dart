@@ -17,6 +17,7 @@ class UserInfo {
   bool alarmStatus;
   bool alarmComment;
   int snsCode;
+  String niceDI;
 
   UserInfo({
     @required this.ref,
@@ -33,6 +34,7 @@ class UserInfo {
     @required this.alarmStatus,
     @required this.alarmComment,
     @required this.snsCode,
+    @required this.niceDI,
   });
 
   factory UserInfo.fromJson(Map<String, dynamic> json) {
@@ -58,6 +60,7 @@ class UserInfo {
       alarmStatus: json['alarm_status'],
       alarmComment: json['alarm_comment'],
       snsCode: json['sns_code'],
+      niceDI: json['nice_di'],
     );
   }
 }

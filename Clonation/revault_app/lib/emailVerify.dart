@@ -111,9 +111,14 @@ class FindUsername extends StatelessWidget {
                 onPressed: () {
                   Navigator.pushNamed(
                     context,
-                    '/phoneverify',
-                    arguments: PhoneVerifyArguments('forgot', 'forgot'),
+                    '/useridentify',
+                    arguments: null,
                   );
+                  // Navigator.pushNamed(
+                  //   context,
+                  //   '/phoneverify',
+                  //   arguments: PhoneVerifyArguments('forgot', 'forgot'),
+                  // );
                 },
                 child: Text(
                   "본인인증하기",
@@ -190,24 +195,24 @@ class EmailVerifyFormState extends State<EmailVerifyForm> {
                     fontSize: 16,
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 24),
-                  child: TextFormField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      hintText: '아이디 / 이메일 주소 입력',
-                      border: inputBorder,
-                      focusedBorder: inputBorder,
-                    ),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return '아이디 또는 이메일을 입력하세요';
-                      }
+                // Padding(
+                //   padding: EdgeInsets.only(top: 24),
+                //   child: TextFormField(
+                //     controller: _emailController,
+                //     decoration: InputDecoration(
+                //       hintText: '아이디 / 이메일 주소 입력',
+                //       border: inputBorder,
+                //       focusedBorder: inputBorder,
+                //     ),
+                //     validator: (value) {
+                //       if (value.isEmpty) {
+                //         return '아이디 또는 이메일을 입력하세요';
+                //       }
 
-                      return null;
-                    },
-                  ),
-                ),
+                //       return null;
+                //     },
+                //   ),
+                // ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 32.0),
                   child: SizedBox(
@@ -222,8 +227,8 @@ class EmailVerifyFormState extends State<EmailVerifyForm> {
                         if (_formKey1.currentState.validate()) {
                           Navigator.pushNamed(
                             context,
-                            '/phoneverify',
-                            arguments: PhoneVerifyArguments('forgot', 'forgot'),
+                            '/useridentify',
+                            arguments: null,
                           );
                         }
                       },

@@ -109,18 +109,21 @@ class Bidding {
   String username;
   DateTime date;
   int price;
+  String profile;
 
   Bidding({
     @required this.username,
     @required this.date,
     @required this.price,
+    @required this.profile,
   });
 
   factory Bidding.fromJson(Map<String, dynamic> json) {
     return Bidding(
       username: json['user_id'],
       date: DateTime.fromMillisecondsSinceEpoch(json['add_time']),
-      price: json['price']
+      price: json['price'],
+      profile: json['profile'],
     );
   }
 }
