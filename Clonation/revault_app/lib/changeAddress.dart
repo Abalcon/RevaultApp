@@ -10,8 +10,15 @@ class ChangeAddress extends StatelessWidget {
     final ReceiverArguments receiver = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         centerTitle: true,
-        title: Text("배송지 변경"),
+        title: Text(
+          "배송지 변경",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: ChangeAddressForm(
         session: receiver.session,
@@ -222,7 +229,7 @@ class ChangeAddressFormState extends State<ChangeAddressForm> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        padding: const EdgeInsets.symmetric(vertical: 55),
                         child: SizedBox(
                           width: double.infinity,
                           child: RaisedButton(
@@ -230,7 +237,7 @@ class ChangeAddressFormState extends State<ChangeAddressForm> {
                             textColor: Colors.white,
                             disabledColor: Colors.grey,
                             disabledTextColor: Colors.black,
-                            padding: EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(18),
                             splashColor: Colors.greenAccent,
                             onPressed: () async {
                               if (_formKey1.currentState.validate()) {
@@ -267,7 +274,10 @@ class ChangeAddressFormState extends State<ChangeAddressForm> {
                             },
                             child: Text(
                               "저장하기",
-                              style: TextStyle(fontSize: 20.0),
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         )

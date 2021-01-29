@@ -24,7 +24,6 @@ import 'package:revault_app/myParticipations.dart';
 import 'package:revault_app/myPrevRecords.dart';
 import 'package:revault_app/myProceedings.dart';
 import 'package:revault_app/mySettings.dart';
-import 'package:revault_app/phoneVerify.dart';
 import 'package:revault_app/purchaseWindow.dart';
 import 'package:revault_app/resetPassword.dart';
 import 'package:revault_app/signup.dart';
@@ -112,7 +111,6 @@ class MyApp extends StatelessWidget {
             '/changeprofile': (context) => ChangeProfile(),
             '/languageselect': (context) => LanguageSelect(),
             '/purchasewindow': (context) => PurchaseWindow(),
-            '/phoneverify': (context) => PhoneVerify(),
             '/policy': (context) => Policy(),
             '/useridentify': (context) => UserIdentify(),
             '/useridentifyresult': (context) => UserIdentifyResult(),
@@ -233,15 +231,6 @@ class _MyHomePageState extends State<MyHomePage> {
               height: MediaQuery.of(context).size.height / 1.5,
               fit: BoxFit.cover,
             ),
-            LinearProgressIndicator(
-              minHeight: 10,
-            ),
-            Text(
-              'Now Loading...',
-              style: TextStyle(
-                fontSize: 20,
-              ),
-            )
           ],
         ),
       ),

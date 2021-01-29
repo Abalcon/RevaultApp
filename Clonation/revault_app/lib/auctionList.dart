@@ -40,7 +40,12 @@ class AuctionList extends StatelessWidget {
                 elevation: 0,
                 flexibleSpace: FlexibleSpaceBar(
                   centerTitle: true,
-                  title: Text("REVAULT"),
+                  title: Text(
+                    "REVAULT",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
                 shape: Border(
                   bottom: BorderSide(

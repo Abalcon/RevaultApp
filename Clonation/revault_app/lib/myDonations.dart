@@ -83,8 +83,8 @@ SessionNamePair currUser;
                         // TODO: 낙찰된 상품의 경우 Image URL에 해당하는 항목이 없다
                         Image.asset(
                           'images/nike_black_hoodie1.jpeg',
-                          height: 60.0,
-                          width: 60.0, 
+                          height: 70.0,
+                          width: 70.0, 
                           fit: BoxFit.cover,
                         ),
                         Expanded(
@@ -92,7 +92,7 @@ SessionNamePair currUser;
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '${snapshot.data[i].brand}',
+                                '[${snapshot.data[i].brand}]',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
@@ -114,7 +114,7 @@ SessionNamePair currUser;
                                 fontSize: 14,
                               )
                             ),
-                            Text('${snapshot.data[i].price / 10}원',
+                            Text('${putComma((snapshot.data[i].price / 10).ceil())}원',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14,

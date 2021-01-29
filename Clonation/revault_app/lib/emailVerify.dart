@@ -14,21 +14,32 @@ class EmailVerify extends StatelessWidget {
                 expandedHeight: 50.0,
                 floating: false,
                 pinned: true,
+                backgroundColor: Colors.transparent,
+                elevation: 0,
                 flexibleSpace: FlexibleSpaceBar(
                   centerTitle: true,
-                  title: Text("계정찾기"),
+                  title: Text(
+                    "계정찾기",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    )
+                  ),
                 ),
               ),
               SliverPersistentHeader(
                 delegate: _SliverAppBarDelegate(
                   TabBar(
-                    indicatorColor: Color(0xFF80F208),
+                    indicatorColor: Colors.transparent,
+                    indicatorWeight: 1,
+                    labelColor: Colors.black,
+                    unselectedLabelColor: Colors.grey[400],
                     tabs: [
                       Tab(
                         child: SizedBox.expand(
                           child: Container(
+                            height: 60,
                             alignment: Alignment.center,
-                            color: Colors.white,
+                            //color: Colors.grey[600],
                             child: Text("아이디",),
                           ),
                         ),
@@ -36,8 +47,9 @@ class EmailVerify extends StatelessWidget {
                       Tab(
                         child: SizedBox.expand(
                           child: Container(
+                            height: 60,
                             alignment: Alignment.center,
-                            color: Colors.white,
+                            //color: Colors.grey[600],
                             child: Text("비밀번호",),
                           ),
                         ),
@@ -88,7 +100,7 @@ class FindUsername extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(10, 40, 10, 0),
+      padding: EdgeInsets.fromLTRB(20, 40, 20, 0),
       child: Column(
         children: [
           Text(
@@ -96,6 +108,7 @@ class FindUsername extends StatelessWidget {
             + '\n비밀번호를 변경하실 수 있습니다.',
             style: TextStyle(
               fontSize: 16,
+              fontWeight: FontWeight.w500,
             ),
           ),
           Padding(
@@ -107,18 +120,13 @@ class FindUsername extends StatelessWidget {
                 textColor: Colors.white,
                 disabledColor: Colors.grey,
                 disabledTextColor: Colors.black,
-                padding: EdgeInsets.all(15.0),
+                padding: EdgeInsets.all(16.0),
                 onPressed: () {
                   Navigator.pushNamed(
                     context,
                     '/useridentify',
                     arguments: null,
                   );
-                  // Navigator.pushNamed(
-                  //   context,
-                  //   '/phoneverify',
-                  //   arguments: PhoneVerifyArguments('forgot', 'forgot'),
-                  // );
                 },
                 child: Text(
                   "본인인증하기",
@@ -130,7 +138,7 @@ class FindUsername extends StatelessWidget {
               ),
             )
           ),
-          Divider(height: 20.0),
+          Divider(height: 30.0),
           Container(
             constraints: BoxConstraints(
               maxWidth: MediaQuery.of(context).size.width * 0.9 - 20,
@@ -138,7 +146,7 @@ class FindUsername extends StatelessWidget {
             child: Text(
               '본인인증 내역이 없어 계정을 찾을 수 없는 경우 고객센터(1544-1544)로 문의하시기 바랍니다.',
               style: TextStyle(
-                color: Colors.grey,
+                color: Colors.grey[600],
               ),
             ),
           ),
@@ -169,19 +177,10 @@ class EmailVerifyFormState extends State<EmailVerifyForm> {
     endIndent: 0,
   );
 
-  // _letsReset(context) {
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: ((BuildContext context) => ResetPassword()),
-  //     ),
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(10, 40, 10, 0),
+      padding: EdgeInsets.fromLTRB(20, 40, 20, 0),
       child: Column(
         children: <Widget>[
           Form(
@@ -193,26 +192,27 @@ class EmailVerifyFormState extends State<EmailVerifyForm> {
                   + '\n비밀번호를 변경하실 수 있습니다.',
                   style: TextStyle(
                     fontSize: 16,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-                // Padding(
-                //   padding: EdgeInsets.only(top: 24),
-                //   child: TextFormField(
-                //     controller: _emailController,
-                //     decoration: InputDecoration(
-                //       hintText: '아이디 / 이메일 주소 입력',
-                //       border: inputBorder,
-                //       focusedBorder: inputBorder,
-                //     ),
-                //     validator: (value) {
-                //       if (value.isEmpty) {
-                //         return '아이디 또는 이메일을 입력하세요';
-                //       }
+                Padding(
+                  padding: EdgeInsets.only(top: 24),
+                  child: TextFormField(
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                      hintText: '아이디 / 이메일 주소 입력',
+                      border: inputBorder,
+                      focusedBorder: inputBorder,
+                    ),
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return '아이디 또는 이메일을 입력하세요';
+                      }
 
-                //       return null;
-                //     },
-                //   ),
-                // ),
+                      return null;
+                    },
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 32.0),
                   child: SizedBox(
@@ -222,7 +222,7 @@ class EmailVerifyFormState extends State<EmailVerifyForm> {
                       textColor: Colors.white,
                       disabledColor: Colors.grey,
                       disabledTextColor: Colors.black,
-                      padding: EdgeInsets.all(15.0),
+                      padding: EdgeInsets.all(16.0),
                       onPressed: () {
                         if (_formKey1.currentState.validate()) {
                           Navigator.pushNamed(
@@ -242,7 +242,7 @@ class EmailVerifyFormState extends State<EmailVerifyForm> {
                     ),
                   )
                 ),
-                Divider(height: 20.0),
+                Divider(height: 30.0),
                 Container(
                   constraints: BoxConstraints(
                     maxWidth: MediaQuery.of(context).size.width * 0.9 - 20,
@@ -250,7 +250,7 @@ class EmailVerifyFormState extends State<EmailVerifyForm> {
                   child: Text(
                     '본인인증 내역이 없어 계정을 찾을 수 없는 경우 고객센터(1544-1544)로 문의하시기 바랍니다.',
                     style: TextStyle(
-                      color: Colors.grey,
+                      color: Colors.grey[600],
                     ),
                   ),
                 ),

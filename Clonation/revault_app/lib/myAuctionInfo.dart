@@ -63,8 +63,15 @@ class MyAuctionInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         centerTitle: true,
-        title: Text("나의 경매 정보"),
+        title: Text(
+          "나의 경매 정보",
+          style: TextStyle(
+            fontWeight: FontWeight.bold
+          ),
+        ),
       ),
       body: MyAuctionInfoDetails(),
     );
@@ -108,7 +115,7 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
             text: TextSpan(
               text: '${snapshot.data.length}',
               style: TextStyle(
-                fontSize: 40, 
+                fontSize: 56, 
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF80F208),
               ),
@@ -136,7 +143,7 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
           list.forEach((good) => donation += (good.price * 0.1).toInt());
 
           return Container(
-            padding: EdgeInsets.symmetric(vertical: 15),
+            padding: EdgeInsets.symmetric(vertical: 30),
             child: Column(
               children: [
                 Row(
@@ -145,24 +152,26 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
                     Text(
                       '누적 기부금액 ',
                       style: TextStyle(
-                        fontSize: 16, 
+                        fontSize: 18, 
                       )
                     ),
                     Text(
-                      '$donation원',
+                      '${putComma(donation)}원',
                       style: TextStyle(
-                        fontSize: 16, 
+                        fontSize: 18, 
                         fontWeight: FontWeight.bold,
                         color: Colors.red,
                       )
                     )
                   ],
                 ),
+                Divider(color: Colors.transparent, height: 8),
                 RichText(
                   text: TextSpan(
                     text: '자세히 보기',
                     style: TextStyle(
                       color: Colors.grey,
+                      fontWeight: FontWeight.bold,
                       decoration: TextDecoration.underline
                     ),
                     recognizer: TapGestureRecognizer()
@@ -190,7 +199,7 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
         if (snapshot.hasData) {
           return CarouselSlider(
             options: CarouselOptions(
-              height: 200.0,
+              height: 250.0,
               enableInfiniteScroll: false,
               autoPlay: false
             ),
@@ -211,7 +220,7 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
                           children: [
                             Container(
                               alignment: Alignment.center,
-                              padding: EdgeInsets.symmetric(vertical: 10),
+                              padding: EdgeInsets.fromLTRB(0, 14, 0, 14),
                               child: Text(
                                 '제품정보',
                                 style: TextStyle(
@@ -232,8 +241,8 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
                                 // TODO: 낙찰된 상품의 경우 Image URL에 해당하는 항목이 없다
                                 Image.asset(
                                   'images/nike_black_hoodie1.jpeg',
-                                  height: 60.0,
-                                  width: 60.0, 
+                                  height: 70.0,
+                                  width: 70.0, 
                                   fit: BoxFit.cover,
                                 ),
                                 Column(
@@ -241,7 +250,7 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      good.brand,
+                                      '[${good.brand}]',
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14,
@@ -250,6 +259,7 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
                                     Text(
                                       good.name,
                                       style: TextStyle(
+                                        fontWeight: FontWeight.w500,
                                         fontSize: 14,
                                       )
                                     ),
@@ -261,46 +271,50 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
                         ),
                         TableRow(
                           decoration: BoxDecoration(
+                            border: Border(
+                              top: BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
+                              bottom: BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
+                            ),
                             color: Colors.white,
                           ),
                           children: [
-                            Row(
-                              children: [
-                                Container(
-                                  width: MediaQuery.of(context).size.width / 4.0,
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    '낙찰 금액',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                    )
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: 14),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: MediaQuery.of(context).size.width / 4.0,
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      '낙찰 금액',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                      )
+                                    ),
                                   ),
-                                ),
-                                Container(
-                                  width: MediaQuery.of(context).size.width / 4.0,
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    isBillingRequired ? '배송지 입력' : '배송 조회',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                    )
+                                  Container(
+                                    width: MediaQuery.of(context).size.width / 4.0,
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      isBillingRequired ? '배송지 입력' : '배송 조회',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                      )
+                                    ),
                                   ),
-                                ),
-                                Container(
-                                  width: MediaQuery.of(context).size.width / 4.0,
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    isBillingRequired ? '잔금 처리' : '결제 완료',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                    )
-                                  ),
-                                )
-                              ]
-                            )
+                                  Container(
+                                    width: MediaQuery.of(context).size.width / 4.0,
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      isBillingRequired ? '잔금 처리' : '결제 완료',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                      )
+                                    ),
+                                  )
+                                ]
+                              ),
+                            ),
                           ]
                         ),
                         TableRow(
@@ -314,11 +328,11 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
                                   width: MediaQuery.of(context).size.width / 4.0,
                                   alignment: Alignment.center,
                                   child: Text(
-                                    '${good.price}원',
+                                    '${putComma(good.price)}원',
                                     style: TextStyle(
                                       color: Colors.red,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 14,
+                                      fontSize: 12,
                                     )
                                   ),
                                 ),
@@ -338,7 +352,7 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
                                     child: Text(
                                       isBillingRequired ? '입력하기' : '조회하기',
                                       style: TextStyle(
-                                        fontSize: 14,
+                                        fontSize: 12,
                                       )
                                     ),
                                     onPressed: isBillingRequired ? () async {
@@ -392,7 +406,7 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
                                     padding: EdgeInsets.all(10),
                                     child: Text('결제하기',
                                       style: TextStyle(
-                                        fontSize: 14,
+                                        fontSize: 12,
                                       )
                                     ),
                                     onPressed: isBillingRequired ? () async {
@@ -447,62 +461,75 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: EdgeInsets.only(top: 20),
       child: Center(
         child: Column(
           children: [
-            Divider(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
+            Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
+                ),
+              ),
+              child: Padding(
+                padding: EdgeInsets.only(top: 38),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      '진행중인 경매',
-                      style: TextStyle(
-                        fontSize: 18, 
-                        fontWeight: FontWeight.bold
-                      )
+                    Column(
+                      children: [
+                        Text(
+                          '진행중인 경매',
+                          style: TextStyle(
+                            fontSize: 24, 
+                            fontWeight: FontWeight.w400,
+                          )
+                        ),
+                        _listCountText(ongoingList, '/myparticipations'),
+                      ]
                     ),
-                    _listCountText(ongoingList, '/myparticipations'),
+                    VerticalDivider(
+                      color: Color(0xFF828282),
+                      width: 56,
+                      thickness: 5,
+                      indent: 20,
+                      endIndent: 20,
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          '이전 참여 경매',
+                          style: TextStyle(
+                            fontSize: 24, 
+                            fontWeight: FontWeight.w400,
+                          )
+                        ),
+                        _listCountText(recordList, '/myprevrecords'),
+                      ]
+                    )
                   ]
                 ),
-                VerticalDivider(
-                  color: Colors.grey,
-                  width: 50,
-                  thickness: 5,
-                  indent: 20,
-                  endIndent: 20,
-                ),
-                Column(
-                  children: [
-                    Text(
-                      '이전 참여 경매',
-                      style: TextStyle(
-                        fontSize: 18, 
-                        fontWeight: FontWeight.bold
-                      )
-                    ),
-                    _listCountText(recordList, '/myprevrecords'),
-                  ]
-                )
-              ]
+              ),
             ),
-            Divider(),
             _getTotalDonation(),
             Container(
-              color: Colors.grey[350],
-              padding: EdgeInsets.only(left: 10, top: 50),
+              color: Colors.grey[300],
+              padding: EdgeInsets.only(top: 30),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '최근 낙찰된 제품',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold
-                    )
+                  Padding(
+                    padding: EdgeInsets.only(left: 48),
+                    child: Text(
+                      '최근 낙찰된 제품',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold
+                      )
                   ),
+                  ),
+                  Divider(color: Colors.transparent, height: 8),
                   _buildWithList(),
                 ]
               ),

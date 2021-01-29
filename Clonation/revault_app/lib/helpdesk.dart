@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:revault_app/common/aux.dart';
 import 'customerRequest.dart';
 
@@ -46,9 +47,20 @@ class HelpDeskDetailsState extends State<HelpDeskDetails> {
                     expandedHeight: 50.0,
                     floating: false,
                     pinned: true,
+                    elevation: 0,
                     flexibleSpace: FlexibleSpaceBar(
                       centerTitle: true,
-                      title: Text("고객센터"),
+                      title: Text(
+                        "고객센터",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    shape: Border(
+                      bottom: BorderSide(
+                        color: Color(0xFFD7D7D7),
+                      )
                     ),
                   ),
                   SliverPersistentHeader(
@@ -84,7 +96,7 @@ class HelpDeskDetailsState extends State<HelpDeskDetails> {
               },
               body: TabBarView(
                 children: <Widget> [
-                  Center(child: RequestForm(user: snapshot.data)),
+                  RequestForm(user: snapshot.data),
                   HelpResponse(user: snapshot.data),
                 ],
               )
@@ -174,15 +186,15 @@ class RequestFormState extends State<RequestForm> {
     var size = MediaQuery.of(context).size;
     final double itemWidth = size.width / 3;
     final double itemHeight = size.width * 4 / 27;
-    final double textLength = 19.35;
+    final double textLength = 22;
     var counter = 0;
 
     return Form(
       key: _formKey,
       child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 10),
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 28),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
@@ -190,7 +202,8 @@ class RequestFormState extends State<RequestForm> {
               child: Text(
                 '문의 유형',
                 style: TextStyle(
-                  fontWeight: FontWeight.bold
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
                 )
               ),
             ),
@@ -283,24 +296,22 @@ class RequestFormState extends State<RequestForm> {
                 "문의 내용에 대한 답변은 '1:1 문의내역'에서 확인할 수 있습니다.",
                 style: TextStyle(
                   color: Colors.grey[600],
-                  fontSize: 12,
+                  fontSize: 14,
                 )
               ),
             ),
-            Divider(),
             Padding(
               padding: const EdgeInsets.symmetric(
-                vertical: 16.0,
-                horizontal: 10.0
+                vertical: 30.0,
               ),
               child: SizedBox(
                 width: double.infinity,
                 child: RaisedButton(
-                  color: Color(0xFF80F208),
+                  color: Colors.black,
                   textColor: Colors.white,
                   disabledColor: Colors.grey,
                   disabledTextColor: Colors.black,
-                  padding: EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(18,),
                   splashColor: Colors.greenAccent,
                   onPressed: () async {
                     if (_formKey.currentState.validate() && _selections.any((sel) => sel)) {
@@ -321,7 +332,10 @@ class RequestFormState extends State<RequestForm> {
                   },
                   child: Text(
                     '신청하기',
-                    style: TextStyle(fontSize: 20.0)
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               )
@@ -388,7 +402,7 @@ class HelpResponseState extends State<HelpResponse> {
                 children: [
                   ListView.builder(
                     shrinkWrap: true,
-                    padding: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.fromLTRB(21, 19, 18, 18),
                     itemCount: snapshot.data.length,
                     itemBuilder: (BuildContext _context, int i) {
                       return Column(
@@ -423,9 +437,9 @@ class HelpResponseState extends State<HelpResponse> {
                                   ],
                                 ),
                               ),
-                              Text('${snapshot.data[i].requestDate}',
+                              Text('${DateFormat('yyyy.MM.dd HH:mm').format(snapshot.data[i].requestDate)}',
                                 style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: 12,
                                   color: Colors.grey
                                 )
                               ),
@@ -439,7 +453,6 @@ class HelpResponseState extends State<HelpResponse> {
                               fontSize: 14,
                             )
                           ),
-                          //Divider(color: Colors.transparent),
                           (snapshot.data[i].responseList.length > 0) ?
                           RichText(
                             textAlign: TextAlign.start,

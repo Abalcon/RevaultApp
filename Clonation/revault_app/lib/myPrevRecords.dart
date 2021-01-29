@@ -49,8 +49,15 @@ class MyPrevRecords extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         centerTitle: true,
-        title: Text("이전 참여 경매"),
+        title: Text(
+          "이전 참여 경매",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: MyPrevRecordsDetail(),
     );
@@ -111,72 +118,89 @@ class MyPrevRecordsDetailState extends State<MyPrevRecordsDetail> {
 
             return ListView.builder(
               shrinkWrap: true,
-              padding: const EdgeInsets.all(10),
+              //padding: const EdgeInsets.all(0),
               itemCount: all.length,
               itemBuilder: (BuildContext _context, int i) {
                 var good = all[i];
                 return Column(
                   children: [
                     Container(
-                      color: win.contains(good.auctionID) ?
-                        Colors.transparent : Colors.grey,
-                      child: Row(
-                        children: [
-                          Image.network(
-                            good.imageUrlList[0],
-                            height: 60.0,
-                            width: 60.0, 
-                            fit: BoxFit.cover,
-                            color: win.contains(good.auctionID) ?
-                              Colors.white : Colors.grey,
-                            colorBlendMode: BlendMode.darken,
-                          ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '[${good.brand}]${good.goodName}',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                  )
-                                ),
-                                Text('Size ${good.size}  Condition ${good.condition}',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                  )
-                                ),
-                                Text('${good.price}원',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: Colors.red
-                                  )
-                                ),
-                              ],
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(color: Colors.grey[300]),
+                        ),
+                        color: win.contains(good.auctionID) ?
+                          Colors.transparent : Colors.grey[350],
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(10, 8, 18, 8),
+                        child: Row(
+                          children: [
+                            good.imageUrlList.length > 0 ?
+                            Image.network(
+                              good.imageUrlList[0],
+                              height: 70.0,
+                              width: 70.0, 
+                              fit: BoxFit.cover,
+                              color: win.contains(good.auctionID) ?
+                                Colors.white : Colors.grey[350],
+                              colorBlendMode: BlendMode.darken,
+                            ) :
+                            Image.asset(
+                              'images/revault_square_logo.jpg',
+                              height: 70.0,
+                              width: 70.0, 
+                              fit: BoxFit.cover,
+                              color: win.contains(good.auctionID) ?
+                                Colors.white : Colors.grey,
+                              colorBlendMode: BlendMode.darken,
                             ),
-                          ),
-                          Container(
-                            width: 60.0,
-                            height: 60.0,
-                            child: win.contains(good.auctionID) ?
-                              Icon(
-                                Icons.verified,
-                                size: 40,
-                                color: Colors.yellow
-                              ) :
-                              Icon(
-                                Icons.block,
-                                size: 40,
-                                color: Colors.grey[400]
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '[${good.brand}]${good.goodName}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    )
+                                  ),
+                                  Text('Size ${good.size}  Condition ${good.condition}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 14,
+                                    )
+                                  ),
+                                  Text('${putComma(good.price)}원',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 14,
+                                    )
+                                  ),
+                                ],
                               ),
-                          )
-                        ],
+                            ),
+                            Container(
+                              width: 60.0,
+                              height: 60.0,
+                              child: win.contains(good.auctionID) ?
+                                Icon(
+                                  Icons.verified,
+                                  size: 40,
+                                  color: Colors.yellow
+                                ) :
+                                Icon(
+                                  Icons.block,
+                                  size: 40,
+                                  color: Colors.grey[600],
+                                ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                    Divider()
-                  ]
+                  ],
                 );
               }
             );
@@ -208,6 +232,7 @@ class MyPrevRecordsDetailState extends State<MyPrevRecordsDetail> {
                 '제품정보',
                 style: TextStyle(
                   color: Colors.white,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),

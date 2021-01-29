@@ -35,8 +35,15 @@ class MyParticipations extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         centerTitle: true,
-        title: Text("진행중인 경매"),
+        title: Text(
+          "진행중인 경매",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: MyParticipationsDetail(),
     );
@@ -85,8 +92,8 @@ class MyParticipationsDetailState extends State<MyParticipationsDetail> {
                       children: [
                         Image.network(
                           good.imageUrlList[0],
-                          height: 60.0,
-                          width: 60.0, 
+                          height: 70.0,
+                          width: 70.0, 
                           fit: BoxFit.cover,
                         ),
                         Expanded(
@@ -94,7 +101,7 @@ class MyParticipationsDetailState extends State<MyParticipationsDetail> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '${good.brand}',
+                                '[${good.brand}]',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
@@ -102,6 +109,7 @@ class MyParticipationsDetailState extends State<MyParticipationsDetail> {
                               ),
                               Text('${good.goodName}',
                                 style: TextStyle(
+                                  fontWeight: FontWeight.w500,
                                   fontSize: 14,
                                 )
                               ),
@@ -116,7 +124,7 @@ class MyParticipationsDetailState extends State<MyParticipationsDetail> {
                                 fontSize: 14,
                               )
                             ),
-                            Text('${good.price}원',
+                            Text('${putComma(good.price)}원',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14,
@@ -174,6 +182,7 @@ class MyParticipationsDetailState extends State<MyParticipationsDetail> {
                 '제품정보',
                 style: TextStyle(
                   color: Colors.white,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),

@@ -9,7 +9,7 @@ class UserInfo {
   String phone;
   String address;
   String profile;
-  //DateTime registerDate;
+  DateTime registerDate;
   List<AuctionGood> auctionList;
   List<Comment> commentList;
   String fcmToken;
@@ -35,6 +35,7 @@ class UserInfo {
     @required this.alarmComment,
     @required this.snsCode,
     @required this.niceDI,
+    @required this.registerDate,
   });
 
   factory UserInfo.fromJson(Map<String, dynamic> json) {
@@ -61,6 +62,8 @@ class UserInfo {
       alarmComment: json['alarm_comment'],
       snsCode: json['sns_code'],
       niceDI: json['nice_di'],
+      registerDate: DateTime.fromMillisecondsSinceEpoch(10000000000),
+      //DateTime.fromMillisecondsSinceEpoch(json['add_time']),
     );
   }
 }

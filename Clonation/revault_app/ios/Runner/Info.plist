@@ -30,6 +30,7 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>bootpayRevault</string>
+				<string>fb428084888378651</string>
 			</array>
 		</dict>
 	</array>

@@ -34,8 +34,15 @@ class MyProceedings extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         centerTitle: true,
-        title: Text("낙찰 과정중인 상품"),
+        title: Text(
+          "낙찰 과정중인 상품",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: MyProceedingsDetail(),
     );
@@ -86,8 +93,8 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
                       children: [
                         Image.asset(
                           'images/nike_black_hoodie1.jpeg',
-                          height: 60.0,
-                          width: 60.0, 
+                          height: 70.0,
+                          width: 70.0, 
                           fit: BoxFit.cover,
                         ),
                         Expanded(
@@ -102,8 +109,9 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
                                 )
                               ),
                               Text(
-                                '${good.price}원',
+                                '${putComma(good.price)}원',
                                 style: TextStyle(
+                                  fontWeight: FontWeight.w500,
                                   fontSize: 14,
                                 )
                               ),
@@ -291,6 +299,7 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
                 '제품정보',
                 style: TextStyle(
                   color: Colors.white,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),

@@ -101,6 +101,7 @@ Future<UserInfo> getInfo(String session) async {
     alarmComment: null,
     snsCode: null,
     niceDI: null,
+    registerDate: null,
   );
 }
 
@@ -136,6 +137,7 @@ Future<UserInfo> userVerify(String session, String di) async {
     alarmComment: null,
     snsCode: null,
     niceDI: null,
+    registerDate: null,
   );
 }
 
@@ -178,6 +180,7 @@ Future<UserInfo> findUserInfo(String phone) async {
     alarmComment: null,
     snsCode: null,
     niceDI: null,
+    registerDate: null,
   );
 }
 
@@ -512,19 +515,6 @@ Future<http.Response> tryCheckBilling(String session, int resID, String receiptI
   return response;
 }
 
-class PhoneVerifyArguments {
-  // 결제할 때는 최초 한번만 - session, username 값이 존재
-  // 아이디를 찾을 때는 항상 - session, username 모두 null
-  // 비번을 찾을 때에도 항상 - username만 값이 존재
-  final String session;
-  final String username;
-
-  PhoneVerifyArguments(
-    this.session,
-    this.username,
-  );
-}
-
 Future<http.Response> tryResetUserPassword(String userID, String newPass) async {
   var map = new Map<String, dynamic>();
   map['user_id'] = userID;
@@ -545,4 +535,13 @@ final ButtonStyle greenButtonStyle = ElevatedButton.styleFrom(
   primary: Colors.grey,
   padding: EdgeInsets.all(8.0),
   textStyle: TextStyle(color: Colors.black,),
+);
+
+final ButtonStyle autoBiddingButtonStyle = TextButton.styleFrom(
+  primary: Color(0xFF02C4CE),
+  padding: EdgeInsets.fromLTRB(20, 21, 20, 21),
+  textStyle: TextStyle(
+    color: Color(0xFF02C4CE),
+    fontSize: 16,
+  ),
 );
