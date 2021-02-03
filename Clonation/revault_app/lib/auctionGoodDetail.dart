@@ -45,7 +45,7 @@ class AuctionGoodDetail extends StatelessWidget {
     final int goodID = ModalRoute.of(context).settings.arguments; // 2020-11-17 djkim: 상품 ID 가져오기
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
         title: Text("REVAULT",
@@ -78,43 +78,41 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
     return showModalBottomSheet<void>(
       isScrollControlled: true,
       context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30.0),
+      ),
       builder: (BuildContext context) {
         return Container(
-          height: MediaQuery.of(context).size.height * 0.7,
+          height: MediaQuery.of(context).size.height * 0.8,
           padding: EdgeInsets.only(
-            top: 10
+            top: 20
           ),
           child: Center(
             child: Column(
               children: [
                 Icon(
                   Icons.verified_outlined,
-                  size: 100,
-                  color: Colors.black,
+                  size: 120,
+                  color: revaultGreen,
                 ),
                 Divider(color: Colors.transparent),
-                Text(
-                  '경매에 참여하시겠습니까?',
-                  style: TextStyle(
-                    fontSize: 22,
-                  )
-                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.check, size: 40, color: Color(0xFF80F208)),
+                    Icon(Icons.wallet_giftcard, size: 30, color: revaultBlack),
                     RichText(
                       text: TextSpan(
                         style: TextStyle(
-                          color: Colors.black,
-                          fontSize : 28,
+                          color: revaultBlack,
+                          fontSize : 22,
+                          letterSpacing: -1.0,
                         ),
                         children: [
                           TextSpan(
-                            text: ' 입찰가: ',
+                            text: ' 현재 입찰가: ',
                           ),
                           TextSpan(
-                            text: '${putComma(currPrice + unitPrice)}원',
+                            text: '${putComma(currPrice)}원',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
@@ -124,12 +122,34 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                     ),
                   ],
                 ),
+                RichText(
+                  text: TextSpan(
+                    style: TextStyle(
+                      color: revaultBlack,
+                      fontSize : 22,
+                      letterSpacing: -1.0,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: putComma(currPrice + unitPrice),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextSpan(
+                        text: '원으로 입찰하시겠습니까?',
+                      ),
+                    ],
+                  ),
+                ),
                 BiddingForm(goodID: widget.goodID, price: currPrice, unit: unitPrice, session: currUser.getSession(), parent: this),
+                Divider(color: Color(0xFF828282), height: 50,),
                 Text(
                   '안내사항',
                   style: TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.bold
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: -1.0,
                   )
                 ),
                 Divider(color: Colors.transparent),
@@ -140,19 +160,22 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                       style: TextStyle(
                         color: Color(0xFF828282),
                         fontSize : 13,
+                        letterSpacing: -1.0,
                       ),
                       children: [
                         TextSpan(
                           text: '1. 경매 낙찰 후 낙찰가를 결제하면 상품 배송이 시작됩니다.',
                         ),
                         TextSpan(
-                          text: '\n\n2. 경매에 낙찰이 되지 않았을 시, 입찰가는 결제되지 않습니다.',
+                          text: '\n\n2. 낙찰가는 두 번째로 높은 입찰가(세컨 프라이스)로 결정됩니다.'),
+                        TextSpan(
+                          text: '\n\n3. 경매에 낙찰이 되지 않았을 시, 입찰가는 결제되지 않습니다.',
                         ),
                         TextSpan(
-                          text: '\n\n3. 경매 낙찰 이후, 낙찰가를 결제하지 않으면, 위약금이 부과됩니다.',
+                          text: '\n\n4. 경매 낙찰 이후, 낙찰가를 결제하지 않으면, 위약금이 부과됩니다.',
                         ),
                         TextSpan(
-                          text: '\n\n4. 경매제품 특성상, 교환과 반품은 불가능합니다.',
+                          text: '\n\n5. 경매제품 특성상, 교환과 반품은 불가능합니다.',
                           style: TextStyle(
                             color: Colors.red,
                             fontWeight: FontWeight.bold,
@@ -246,15 +269,16 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                       fontWeight: FontWeight.bold
                     )
                   ),
-                  RaisedButton(
-                    color: Colors.black,
+                  FlatButton(
+                    shape: Border(),
+                    color: revaultBlack,
                     textColor: Colors.white,
                     disabledColor: Colors.grey,
-                    disabledTextColor: Colors.black,
+                    disabledTextColor: revaultBlack,
                     padding: EdgeInsets.symmetric(
                       vertical: 8.0,
                       horizontal: 50.0),
-                    splashColor: Colors.black,
+                    splashColor: revaultBlack,
                     onPressed: () => Navigator.pushNamed(context, '/myparticipations'),
                     child: Text(
                       "경매 진행내역 보기",
@@ -510,33 +534,37 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
         children: [
           FlipPanel.stream(
             itemStream: channel.stream,
-            itemBuilder: (context, value) => Container(
-              decoration: BoxDecoration(
-               //color: Colors.black,
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0xFF231F20),
-                    Color(0xFF444444),
-                    Color(0xFF231F20),
-                  ],
-                  //stops:
+            itemBuilder: (context, value) {
+              if (int.tryParse(value) != null) {
+                currentPrice = int.parse(value);
+              }
+
+              return Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      revaultBlack,
+                      Color(0xFF444444),
+                      revaultBlack,
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              padding: const EdgeInsets.fromLTRB(24, 0, 24, 5),
-              child: Text(
-                (int.tryParse(value) != null) ? putComma(int.parse(value)) :
-                (value != "connected") ? value : putComma(good.price),
-                style: TextStyle(
-                  fontFamily: 'Oswald',
-                  fontWeight: FontWeight.bold,
-                  fontSize: 55.0,
-                  color: Colors.white,
+                padding: const EdgeInsets.fromLTRB(24, 0, 24, 5),
+                child: Text(
+                  (int.tryParse(value) != null) ? putComma(int.parse(value)) :
+                  (value != "connected") ? value : putComma(good.price),
+                  style: TextStyle(
+                    fontFamily: 'Oswald',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 44.0,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-            ),
+              );
+            },
             initValue: putComma(good.price),
           ),
           Padding(
@@ -546,7 +574,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CircleAvatar(
-                  radius: 20.0,
+                  radius: 16.0,
                   backgroundImage: NetworkImage(
                     good.biddingList[0].profile,
                   ),
@@ -554,8 +582,9 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                 RichText(
                   text: TextSpan(
                     style: TextStyle(
-                      color: Colors.black,
+                      color: revaultBlack,
                       fontSize : 16,
+                      letterSpacing: -1.0
                     ),
                     children: [
                       TextSpan(
@@ -598,7 +627,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                 '₩${putComma(good.unitPrice)}',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Colors.black,
+                  color: revaultBlack,
                   fontSize: 16,
                 ),
               ),
@@ -614,15 +643,15 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
           ),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8),
-            child: RaisedButton(
+            child: FlatButton(
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(24.0),
+                borderRadius: BorderRadius.circular(26.0),
               ),
-              color: Color(0xFF80F208),
-              textColor: Colors.black,
+              color: revaultGreen,
+              textColor: Colors.white,
               disabledColor: Colors.grey,
               disabledTextColor: Colors.grey[600],
-              padding: EdgeInsets.symmetric(vertical: 14.0, horizontal: 80.0),
+              padding: EdgeInsets.symmetric(vertical: 14.0, horizontal: 90.0),
               onPressed: () async {
                 var isVerified = await checkVerify(currUser.getSession());
                 if (isVerified) {
@@ -643,7 +672,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                 }
               },
               child: Text(
-                "BIDS UP",
+                "BID UP",
                 style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
@@ -657,7 +686,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
             children: [
               Icon(
                 Icons.cached,
-                color: Color(0xFF80F208),
+                color: revaultGreen,
               ),
               Text(
                 "${putComma(good.autoPrice)}원 까지 자동입찰 중",
@@ -673,6 +702,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
               style: TextStyle(
                 color: Color(0xFF828282),
                 fontSize: 15,
+                decoration: TextDecoration.underline
               ),
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
@@ -701,7 +731,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
     return Column(
       children: [
         Container(
-          color: Colors.black,
+          color: revaultBlack,
           padding: EdgeInsets.symmetric(vertical: 10),
           alignment: Alignment.center,
           child: Text(
@@ -760,7 +790,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                             child: DecoratedBox(
                               decoration: ShapeDecoration(
                                 color: (i == 0) ?
-                                  Color(0xFF80F208) : Colors.black,
+                                  revaultGreen : revaultBlack,
                                 shape: BeveledRectangleBorder(
                                   side: BorderSide.none,
                                   borderRadius: BorderRadius.only(
@@ -773,12 +803,12 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                                 padding: EdgeInsets.only(
                                   top: 6, bottom: 6, left: 22, right: 12),
                                 child: Text(
-                                  '₩${putComma(bidRecord[i].price)}',
+                                  putComma(bidRecord[i].price),
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
                                     color: (i == 0) ?
-                                    Colors.black : Colors.white,
+                                    revaultBlack : Colors.white,
                                   ),
                                 ),
                               ),
@@ -821,11 +851,12 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
         child: isWaiting
         ? SizedBox(
           width: double.infinity,
-          child: RaisedButton(
-            color: Colors.black,
+          child: FlatButton(
+            shape: Border(),
+            color: revaultBlack,
             textColor: Colors.white,
             disabledColor: Colors.grey,
-            disabledTextColor: Colors.black,
+            disabledTextColor: revaultBlack,
             padding: EdgeInsets.all(18.0),
             splashColor: Colors.greenAccent,
             onPressed: () async {
@@ -842,9 +873,10 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
         )
         : SizedBox(
           width: double.infinity,
-          child: RaisedButton(
-            color: Color(0xFF80F208),
-            textColor: Colors.black,
+          child: FlatButton(
+            shape: Border(),
+            color: revaultGreen,
+            textColor: revaultBlack,
             disabledColor: Colors.grey,
             disabledTextColor: Colors.white,
             padding: EdgeInsets.all(18.0),
@@ -882,70 +914,80 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
           Container(
             width: MediaQuery.of(context).size.width,
             child: FlatButton(
-              padding: EdgeInsets.symmetric(vertical: 2),
+              padding: EdgeInsets.symmetric(vertical: 0),
               shape: Border(
                 top: BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
                 bottom: BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
               ),
               color: Colors.white,
-              textColor: Colors.black,
+              textColor: revaultBlack,
               disabledColor: Colors.grey,
               disabledTextColor: Colors.white,
               child: Icon(
                 Icons.keyboard_arrow_up,
-                //size: 16,
               ),
-              onPressed: () => {
-                _showCommentsModal(good.commentList)
+              onPressed: () async {
+                await _showCommentsModal(good.commentList);
+                setState(() {
+                  currentGood = fetchGood(widget.goodID);
+                });
               },
             ),
           ),
-          Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 20.0, right: 5.0),
-                child: CircleAvatar(
-                  radius: 20.0,
-                  backgroundImage: good.commentList.length > 0
-                    ? NetworkImage(good.commentList[0].profile)
-                    : NetworkImage('https://ibsoft.site/profile/default_profile.jpg'),
-                  backgroundColor: Colors.transparent,
+          FlatButton(
+            onPressed: () async {
+              await _showCommentsModal(good.commentList);
+              setState(() {
+                currentGood = fetchGood(widget.goodID);
+              });
+            },
+            child: Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 10.0, right: 5.0),
+                  child: CircleAvatar(
+                    radius: 20.0,
+                    backgroundImage: good.commentList.length > 0
+                      ? NetworkImage(good.commentList[0].profile)
+                      : NetworkImage('https://ibsoft.site/profile/default_profile.jpg'),
+                    backgroundColor: Colors.transparent,
+                  ),
                 ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  good.commentList.length > 0 ?
-                  Row(
-                    children: [
-                      Text(
-                        '${good.commentList[0].username}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    good.commentList.length > 0 ?
+                    Row(
+                      children: [
+                        Text(
+                          '${good.commentList[0].username}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
                         ),
-                      ),
-                      VerticalDivider(),
-                      Text(
-                        commentTimeTextFromDate(good.commentList[0].date),
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
+                        VerticalDivider(),
+                        Text(
+                          commentTimeTextFromDate(good.commentList[0].date),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
                         ),
-                      ),
-                    ]
-                  )
-                  : Text('이 상품에 대한 반응이 아직 없습니다'),
-                  good.commentList.length > 0 ?
-                  Text('${good.commentList[0].content}',
-                    style: TextStyle(
-                      fontSize: 14,
+                      ]
                     )
-                  )
-                  : Text('첫 반응을 작성하세요!'),
-                ],
-              ),
-            ],
+                    : Text('이 상품에 대한 반응이 아직 없습니다'),
+                    good.commentList.length > 0 ?
+                    Text('${good.commentList[0].content}',
+                      style: TextStyle(
+                        fontSize: 14,
+                      )
+                    )
+                    : Text('첫 반응을 작성하세요!'),
+                  ],
+                ),
+              ],
+            ),
           ),
           Divider(color: Color(0xFFE0E0E0)),
         ],
@@ -957,7 +999,8 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
     if (urlList == null || urlList.length == 0) {
       return [
         Container(
-          width: MediaQuery.of(context).size.width,
+          width: MediaQuery.of(context).size.width * 0.8,
+          padding: EdgeInsets.symmetric(vertical: 10),
           margin: EdgeInsets.symmetric(horizontal: 5.0),
           child: Image.asset(
             'images/revault_square_logo.jpg',
@@ -1060,70 +1103,107 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView( 
-      child: Center(
-        child: FutureBuilder<AuctionGood>(
-          future: currentGood,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              var good = snapshot.data;
-              return Column(
-                children: [
-                  Text(
-                    '[${good.brand}]',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    )
-                  ),
-                  Text(
-                    good.goodName,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 20,
-                    )
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.person_outline, size: 12),
-                      Container(
-                        padding: EdgeInsets.only(right: 8),
-                        child: Text(good.seller, style: TextStyle(fontSize: 12)),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(right: 8),
-                        child: Text('SIZE: ${good.size}', style: TextStyle(fontSize: 12)),
-                      ),
-                      Text('CONDITION: ${good.condition}', style: TextStyle(fontSize: 12)),
-                    ],
-                  ),
-                  Divider(
-                    indent: 50,
-                    endIndent: 50,
-                  ),
-                  remainingTimeDisplay(good.endDate, good.biddingList.length),
-                  CarouselSlider(
-                    options: CarouselOptions(
-                      height: 360.0,
-                      enableInfiniteScroll: false,
-                      autoPlay: false
+    return SingleChildScrollView(
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+        ),
+        child: Center(
+          child: FutureBuilder<AuctionGood>(
+            future: currentGood,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                var good = snapshot.data;
+                return Column(
+                  children: [
+                    Text(
+                      good.brand,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: revaultBlack,
+                        letterSpacing: -1.0,
+                      )
                     ),
-                    items: _sliderItems(good.imageUrlList),
-                  ),
-                  interactingSection(good),
-                  commentSection(good),
-                ],
-              );
-            }
-            else if (snapshot.hasError) {
-              return Text("${snapshot.error}");
-            }
+                    Text(
+                      good.goodName,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                        color: revaultBlack,
+                        letterSpacing: -1.0,
+                      )
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 6),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.person_outline, size: 12),
+                          Container(
+                            padding: EdgeInsets.only(right: 8),
+                            child: Text(
+                              good.seller,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: revaultBlack,
+                                letterSpacing: -1.0,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(right: 8),
+                            child: Text(
+                              'SIZE: ${good.size}',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: revaultBlack,
+                                letterSpacing: -1.0,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            'CONDITION: ${good.condition}',
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: revaultBlack,
+                                letterSpacing: -1.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(
+                      indent: 50,
+                      endIndent: 50,
+                      color: Color(0xFFE0E0E0),
+                    ),
+                    remainingTimeDisplay(good.endDate, good.biddingList.length),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: CarouselSlider(
+                        options: CarouselOptions(
+                          height: 320.0,
+                          enableInfiniteScroll: false,
+                          autoPlay: false
+                        ),
+                        items: _sliderItems(good.imageUrlList),
+                      ),
+                    ),
+                    interactingSection(good),
+                    commentSection(good),
+                  ],
+                );
+              }
+              else if (snapshot.hasError) {
+                return Text("${snapshot.error}");
+              }
 
-            return CircularProgressIndicator();
-          },
-        )
-      )
+              return CircularProgressIndicator();
+            },
+          ),
+        ),
+      ),
     );
   }
 }
@@ -1171,17 +1251,17 @@ class BiddingFormState extends State<BiddingForm> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 32, bottom: 50),
-      child: RaisedButton(
+      padding: EdgeInsets.only(top: 32, bottom: 20),
+      child: FlatButton(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
-          side: BorderSide(color: Colors.black)
+          side: BorderSide(color: revaultBlack)
         ),
-        color: Colors.black,
+        color: revaultBlack,
         textColor: Colors.white,
         disabledColor: Colors.grey,
-        disabledTextColor: Colors.black,
-        padding: EdgeInsets.symmetric(vertical: 18, horizontal: 120),
+        disabledTextColor: revaultBlack,
+        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 100),
         splashColor: Colors.transparent,
         onPressed: () async {
           http.Response response = await addBidding(widget.goodID, selectedPrice);
@@ -1200,10 +1280,11 @@ class BiddingFormState extends State<BiddingForm> {
           }
         },
         child: Text(
-          '참가하기',
+          '입찰하기',
           style: TextStyle(
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
+            letterSpacing: -1.0,
           )
         ),
       ),
@@ -1421,11 +1502,12 @@ class CommentFormState extends State<CommentForm> {
                 },
               ),
             ),
-            RaisedButton(
-              color: Colors.black,
+            FlatButton(
+              shape: Border(),
+              color: revaultBlack,
               textColor: Colors.white,
               disabledColor: Colors.grey,
-              disabledTextColor: Colors.black,
+              disabledTextColor: revaultBlack,
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 14),
               splashColor: Colors.transparent,
               onPressed: () async {

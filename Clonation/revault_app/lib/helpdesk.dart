@@ -67,7 +67,7 @@ class HelpDeskDetailsState extends State<HelpDeskDetails> {
                     delegate: _SliverAppBarDelegate(
                       TabBar(
                         indicatorWeight: 3,
-                        indicatorColor: Color(0xFF80F208),
+                        indicatorColor: revaultGreen,
                         tabs: [
                           Tab(
                             child: SizedBox.expand(
@@ -258,8 +258,8 @@ class RequestFormState extends State<RequestForm> {
                       }
                     });
                   },
-                  fillColor: Color(0xFF80F208),
-                  selectedColor: Colors.black,
+                  fillColor: revaultGreen,
+                  selectedColor: revaultBlack,
                 );
               }).toList(),
             ),
@@ -306,11 +306,12 @@ class RequestFormState extends State<RequestForm> {
               ),
               child: SizedBox(
                 width: double.infinity,
-                child: RaisedButton(
-                  color: Colors.black,
+                child: FlatButton(
+                  shape: Border(),
+                  color: revaultBlack,
                   textColor: Colors.white,
                   disabledColor: Colors.grey,
-                  disabledTextColor: Colors.black,
+                  disabledTextColor: revaultBlack,
                   padding: EdgeInsets.all(18,),
                   splashColor: Colors.greenAccent,
                   onPressed: () async {
@@ -417,7 +418,7 @@ class HelpResponseState extends State<HelpResponse> {
                                     RichText(
                                       text: TextSpan(
                                         style: TextStyle(
-                                          color: Colors.black,
+                                          color: revaultBlack,
                                           fontWeight: FontWeight.bold,
                                           fontSize: 14,
                                         ),
@@ -458,7 +459,7 @@ class HelpResponseState extends State<HelpResponse> {
                             textAlign: TextAlign.start,
                             text: TextSpan(
                               style: TextStyle(
-                                color: Colors.black,
+                                color: revaultBlack,
                                 fontSize: 14,
                               ),
                               children: [

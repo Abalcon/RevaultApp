@@ -46,6 +46,7 @@ class MyParticipations extends StatelessWidget {
         ),
       ),
       body: MyParticipationsDetail(),
+      backgroundColor: backgroundGrey,
     );
   }
 }
@@ -82,13 +83,30 @@ class MyParticipationsDetailState extends State<MyParticipationsDetail> {
           if (snapshot.data.length > 0) {
             return ListView.builder(
               shrinkWrap: true,
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
               itemCount: snapshot.data.length,
               itemBuilder: (BuildContext _context, int i) {
                 var good = snapshot.data[i];
-                return Column(
-                  children: [
-                    Row(
+                return Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Color(0xFFE0E0E0),
+                      ),
+                    ),
+                  ),
+                  child: FlatButton(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    onPressed: () async {
+                      await Navigator.pushNamed(
+                        context, '/auctiongooddetail',
+                        arguments: good.auctionID // 2020-11-17 djkim: 상품 ID 가져오기
+                      );
+                      setState(() {
+                        auctionList = fetchParticipations(currUser.getSession());
+                      });
+                    },
+                    child: Row(
                       children: [
                         Image.network(
                           good.imageUrlList[0],
@@ -96,21 +114,25 @@ class MyParticipationsDetailState extends State<MyParticipationsDetail> {
                           width: 70.0, 
                           fit: BoxFit.cover,
                         ),
+                        VerticalDivider(width: 5),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '[${good.brand}]',
+                                good.brand,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
+                                  letterSpacing: -1.0,
                                 )
                               ),
-                              Text('${good.goodName}',
+                              Text(
+                                good.goodName,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 14,
+                                  letterSpacing: -1.0,
                                 )
                               ),
                             ],
@@ -135,8 +157,7 @@ class MyParticipationsDetailState extends State<MyParticipationsDetail> {
                         ),
                       ],
                     ),
-                    Divider()
-                  ]
+                  ),
                 );
               }
             );
@@ -175,7 +196,7 @@ class MyParticipationsDetailState extends State<MyParticipationsDetail> {
         child: Column(
           children: [
             Container(
-              color: Colors.black,
+              color: revaultBlack,
               padding: EdgeInsets.symmetric(vertical: 15),
               alignment: Alignment.center,
               child: Text(

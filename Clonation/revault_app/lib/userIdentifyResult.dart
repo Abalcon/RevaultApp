@@ -7,12 +7,15 @@ class UserIdentifyResult extends StatelessWidget {
     final UserIdentifyArguments arguments = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
         title: Text("계정찾기 결과"),
       ),
       body: UserIdentifyResultDetail(
         snsCode: arguments.snsCode,
         userID: arguments.userID,
-      )
+      ),
+      backgroundColor: Colors.white,
     );
   }
 }
@@ -62,11 +65,12 @@ class UserIdentifyResultDetailState extends State<UserIdentifyResultDetail> {
           padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
           child: SizedBox(
             width: double.infinity,
-            child: RaisedButton(
-              color: Color(0xFF80F208),
+            child: FlatButton(
+              shape: Border(),
+              color: revaultGreen,
               textColor: Colors.white,
               disabledColor: Colors.grey,
-              disabledTextColor: Colors.black,
+              disabledTextColor: revaultBlack,
               padding: EdgeInsets.all(20.0),
               onPressed: () {
                 Navigator.pushReplacementNamed(
@@ -85,11 +89,12 @@ class UserIdentifyResultDetailState extends State<UserIdentifyResultDetail> {
           padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
           child: SizedBox(
             width: double.infinity,
-            child: RaisedButton(
-              color: Color(0xFF80F208),
+            child: FlatButton(
+              shape: Border(),
+              color: revaultGreen,
               textColor: Colors.white,
               disabledColor: Colors.grey,
-              disabledTextColor: Colors.black,
+              disabledTextColor: revaultBlack,
               padding: EdgeInsets.all(20.0),
               onPressed: () {
                 Navigator.pushReplacementNamed(

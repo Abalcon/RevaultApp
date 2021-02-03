@@ -45,6 +45,7 @@ class MyProceedings extends StatelessWidget {
         ),
       ),
       body: MyProceedingsDetail(),
+      backgroundColor: backgroundGrey,
     );
   }
 }
@@ -82,14 +83,22 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
           if (snapshot.data.length > 0) {
             return ListView.builder(
               shrinkWrap: true,
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.symmetric(vertical: 10),
               itemCount: snapshot.data.length,
               itemBuilder: (BuildContext _context, int i) {
                 var good = snapshot.data[i];
                 bool isBillingRequired = (good.status == '입금대기');
-                return Column(
-                  children: [
-                    Row(
+                return Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Color(0xFFE0E0E0),
+                      ),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
                       children: [
                         Image.asset(
                           'images/nike_black_hoodie1.jpeg',
@@ -97,6 +106,7 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
                           width: 70.0, 
                           fit: BoxFit.cover,
                         ),
+                        VerticalDivider(),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,6 +116,7 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
+                                  letterSpacing: -1.0,
                                 )
                               ),
                               Text(
@@ -113,6 +124,7 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 14,
+                                  letterSpacing: -1.0,
                                 )
                               ),
                               Text(
@@ -120,13 +132,15 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
-                                  color: Colors.lightGreen
+                                  color: Colors.lightGreen,
+                                  letterSpacing: -1.0,
                                 )
                               ),
                             ],
                           ),
                         ),
-                        RaisedButton(
+                        FlatButton(
+                          shape: Border(),
                           color: Colors.white,
                           textColor: Colors.grey,
                           disabledColor: Colors.transparent,
@@ -152,8 +166,7 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
                         ),
                       ],
                     ),
-                    Divider()
-                  ]
+                  )
                 );
               }
             );
@@ -292,7 +305,7 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
         child: Column(
           children: [
             Container(
-              color: Colors.black,
+              color: revaultBlack,
               padding: EdgeInsets.symmetric(vertical: 15),
               alignment: Alignment.center,
               child: Text(

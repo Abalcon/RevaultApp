@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:customtogglebuttons/customtogglebuttons.dart';
+import 'package:revault_app/common/aux.dart';
 
 class LanguageSelect extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
         centerTitle: true,
         title: Text("Language Setting"),
       ),
       body: LanguageSelectForm(),
-      backgroundColor: Colors.grey,
+      backgroundColor: backgroundGrey,
     );
   }
 }

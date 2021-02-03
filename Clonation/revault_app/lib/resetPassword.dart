@@ -8,10 +8,13 @@ class ResetPassword extends StatelessWidget {
     final String userID = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         centerTitle: true,
         title: Text("비밀번호 재설정"),
       ),
       body: ResetPasswordForm(userID: userID),
+      backgroundColor: Colors.white,
     );
   }
 }
@@ -64,12 +67,11 @@ class ResetPasswordFormState extends State<ResetPasswordForm> {
     return Center(
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              // Start of password reset
               Form(
                 key: _formKey1,
                   child: Column(
@@ -89,6 +91,7 @@ class ResetPasswordFormState extends State<ResetPasswordForm> {
                         decoration: InputDecoration(
                           hintText: '영소문자/영대문자/숫자/특수문자 3종류 이상 포함하여 8글자 이상',
                           border: inputBorder,
+                          enabledBorder: inputBorder,
                           focusedBorder: inputBorder,
                         ),
                         validator: (value) {
@@ -102,7 +105,7 @@ class ResetPasswordFormState extends State<ResetPasswordForm> {
                         },
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 20, bottom: 5),
+                        padding: EdgeInsets.only(top: 30, bottom: 5),
                         child: Text(
                           '새 비밀번호 확인',
                           style: TextStyle(
@@ -115,6 +118,7 @@ class ResetPasswordFormState extends State<ResetPasswordForm> {
                         decoration: InputDecoration(
                           hintText: '새 비밀번호 확인',
                           border: inputBorder,
+                          enabledBorder: inputBorder,
                           focusedBorder: inputBorder,
                         ),
                         validator: (value) {
@@ -128,14 +132,15 @@ class ResetPasswordFormState extends State<ResetPasswordForm> {
                         },
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        padding: const EdgeInsets.symmetric(vertical: 40.0),
                         child: SizedBox(
                           width: double.infinity,
-                          child: RaisedButton(
-                            color: Color(0xFF80F208),
+                          child: FlatButton(
+                            shape: Border(),
+                            color: revaultGreen,
                             textColor: Colors.white,
                             disabledColor: Colors.grey,
-                            disabledTextColor: Colors.black,
+                            disabledTextColor: revaultBlack,
                             padding: EdgeInsets.all(16.0),
                             splashColor: Colors.greenAccent,
                             onPressed: () async {
@@ -162,7 +167,11 @@ class ResetPasswordFormState extends State<ResetPasswordForm> {
                             },
                             child: Text(
                               "비밀번호 재설정",
-                              style: TextStyle(fontSize: 20.0),
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: -1.0,
+                              ),
                             ),
                           ),
                         )
@@ -170,7 +179,6 @@ class ResetPasswordFormState extends State<ResetPasswordForm> {
                     ]
                 )
               ),
-              // End of password reset
             ],
           ),
         )

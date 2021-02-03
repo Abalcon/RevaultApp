@@ -41,9 +41,10 @@ class SignUp extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text("Sign Up"),
+        title: Text("회원가입"),
       ),
       body: SignUpForm(),
+      backgroundColor: Colors.white,
     );
   }
 }
@@ -81,7 +82,7 @@ class SignUpFormState extends State<SignUpForm> {
             color: Colors.transparent,
             shape: BoxShape.circle,
             border: Border.all(
-              color: Color(0xFF80F208),
+              color: revaultGreen,
               width: 2, 
             ),
           ),
@@ -90,10 +91,10 @@ class SignUpFormState extends State<SignUpForm> {
             child: Icon(
               Icons.camera_alt_outlined,
               size: 50.0,
-              color: Color(0xFF80F208),
+              color: revaultGreen,
             ),
             backgroundColor: Colors.white,
-            //foregroundColor: Color(0xFF80F208),
+            //foregroundColor: revaultGreen,
           ),
         ),
       );
@@ -107,7 +108,7 @@ class SignUpFormState extends State<SignUpForm> {
       width: 110.0,
       height: 110.0,
       decoration: BoxDecoration(
-        color: Color(0xFF80F208),
+        color: revaultGreen,
         shape: BoxShape.circle,
       ),
       child: CircleAvatar(
@@ -126,121 +127,128 @@ class SignUpFormState extends State<SignUpForm> {
       key: _formKey,
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+          padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
           child: Column(
             children: <Widget>[
               currentProfile(),
               Divider(color: Colors.transparent),
-              TextFormField(
-                controller: _idController,
-                decoration: InputDecoration(
-                  hintText: '아이디 입력',
-                  hintStyle: TextStyle(
-                    color: Color(0xFFBDBDBD),
-                  ),
-                  enabledBorder: signUpBorder,  
-                  focusedBorder: signUpBorder,
-                  border: signUpBorder
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: _idController,
+                      decoration: InputDecoration(
+                        hintText: '아이디 입력',
+                        hintStyle: TextStyle(
+                          color: Color(0xFFBDBDBD),
+                        ),
+                        enabledBorder: signUpBorder,  
+                        focusedBorder: signUpBorder,
+                        border: signUpBorder
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter your username';
+                        }
+                        else if (usernameValidation(value)) {
+                          return 'Invalid username';
+                        }
+                        return null;
+                      },
+                    ),
+                    Divider(color: Colors.white, height: 12,),
+                    TextFormField(
+                      controller: _mailController,
+                      decoration: InputDecoration(
+                        hintText: '이메일 주소 입력',
+                        hintStyle: TextStyle(
+                          color: Color(0xFFBDBDBD),
+                        ),
+                        enabledBorder: signUpBorder,  
+                        focusedBorder: signUpBorder,
+                        border: signUpBorder
+                      ),
+                      validator: (email) {
+                        if (email.isEmpty) {
+                          return 'Please enter your E-mail address';
+                        }
+                        else if (!EmailValidator.validate(email)) {
+                          return 'Invalid E-mail address';
+                        }
+                        return null;
+                      },
+                    ),
+                    Divider(color: Colors.white, height: 12,),
+                    TextFormField(
+                      controller: _phoneController,
+                      decoration: InputDecoration(
+                        hintText: '전화번호 입력',
+                        hintStyle: TextStyle(
+                          color: Color(0xFFBDBDBD),
+                        ),
+                        enabledBorder: signUpBorder,  
+                        focusedBorder: signUpBorder,
+                        border: signUpBorder
+                      ),
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter your phone number';
+                        }
+                        return null;
+                      },
+                    ),
+                    Divider(color: Colors.white, height: 12,),
+                    TextFormField(
+                      controller: _passController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        hintText: '비밀번호 입력',
+                        hintStyle: TextStyle(
+                          color: Color(0xFFBDBDBD),
+                        ),
+                        enabledBorder: signUpBorder,  
+                        focusedBorder: signUpBorder,
+                        border: signUpBorder
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter your password';
+                        }
+                        else if (!passwordValidation(value)) {
+                          return 'Invalid password: 영소문자/영대문자/숫자/특수문자 중에\n3종류 이상을 포함하여 8글자 이상';
+                        }
+                        return null;
+                      },
+                    ),
+                    Divider(color: Colors.white, height: 12,),
+                    TextFormField(
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        hintText: '비밀번호 확인',
+                        hintStyle: TextStyle(
+                          color: Color(0xFFBDBDBD),
+                        ),
+                        enabledBorder: signUpBorder,  
+                        focusedBorder: signUpBorder,
+                        border: signUpBorder
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter your password';
+                        }
+                        else if (value != _passController.text) {
+                          return 'Password is not matching';
+                        }
+                        return null;
+                      },
+                    ),
+                  ],
                 ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter your username';
-                  }
-                  else if (usernameValidation(value)) {
-                    return 'Invalid username';
-                  }
-                  return null;
-                },
-              ),
-              Divider(color: Colors.white, height: 12,),
-              TextFormField(
-                controller: _mailController,
-                decoration: InputDecoration(
-                  hintText: '이메일 주소 입력',
-                  hintStyle: TextStyle(
-                    color: Color(0xFFBDBDBD),
-                  ),
-                  enabledBorder: signUpBorder,  
-                  focusedBorder: signUpBorder,
-                  border: signUpBorder
-                ),
-                validator: (email) {
-                  if (email.isEmpty) {
-                    return 'Please enter your E-mail address';
-                  }
-                  else if (!EmailValidator.validate(email)) {
-                    return 'Invalid E-mail address';
-                  }
-                  return null;
-                },
-              ),
-              Divider(color: Colors.white, height: 12,),
-              TextFormField(
-                controller: _phoneController,
-                decoration: InputDecoration(
-                  hintText: '전화번호 입력',
-                  hintStyle: TextStyle(
-                    color: Color(0xFFBDBDBD),
-                  ),
-                  enabledBorder: signUpBorder,  
-                  focusedBorder: signUpBorder,
-                  border: signUpBorder
-                ),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter your phone number';
-                  }
-                  return null;
-                },
-              ),
-              Divider(color: Colors.white, height: 12,),
-              TextFormField(
-                controller: _passController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  hintText: '비밀번호 입력',
-                  hintStyle: TextStyle(
-                    color: Color(0xFFBDBDBD),
-                  ),
-                  enabledBorder: signUpBorder,  
-                  focusedBorder: signUpBorder,
-                  border: signUpBorder
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter your password';
-                  }
-                  else if (!passwordValidation(value)) {
-                    return 'Invalid password: 영소문자/영대문자/숫자/특수문자 중에\n3종류 이상을 포함하여 8글자 이상';
-                  }
-                  return null;
-                },
-              ),
-              Divider(color: Colors.white, height: 12,),
-              TextFormField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  hintText: '비밀번호 확인',
-                  hintStyle: TextStyle(
-                    color: Color(0xFFBDBDBD),
-                  ),
-                  enabledBorder: signUpBorder,  
-                  focusedBorder: signUpBorder,
-                  border: signUpBorder
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter your password';
-                  }
-                  else if (value != _passController.text) {
-                    return 'Password is not matching';
-                  }
-                  return null;
-                },
               ),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 24),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 24),
                 child: RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(
@@ -285,15 +293,16 @@ class SignUpFormState extends State<SignUpForm> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(
-                  vertical: 16,
+                  vertical: 20,
                 ),
                 child: SizedBox(
                   width: double.infinity,
-                  child: RaisedButton(
-                    color: Color(0xFF333333),
+                  child: FlatButton(
+                    shape: Border(),
+                    color: revaultBlack,
                     textColor: Colors.white,
                     disabledColor: Colors.grey,
-                    disabledTextColor: Colors.black,
+                    disabledTextColor: revaultBlack,
                     padding: EdgeInsets.all(20),
                     splashColor: Colors.greenAccent,
                     onPressed: () async {

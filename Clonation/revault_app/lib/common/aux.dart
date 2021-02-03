@@ -227,13 +227,13 @@ String timeTextBuilder(DateTime date, bool isReverse, String dayText, String hou
 
 String remainingTimeTextFromDuration(Duration timeLeft) {
   if (timeLeft.inDays > 0) 
-    return timeLeft.inDays.toString() + 'd ' + timeLeft.inHours.toString() + 'h';
+    return '${timeLeft.inDays}d ${timeLeft.inHours - timeLeft.inDays * 24}h';
   else if (timeLeft.inHours > 0) 
-    return timeLeft.inHours.toString() + 'h ' + timeLeft.inMinutes.toString() + 'm';
+    return '${timeLeft.inHours}h ${timeLeft.inMinutes - timeLeft.inHours * 60}m';
   else if (timeLeft.inMinutes > 0) 
-    return timeLeft.inMinutes.toString() + 'm';
+    return '${timeLeft.inMinutes}m';
   else if (timeLeft.inSeconds > 0)
-    return timeLeft.inSeconds.toString() + 's';
+    return '${timeLeft.inSeconds}s';
 
   return 'Ended';
 }
@@ -296,15 +296,19 @@ Widget remainingTimeDisplay(DateTime deadline, int entries) {
           '남은시간 : $timeString',
           style: TextStyle(
             fontSize: 13,
-            color: Colors.red
+            color: Colors.red,
+            fontWeight: FontWeight.bold,
+            letterSpacing: -0.5,
           )
         ),
       ),
-      Icon(Icons.person_outline_rounded, size: 13),
+      Icon(Icons.person_outline_rounded, size: 14),
       Text(
         '$entries' + '명 참여 중', // TODO: 같은 사람이 여러번 올린 경우를 빼야한다
         style: TextStyle(
-          fontSize: 13
+          fontSize: 13,
+          color: revaultBlack,
+          letterSpacing: -1.0,
         ),
       )
     ],
@@ -530,11 +534,15 @@ Future<http.Response> tryResetUserPassword(String userID, String newPass) async 
   return response;
 }
 
+final Color revaultGreen = Color(0xFF08AE5F);
+final Color revaultBlack = Color(0xFF231F20);
+final Color backgroundGrey = Color(0xFFF2F2F2);
+
 final ButtonStyle greenButtonStyle = ElevatedButton.styleFrom(
-  onPrimary: Color(0xFF80F208),
+  onPrimary: revaultGreen,
   primary: Colors.grey,
   padding: EdgeInsets.all(8.0),
-  textStyle: TextStyle(color: Colors.black,),
+  textStyle: TextStyle(color: revaultBlack,),
 );
 
 final ButtonStyle autoBiddingButtonStyle = TextButton.styleFrom(
@@ -545,3 +553,4 @@ final ButtonStyle autoBiddingButtonStyle = TextButton.styleFrom(
     fontSize: 16,
   ),
 );
+

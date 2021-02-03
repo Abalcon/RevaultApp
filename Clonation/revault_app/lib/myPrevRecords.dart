@@ -60,6 +60,7 @@ class MyPrevRecords extends StatelessWidget {
         ),
       ),
       body: MyPrevRecordsDetail(),
+      backgroundColor: backgroundGrey,
     );
   }
 }
@@ -225,7 +226,7 @@ class MyPrevRecordsDetailState extends State<MyPrevRecordsDetail> {
         child: Column(
           children: [
             Container(
-              color: Colors.black,
+              color: revaultBlack,
               padding: EdgeInsets.symmetric(vertical: 15),
               alignment: Alignment.center,
               child: Text(

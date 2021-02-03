@@ -12,6 +12,7 @@ import 'package:revault_app/auctionList.dart';
 import 'package:revault_app/changeAddress.dart';
 import 'package:revault_app/changePassword.dart';
 import 'package:revault_app/changeProfile.dart';
+import 'package:revault_app/common/aux.dart';
 import 'package:revault_app/emailVerify.dart';
 import 'package:revault_app/helpdesk.dart';
 import 'package:revault_app/languageSelect.dart';
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    precacheImage(AssetImage('images/revault_square_logo.jpg'), context);
     return MultiProvider(
       providers: [
         // CatalogModel never changes, so a simple Provider is sufficient.
@@ -65,26 +67,36 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           title: 'Welcome to REVAULT',
           theme: ThemeData(
-            //primarySwatch: Color(0xFF80F208),
             primaryColor: Colors.white,
             visualDensity: VisualDensity.adaptivePlatformDensity,
-            textTheme: Typography.blackMountainView,
+            textTheme: Typography.blackMountainView.copyWith(
+              headline1: TextStyle(
+                fontFamily: 'Noto Sans KR',
+                letterSpacing: -1.0,
+              ),
+              headline6: TextStyle(
+                fontFamily: 'Noto Sans KR',
+                letterSpacing: -1.0
+              ),
+            ),
             bottomSheetTheme: BottomSheetThemeData(
               modalBackgroundColor: Colors.white,
               backgroundColor: Colors.white,
             ),
             tabBarTheme: TabBarTheme(
-              labelColor: Colors.black,
+              labelColor: revaultBlack,
               labelPadding: EdgeInsets.all(0),
               labelStyle: Theme.of(context).textTheme.headline6.copyWith(
                 fontSize: 16,
                 color: Color(0xFF333333),
                 fontWeight: FontWeight.bold,
+                letterSpacing: -1.0,
               ),
               unselectedLabelColor: Color(0xFFD7D7D7),
               unselectedLabelStyle: Theme.of(context).textTheme.headline6.copyWith(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
+                letterSpacing: -1.0,
               ),
             ),
           ),
@@ -124,7 +136,7 @@ class MyApp extends StatelessWidget {
             );
           },
         ),
-      )
+      ),
     );
   }
 }
@@ -197,17 +209,20 @@ class _MyHomePageState extends State<MyHomePage> {
       if (response.statusCode == 200 && response.body != null && response.body != "") {
         print(response.body);
         // 로그인 상태이므로 상품 리스트 화면으로
-        Navigator.pushReplacementNamed(context, '/auctionlist');
+        Future.delayed(Duration(seconds: 1),
+         () => Navigator.pushReplacementNamed(context, '/auctionlist'));
       }
       else {
         // 사용자 정보가 만료되었으므로 로그인 화면으로
         print("Session Expired");
         await storage.delete(key: "session",);
-        Navigator.pushReplacementNamed(context, '/login');
+        Future.delayed(Duration(seconds: 1),
+         () => Navigator.pushReplacementNamed(context, '/login'));
       }
     }
     else
-      Navigator.pushReplacementNamed(context, '/login');
+      Future.delayed(Duration(seconds: 1),
+         () => Navigator.pushReplacementNamed(context, '/login'));
   }
 
   @override
@@ -234,6 +249,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
+      backgroundColor: Colors.white,
     );
   }
 }

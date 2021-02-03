@@ -26,7 +26,8 @@ class Login extends StatelessWidget {
         ),
         elevation: 0,
       ),
-      body: LoginForm()
+      body: LoginForm(),
+      backgroundColor: Colors.white,
     );
   }
 }
@@ -99,7 +100,7 @@ class LoginFormState extends State<LoginForm> {
           child: Center(
             child: Column(
               children: [
-                Icon(Icons.verified, size: 100, color: Colors.black),
+                Icon(Icons.verified, size: 100, color: revaultBlack),
                 Text(
                   'Revault에 오신 것을 환영합니다!\n',
                   style: TextStyle(
@@ -130,15 +131,15 @@ class LoginFormState extends State<LoginForm> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    RaisedButton(
+                    FlatButton(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18.0),
-                        side: BorderSide(color: Colors.black)
+                        side: BorderSide(color: revaultBlack)
                       ),
-                      color: Colors.black,
+                      color: revaultBlack,
                       textColor: Colors.white,
                       disabledColor: Colors.grey,
-                      disabledTextColor: Colors.black,
+                      disabledTextColor: revaultBlack,
                       padding: EdgeInsets.all(8.0),
                       splashColor: Colors.transparent,
                       onPressed: () async {
@@ -151,15 +152,15 @@ class LoginFormState extends State<LoginForm> {
                       ),
                     ),
                     VerticalDivider(),
-                    RaisedButton(
+                    FlatButton(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18.0),
-                        side: BorderSide(color: Colors.black)
+                        side: BorderSide(color: revaultBlack)
                       ),
-                      color: Colors.black,
+                      color: revaultBlack,
                       textColor: Colors.white,
                       disabledColor: Colors.grey,
-                      disabledTextColor: Colors.black,
+                      disabledTextColor: revaultBlack,
                       padding: EdgeInsets.all(8.0),
                       splashColor: Colors.transparent,
                       onPressed: () async {
@@ -265,7 +266,7 @@ class LoginFormState extends State<LoginForm> {
                     TextFormField(
                       controller: _idController,
                       decoration: InputDecoration(
-                        hintText: '아이디 입력',
+                        hintText: '아이디 / 이메일 주소 입력',
                         hintStyle: TextStyle(
                           color: Color(0xFFBDBDBD),
                         ),
@@ -304,13 +305,14 @@ class LoginFormState extends State<LoginForm> {
                       padding: const EdgeInsets.only(top: 50.0, bottom: 14.0),
                       child: SizedBox(
                         width: double.infinity,
-                        child: RaisedButton(
-                          color: Color(0xFF333333),
+                        child: FlatButton(
+                          shape: Border(),
+                          color: revaultBlack,
                           textColor: Colors.white,
                           disabledColor: Colors.grey,
-                          disabledTextColor: Colors.black,
+                          disabledTextColor: revaultBlack,
                           padding: EdgeInsets.only(top: 17, bottom: 19),
-                          splashColor: Colors.black,
+                          splashColor: revaultBlack,
                           onPressed: () async {
                             if (_formKey.currentState.validate()) {
                               var fcmToken = await storage.read(key: "fcm");
@@ -347,11 +349,12 @@ class LoginFormState extends State<LoginForm> {
             ),
             SizedBox(
               width: double.infinity,
-              child: RaisedButton(
+              child: FlatButton(
+                shape: Border(),
                 color: Color(0xFF3A5CA9), // 개편 이후의 색상: 0xFF1877F2
                 textColor: Colors.white,
                 disabledColor: Colors.grey,
-                disabledTextColor: Colors.black,
+                disabledTextColor: revaultBlack,
                 padding: EdgeInsets.only(top: 15, bottom: 15),
                 splashColor: Colors.blueAccent,
                 onPressed: () async {
@@ -464,9 +467,10 @@ class LoginFormState extends State<LoginForm> {
               padding: EdgeInsets.only(top: 14.0),
               child: SizedBox(
                 width: double.infinity,
-                child: RaisedButton(
+                child: FlatButton(
+                  shape: Border(),
                   color: Color(0xFFFEE500),
-                  textColor: Colors.black,
+                  textColor: revaultBlack,
                   disabledColor: Colors.grey,
                   disabledTextColor: Colors.white,
                   padding: EdgeInsets.all(15.0),
@@ -559,45 +563,36 @@ class LoginFormState extends State<LoginForm> {
               ),
             ),
             Divider(color: Colors.white),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                RichText(
-                  text: TextSpan(
+            RichText(
+              text: TextSpan(
+                style: TextStyle(
+                  color: Color(0xFF828282),
+                  fontSize: 15,
+                ),
+                children: [
+                  TextSpan(
                     text: '회원가입',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
-                    ),
                     recognizer: TapGestureRecognizer()
-                      ..onTap = () => Navigator.pushNamed(context, '/signup')
+                      ..onTap = () => Navigator.pushNamed(context, '/signup'),
                   ),
-                ),
-                VerticalDivider(thickness: 5, color: Colors.grey,),
-                RichText(
-                  text: TextSpan(
+                  TextSpan(
+                    text: '  |  ',
+                  ),
+                  TextSpan(
                     text: '계정찾기',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
-                    ),
                     recognizer: TapGestureRecognizer()
-                      ..onTap = () => Navigator.pushNamed(context, '/verifyemail')
+                      ..onTap = () => Navigator.pushNamed(context, '/verifyemail'),
                   ),
-                ),
-                VerticalDivider(thickness: 5, color: Colors.grey,),
-                RichText(
-                  text: TextSpan(
+                  TextSpan(
+                    text: '  |  ',
+                  ),
+                  TextSpan(
                     text: '비밀번호 재설정',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
-                    ),
                     recognizer: TapGestureRecognizer()
-                      ..onTap = () => Navigator.pushNamed(context, '/verifyemail')
+                      ..onTap = () => Navigator.pushNamed(context, '/verifyemail'),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),

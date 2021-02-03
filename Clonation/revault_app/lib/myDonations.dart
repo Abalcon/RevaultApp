@@ -33,10 +33,13 @@ class MyDonations extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
         centerTitle: true,
         title: Text("기부금 사용내역"),
       ),
       body: MyDonationsDetail(),
+      backgroundColor: backgroundGrey,
     );
   }
 }
@@ -165,7 +168,7 @@ SessionNamePair currUser;
         child: Column(
           children: [
             Container(
-              color: Colors.black,
+              color: revaultBlack,
               padding: EdgeInsets.symmetric(vertical: 15),
               alignment: Alignment.center,
               child: Text(

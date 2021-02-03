@@ -168,10 +168,11 @@ class ChangeAddressFormState extends State<ChangeAddressForm> {
                             ),
                           ),
                           VerticalDivider(),
-                          RaisedButton(
+                          FlatButton(
+                            shape: Border(),
                             color: Colors.grey[300],
                             textColor: Colors.grey[700],
-                            disabledColor: Colors.black,
+                            disabledColor: revaultBlack,
                             disabledTextColor: Colors.grey,
                             padding: EdgeInsets.all(12.0),
                             splashColor: Colors.transparent,
@@ -232,11 +233,12 @@ class ChangeAddressFormState extends State<ChangeAddressForm> {
                         padding: const EdgeInsets.symmetric(vertical: 55),
                         child: SizedBox(
                           width: double.infinity,
-                          child: RaisedButton(
-                            color: Colors.black,
+                          child: FlatButton(
+                            shape: Border(),
+                            color: revaultBlack,
                             textColor: Colors.white,
                             disabledColor: Colors.grey,
-                            disabledTextColor: Colors.black,
+                            disabledTextColor: revaultBlack,
                             padding: EdgeInsets.all(18),
                             splashColor: Colors.greenAccent,
                             onPressed: () async {

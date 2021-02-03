@@ -31,7 +31,7 @@ class EmailVerify extends StatelessWidget {
                   TabBar(
                     indicatorColor: Colors.transparent,
                     indicatorWeight: 1,
-                    labelColor: Colors.black,
+                    labelColor: revaultBlack,
                     unselectedLabelColor: Colors.grey[400],
                     tabs: [
                       Tab(
@@ -39,7 +39,6 @@ class EmailVerify extends StatelessWidget {
                           child: Container(
                             height: 60,
                             alignment: Alignment.center,
-                            //color: Colors.grey[600],
                             child: Text("아이디",),
                           ),
                         ),
@@ -49,7 +48,6 @@ class EmailVerify extends StatelessWidget {
                           child: Container(
                             height: 60,
                             alignment: Alignment.center,
-                            //color: Colors.grey[600],
                             child: Text("비밀번호",),
                           ),
                         ),
@@ -115,11 +113,12 @@ class FindUsername extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 36.0),
             child: SizedBox(
               width: double.infinity,
-              child: RaisedButton(
-                color: Colors.black,
+              child: FlatButton(
+                shape: Border(),
+                color: revaultBlack,
                 textColor: Colors.white,
                 disabledColor: Colors.grey,
-                disabledTextColor: Colors.black,
+                disabledTextColor: revaultBlack,
                 padding: EdgeInsets.all(16.0),
                 onPressed: () {
                   Navigator.pushNamed(
@@ -217,11 +216,12 @@ class EmailVerifyFormState extends State<EmailVerifyForm> {
                   padding: const EdgeInsets.symmetric(vertical: 32.0),
                   child: SizedBox(
                     width: double.infinity,
-                    child: RaisedButton(
-                      color: Colors.black,
+                    child: FlatButton(
+                      shape: Border(),
+                      color: revaultBlack,
                       textColor: Colors.white,
                       disabledColor: Colors.grey,
-                      disabledTextColor: Colors.black,
+                      disabledTextColor: revaultBlack,
                       padding: EdgeInsets.all(16.0),
                       onPressed: () {
                         if (_formKey1.currentState.validate()) {

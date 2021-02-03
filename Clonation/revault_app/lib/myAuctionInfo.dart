@@ -117,7 +117,7 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
               style: TextStyle(
                 fontSize: 56, 
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF80F208),
+                color: revaultGreen,
               ),
               recognizer: TapGestureRecognizer()
                 ..onTap = () => Navigator.pushNamed(context, route)
@@ -215,7 +215,7 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
                       children: [
                         TableRow(
                           decoration: BoxDecoration(
-                            color: Colors.black,
+                            color: revaultBlack,
                           ),
                           children: [
                             Container(
@@ -250,10 +250,11 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '[${good.brand}]',
+                                      good.brand,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14,
+                                        letterSpacing: -1.0,
                                       )
                                     ),
                                     Text(
@@ -261,6 +262,7 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         fontSize: 14,
+                                        letterSpacing: -1.0,
                                       )
                                     ),
                                   ],
@@ -339,7 +341,7 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
                                 Container(
                                   width: MediaQuery.of(context).size.width / 4.0,
                                   alignment: Alignment.center,
-                                  child: RaisedButton(
+                                  child: FlatButton(
                                     color: Colors.white,
                                     textColor: Colors.grey,
                                     disabledColor: Colors.transparent,
@@ -394,7 +396,7 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
                                 Container(
                                   width: MediaQuery.of(context).size.width / 4.0,
                                   alignment: Alignment.center,
-                                  child: RaisedButton(
+                                  child: FlatButton(
                                     color: Colors.white,
                                     textColor: Colors.grey,
                                     disabledColor: Colors.white,
@@ -512,7 +514,7 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
             ),
             _getTotalDonation(),
             Container(
-              color: Colors.grey[300],
+              color: backgroundGrey,
               padding: EdgeInsets.only(top: 30),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,

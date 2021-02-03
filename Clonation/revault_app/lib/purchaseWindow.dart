@@ -52,7 +52,7 @@ class PurchaseWindowDetailState extends State<PurchaseWindowDetail> {
         case "1":
           return Column(
             children: [
-              Icon(Icons.verified, size: 100, color: Color(0xFF80F208)),
+              Icon(Icons.verified, size: 100, color: revaultGreen),
               Text(
                 '결제가 완료되었습니다!',
                 style: TextStyle(
@@ -64,15 +64,15 @@ class PurchaseWindowDetailState extends State<PurchaseWindowDetail> {
                 indent: 50,
                 endIndent: 50,
               ),
-              RaisedButton(
+              FlatButton(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18.0),
-                  side: BorderSide(color: Colors.black)
+                  side: BorderSide(color: revaultBlack)
                 ),
-                color: Colors.black,
+                color: revaultBlack,
                 textColor: Colors.white,
                 disabledColor: Colors.grey,
-                disabledTextColor: Colors.black,
+                disabledTextColor: revaultBlack,
                 padding: EdgeInsets.all(8.0),
                 splashColor: Colors.transparent,
                 onPressed: () {
@@ -100,15 +100,15 @@ class PurchaseWindowDetailState extends State<PurchaseWindowDetail> {
                 indent: 50,
                 endIndent: 50,
               ),
-              RaisedButton(
+              FlatButton(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18.0),
-                  side: BorderSide(color: Colors.black)
+                  side: BorderSide(color: revaultBlack)
                 ),
-                color: Colors.black,
+                color: revaultBlack,
                 textColor: Colors.white,
                 disabledColor: Colors.grey,
-                disabledTextColor: Colors.black,
+                disabledTextColor: revaultBlack,
                 padding: EdgeInsets.all(8.0),
                 splashColor: Colors.transparent,
                 onPressed: () {
@@ -136,15 +136,15 @@ class PurchaseWindowDetailState extends State<PurchaseWindowDetail> {
                 indent: 50,
                 endIndent: 50,
               ),
-              RaisedButton(
+              FlatButton(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18.0),
-                  side: BorderSide(color: Colors.black)
+                  side: BorderSide(color: revaultBlack)
                 ),
-                color: Colors.black,
+                color: revaultBlack,
                 textColor: Colors.white,
                 disabledColor: Colors.grey,
-                disabledTextColor: Colors.black,
+                disabledTextColor: revaultBlack,
                 padding: EdgeInsets.all(8.0),
                 splashColor: Colors.transparent,
                 onPressed: () {
@@ -176,15 +176,15 @@ class PurchaseWindowDetailState extends State<PurchaseWindowDetail> {
           indent: 50,
           endIndent: 50,
         ),
-        RaisedButton(
+        FlatButton(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(18.0),
-            side: BorderSide(color: Colors.black)
+            side: BorderSide(color: revaultBlack)
           ),
-          color: Colors.black,
+          color: revaultBlack,
           textColor: Colors.white,
           disabledColor: Colors.grey,
-          disabledTextColor: Colors.black,
+          disabledTextColor: revaultBlack,
           padding: EdgeInsets.all(8.0),
           splashColor: Colors.transparent,
           onPressed: () async {

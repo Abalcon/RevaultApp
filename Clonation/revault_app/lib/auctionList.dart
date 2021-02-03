@@ -47,11 +47,6 @@ class AuctionList extends StatelessWidget {
                     ),
                   ),
                 ),
-                shape: Border(
-                  bottom: BorderSide(
-                    color: Color(0xFFD7D7D7),
-                  )
-                ),
                 actions: [
                   Expanded(
                     child: Row(
@@ -75,7 +70,7 @@ class AuctionList extends StatelessWidget {
                 delegate: _SliverAppBarDelegate(
                   TabBar(
                     indicatorWeight: 3,
-                    indicatorColor: Color(0xFF80F208),
+                    indicatorColor: revaultGreen,
                     tabs: [
                       Tab(
                         child: SizedBox.expand(
@@ -184,11 +179,66 @@ class _AuctionGoodsState extends State<AuctionGoods> {
   Widget _buildItem(AuctionGood good) {
     return Column(
       children: [
-        Divider(thickness: 12, color: Color(0xFFE7E7E7),),
+        Divider(height: 8, thickness: 8, color: backgroundGrey,),
+        specSection(good),
         imageSection(good),
-        Divider(thickness: 2, color: Color(0xFFE7E7E7),),
         detailSection(good),
       ],
+    );
+  }
+
+  Widget specSection(AuctionGood good) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          bottom: BorderSide(
+            color: Color(0xFFA4A4A4),
+            width: 0.2,
+          ),
+        ),
+      ),
+      padding: EdgeInsets.fromLTRB(8, 8, 10, 8),
+      child: Row(
+        children: [
+          Expanded(
+            child: Row(
+              children: [
+                Icon(Icons.person_outline_outlined, size: 18),
+                Text(
+                  good.seller,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: revaultBlack,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: -1.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Icon(Icons.verified_outlined, size: 18),
+          Text(
+            good.condition != null ? good.condition: 'F',
+            style: TextStyle(
+              fontSize: 15,
+              color: revaultBlack,
+              fontWeight: FontWeight.w500,
+              letterSpacing: -1.0,
+            ),
+          ),
+          VerticalDivider(width: 10),
+          Icon(Icons.checkroom_outlined, size: 18),
+          Text(good.size != null ? good.size: 'Free',
+            style: TextStyle(
+              fontSize: 15,
+              color: revaultBlack,
+              fontWeight: FontWeight.w500,
+              letterSpacing: -1.0,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -202,26 +252,26 @@ class _AuctionGoodsState extends State<AuctionGoods> {
             Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.width / 2,
-              color: Colors.grey,
+              color: Color(0x80000000),
               child: Image.network(
                 good.imageUrlList[0],
                 width: MediaQuery.of(context).size.width / 2,
                 height: MediaQuery.of(context).size.width / 2,
                 //fit: BoxFit.cover,
-                color: Colors.grey,
+                color: Color(0x80000000),
                 colorBlendMode: BlendMode.darken,
               ),
             ) :
             Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.width / 2,
-              color: Colors.grey,
+              color: Color(0x80000000),
               child: Image.asset(
                 'images/nike_black_hoodie1.jpeg',
                 width: MediaQuery.of(context).size.width / 2,
                 height: MediaQuery.of(context).size.width / 2,
                 //fit: BoxFit.cover,
-                color: Colors.grey,
+                color: Color(0x80000000),
                 colorBlendMode: BlendMode.darken,
               ),
             ),
@@ -271,55 +321,16 @@ class _AuctionGoodsState extends State<AuctionGoods> {
       );
     }
 
-    var rt = remainingTime(good.endDate);
+    var rt = (good.aucState == 1)
+      ? remainingTime(good.endDate)
+      : remainingTime(good.startDate);
 
-    return Padding(
-      padding: EdgeInsets.fromLTRB(20, 14, 20, 14),
+    return Container(
+      color: Colors.white,
       child: Stack(
         children: [
           Container(
-            width: MediaQuery.of(context).size.width,
-            height: 90.0,
-            alignment: Alignment.topLeft,
-            child: Container(
-              width: 65.0,
-              height: 28.0,
-              child: ClipRect(
-                child: DecoratedBox(
-                  decoration: ShapeDecoration(
-                    color: (rt.inDays > 2) ?
-                      Color(0xFF2C4FDE) : Color(0xFFE92D2D),
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide.none,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(8),
-                      )
-                    )
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.schedule,
-                          color: Colors.white,
-                          size: 15
-                        ),
-                        Text(
-                          remainingTimeTextFromDuration(rt),
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Container(
+            color: Colors.white,
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.width / 2,
             child: (good.imageUrlList != null && good.imageUrlList.length > 0) ?
@@ -334,6 +345,49 @@ class _AuctionGoodsState extends State<AuctionGoods> {
               width: MediaQuery.of(context).size.width / 2,
               height: MediaQuery.of(context).size.width,
               //fit: BoxFit.cover,
+            ),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: 90.0,
+            padding: EdgeInsets.only(top: 16),
+            alignment: Alignment.topLeft,
+            child: Container(
+              width: 90.0,
+              child: ClipRect(
+                child: DecoratedBox(
+                  decoration: ShapeDecoration(
+                    color: (rt.inDays > 2) ?
+                      Color(0xFF2C4FDE) : Color(0xFFE92D2D),
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide.none,
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(20),
+                        bottomRight: Radius.circular(20),
+                      )
+                    )
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(10, 9, 0, 9),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.schedule,
+                          color: Colors.white,
+                          size: 18,
+                        ),
+                        Text(
+                          remainingTimeTextFromDuration(rt),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
           // Container(
@@ -381,69 +435,91 @@ class _AuctionGoodsState extends State<AuctionGoods> {
   Widget makeDetailButton(AuctionGood good) {
     switch (good.aucState) {
       case 0:
-        return RaisedButton(
-          color: Colors.black,
-          textColor: Color(0xFF80F208),
+        return FlatButton(
+          shape: Border(),
+          color: revaultBlack,
+          textColor: Colors.white,
           disabledColor: Colors.grey,
           disabledTextColor: Colors.grey[700],
           padding: EdgeInsets.symmetric(horizontal: 17.0, vertical: 17.0),
           splashColor: Colors.greenAccent,
-          onPressed: () => Navigator.pushNamed(
-            context, '/auctiongooddetail',
-            arguments: good.auctionID // 2020-11-17 djkim: 상품 ID 가져오기
-          ),
+          onPressed: () async {
+            await Navigator.pushNamed(
+              context, '/auctiongooddetail',
+              arguments: good.auctionID // 2020-11-17 djkim: 상품 ID 가져오기
+            );
+            setState(() {
+              auctionList = fetchGoodList(widget.status);
+            });
+          },
           child: Text(
             "시작시 알림",
             style: TextStyle(
               fontSize: 16.0,
               fontWeight: FontWeight.bold,
+              letterSpacing: -1.0,
             ),
           ),
         );
       case 1: 
-        return RaisedButton(
-          color: Color(0xFF80F208),
-          textColor: Colors.black,
+        return FlatButton(
+          shape: Border(),
+          color: revaultBlack,
+          textColor: Colors.white,
           disabledColor: Colors.grey,
           disabledTextColor: Colors.grey[700],
           padding: EdgeInsets.symmetric(horizontal: 17.0, vertical: 18.0),
           splashColor: Colors.greenAccent,
-          onPressed: () => Navigator.pushNamed(
-            context, '/auctiongooddetail',
-            arguments: good.auctionID // 2020-11-17 djkim: 상품 ID 가져오기
-          ),
+          onPressed: () async {
+            await Navigator.pushNamed(
+              context, '/auctiongooddetail',
+              arguments: good.auctionID // 2020-11-17 djkim: 상품 ID 가져오기
+            );
+            setState(() {
+              auctionList = fetchGoodList(widget.status);
+            });
+          },
           child: Text(
             "경매 참여",
             style: TextStyle(
               fontSize: 16.0,
               fontWeight: FontWeight.bold,
+              letterSpacing: -1.0,
             ),
           ),
         );
       case 2:
-        return RaisedButton(
-          color: Colors.black,
+        return FlatButton(
+          shape: Border(),
+          color: revaultBlack,
           textColor: Colors.white,
           disabledColor: Colors.grey,
           disabledTextColor: Colors.grey[700],
           padding: EdgeInsets.symmetric(horizontal: 18.0, vertical: 18.0),
           splashColor: Colors.greenAccent,
-          onPressed: () => Navigator.pushNamed(
-            context, '/auctiongooddetail',
-            arguments: good.auctionID // 2020-11-17 djkim: 상품 ID 가져오기
-          ),
+          onPressed: () async {
+            await Navigator.pushNamed(
+              context, '/auctiongooddetail',
+              arguments: good.auctionID // 2020-11-17 djkim: 상품 ID 가져오기
+            );
+            setState(() {
+              auctionList = fetchGoodList(widget.status);
+            });
+          },
           child: Text(
             "기록보기",
             style: TextStyle(
               fontSize: 16.0,
               fontWeight: FontWeight.bold,
+              letterSpacing: -1.0,
             ),
           ),
         );
       default:
-        return RaisedButton(
-          color: Color(0xFF80F208),
-          textColor: Colors.black,
+        return FlatButton(
+          shape: Border(),
+          color: revaultGreen,
+          textColor: revaultBlack,
           disabledColor: Colors.grey,
           disabledTextColor: Colors.grey[700],
           padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 14.0),
@@ -458,71 +534,44 @@ class _AuctionGoodsState extends State<AuctionGoods> {
   }
 
   Widget detailSection(AuctionGood good) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(19, 9, 15, 10),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          top: BorderSide(
+            color: Color(0xFFA4A4A4),
+            width: 0.2,
+          ),
+          bottom: BorderSide(
+            color: Color(0xFFA4A4A4),
+            width: 0.2,
+          ),
+        ),
+      ),
+      padding: EdgeInsets.fromLTRB(15, 9, 15, 9),
       child: Row(
         children: [
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                RichText(
-                  text: TextSpan(
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
-                    ),
-                    children: [
-                      TextSpan(
-                        text: '[${good.brand}]',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      TextSpan(
-                        text: good.goodName,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
+                Text(
+                  good.brand,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: revaultBlack,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: -1.0,
                   ),
                 ),
-                Row(
-                  children: [
-                    Icon(Icons.person_outline_outlined, size: 16),
-                    Text(
-                      good.seller,
-                      style: TextStyle(
-                        fontSize: 11
-                      ),
-                    ),
-                    VerticalDivider(width: 10),
-                    Text(
-                      'SIZE : ',
-                      style: TextStyle(
-                        fontSize: 11,
-                      ),
-                    ),
-                    Text(
-                      good.condition != null ? good.condition: 'F',
-                      style: TextStyle(
-                        fontSize: 11,
-                      ),
-                    ),
-                    VerticalDivider(width: 10),
-                    Text(
-                      'CONDITION : ',
-                      style: TextStyle(
-                        fontSize: 11,
-                      ),
-                    ),
-                    Text(good.size != null ? good.size: 'Free',
-                      style: TextStyle(
-                        fontSize: 11,
-                      ),
-                    ),
-                  ],
+                Text(
+                  good.goodName,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: revaultBlack,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: -1.0,
+                  ),
                 ),
                 Row(
                   children: [
@@ -530,32 +579,18 @@ class _AuctionGoodsState extends State<AuctionGoods> {
                       good.price != null ? '${putComma(good.price)}원' : 'priceless',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                        fontSize: 18,
+                        letterSpacing: -1.0,
                       )
                     ),
-                    VerticalDivider(width: 5),
-                    ClipRect(
-                      child: DecoratedBox(
-                        decoration: ShapeDecoration(
-                          color: Colors.black,
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide.none,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(5),
-                            )
-                          )
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(5, 1, 5, 2),
-                          child: Text(
-                            '10% 기부',
-                            style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            )
-                          ),
-                        ),
+                    VerticalDivider(width: 8),
+                    Text(
+                      '10% 기부',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red,
+                        letterSpacing: -1.0,
                       ),
                     ),
                   ],
@@ -587,6 +622,16 @@ class _AuctionGoodsState extends State<AuctionGoods> {
 
   @override
   Widget build(BuildContext context) {
-    return _buildWithList();
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(
+            color: Color(0xFFA4A4A4),
+            width: 0.2,
+          )
+        ),
+      ),
+      child: _buildWithList(),
+    );
   }
 }

@@ -45,6 +45,7 @@ class MyFailures extends StatelessWidget {
         ),
       ),
       body: MyFailuresDetail(),
+      backgroundColor: backgroundGrey,
     );
   }
 }
@@ -100,16 +101,19 @@ SessionNamePair currUser;
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '[${good.brand}]',
+                                good.brand,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
+                                  letterSpacing: -1.0,
                                 )
                               ),
-                              Text('${good.goodName}',
+                              Text(
+                                good.goodName,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 14,
+                                  letterSpacing: -1.0,
                                 )
                               ),
                             ],
@@ -174,7 +178,7 @@ SessionNamePair currUser;
         child: Column(
           children: [
             Container(
-              color: Colors.black,
+              color: revaultBlack,
               padding: EdgeInsets.symmetric(vertical: 15),
               alignment: Alignment.center,
               child: Text(

@@ -4,7 +4,6 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
 import 'common/aux.dart';
 
 class AddProfile extends StatelessWidget {
@@ -12,10 +11,13 @@ class AddProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
         centerTitle: true,
         title: Text("프로필 사진 설정"),
       ),
       body: AddProfileDetail(),
+      backgroundColor: Colors.white,
     );
   }
 }
@@ -123,11 +125,12 @@ class AddProfileDetailState extends State<AddProfileDetail> {
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: SizedBox(
                   width: double.infinity,
-                  child: RaisedButton(
-                    color: Colors.black,
+                  child: FlatButton(
+                    shape: Border(),
+                    color: revaultBlack,
                     textColor: Colors.white,
                     disabledColor: Colors.grey,
-                    disabledTextColor: Colors.black,
+                    disabledTextColor: revaultBlack,
                     padding: EdgeInsets.all(15.0),
                     splashColor: Colors.greenAccent,
                     onPressed: () {
@@ -145,15 +148,12 @@ class AddProfileDetailState extends State<AddProfileDetail> {
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: SizedBox(
                   width: double.infinity,
-                  child: RaisedButton(
-                    // style: greenButtonStyle.copyWith(
-                    //   padding: MaterialStateProperty.resolveWith((states)
-                    //     => EdgeInsets.all(15.0)),
-                    // ),
-                    color: Color(0xFF80F208),
+                  child: FlatButton(
+                    shape: Border(),
+                    color: revaultGreen,
                     textColor: Colors.white,
                     disabledColor: Colors.grey,
-                    disabledTextColor: Colors.black,
+                    disabledTextColor: revaultBlack,
                     padding: EdgeInsets.all(15.0),
                     splashColor: Colors.greenAccent,
                     onPressed: (selectedImage == null) ? null

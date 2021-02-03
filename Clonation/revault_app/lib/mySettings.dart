@@ -9,7 +9,7 @@ class MySettings extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
         title: Text(
@@ -18,8 +18,15 @@ class MySettings extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
+        shape: Border(
+          top: BorderSide(
+            width: 0.2,
+            color: Color(0xFFA4A4A4),
+          ),
+        ),
       ),
-      body: MySettingsBody()
+      body: MySettingsBody(),
+      backgroundColor: backgroundGrey,
     );
   }
 }
@@ -87,9 +94,9 @@ class MySettingsBodyState extends State<MySettingsBody> {
               child: Column(
                 children: [
                   Divider(
-                    color: Colors.grey[300],
-                    thickness: 15,
-                    height: 15
+                    color: backgroundGrey,
+                    thickness: 24,
+                    height: 24
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width,
@@ -102,6 +109,7 @@ class MySettingsBodyState extends State<MySettingsBody> {
                       ),
                     ),
                     child: FlatButton(
+                      shape: Border(),
                       textColor: Colors.grey[600],
                       onPressed: () => Navigator.pushNamed(
                         context, '/changepassword',
@@ -129,6 +137,7 @@ class MySettingsBodyState extends State<MySettingsBody> {
                       ),
                     ),
                     child: FlatButton(
+                      shape: Border(),
                       textColor: Colors.grey[600],
                       onPressed: () => Navigator.pushNamed(
                         context, '/changeaddress',
@@ -162,6 +171,7 @@ class MySettingsBodyState extends State<MySettingsBody> {
                       ),
                     ),
                     child: FlatButton(
+                      shape: Border(),
                       textColor: Colors.grey[600],
                       onPressed: () => Navigator.pushNamed(context, '/languageselect'),
                       child: Align(
@@ -176,8 +186,9 @@ class MySettingsBodyState extends State<MySettingsBody> {
                     ),
                   ),
                   Divider(
-                    color: Colors.grey[300],
-                    thickness: 18,
+                    color: backgroundGrey,
+                    thickness: 35,
+                    height: 35,
                   ),
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10,),
@@ -206,7 +217,7 @@ class MySettingsBodyState extends State<MySettingsBody> {
                               isSwitched1 = value;
                             });
                           },
-                          activeColor: Color(0xFF80F208),
+                          activeColor: revaultGreen,
                         ),
                       ]
                     ),
@@ -238,7 +249,7 @@ class MySettingsBodyState extends State<MySettingsBody> {
                               isSwitched2 = value;
                             });
                           },
-                          activeColor: Color(0xFF80F208),
+                          activeColor: revaultGreen,
                         ),
                       ]
                     ),
@@ -270,18 +281,19 @@ class MySettingsBodyState extends State<MySettingsBody> {
                               isSwitched3 = value;
                             });
                           },
-                          activeColor: Color(0xFF80F208),
+                          activeColor: revaultGreen,
                         ),
                       ]
                     ),
                   ),
                   SizedBox(
                     width: double.infinity,
-                    child: RaisedButton(
-                      color: Color(0xFF80F208),
-                      textColor: Colors.black,
+                    child: FlatButton(
+                      shape: Border(),
+                      color: revaultGreen,
+                      textColor: revaultBlack,
                       disabledColor: Colors.grey,
-                      disabledTextColor: Colors.black,
+                      disabledTextColor: revaultBlack,
                       padding: EdgeInsets.all(16.0),
                       splashColor: Colors.greenAccent,
                       onPressed: () async {
@@ -314,12 +326,12 @@ class MySettingsBodyState extends State<MySettingsBody> {
                     width: MediaQuery.of(context).size.width,
                     height: 100.0,
                     padding: EdgeInsets.only(left: 20, top: 15),
-                    color: Colors.grey[200],
+                    color: backgroundGrey,
                     child: RichText(
                       text: TextSpan(
                         text: '회원탈퇴하기',
                         style: TextStyle(
-                          color: Colors.black,
+                          color: revaultBlack,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           decoration: TextDecoration.underline

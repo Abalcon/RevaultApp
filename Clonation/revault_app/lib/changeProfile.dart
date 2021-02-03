@@ -13,6 +13,8 @@ class ChangeProfile extends StatelessWidget {
     final ProfileArguments profile = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
         centerTitle: true,
         title: Text("프로필 사진 변경"),
       ),
@@ -20,6 +22,7 @@ class ChangeProfile extends StatelessWidget {
         session: profile.session,
         imagePath: profile.imagePath
       ),
+      backgroundColor: Colors.white,
     );
   }
 }
@@ -135,11 +138,12 @@ class ChangeProfileDetailState extends State<ChangeProfileDetail> {
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: SizedBox(
                   width: double.infinity,
-                  child: RaisedButton(
-                    color: Colors.black,
+                  child: FlatButton(
+                    shape: Border(),
+                    color: revaultBlack,
                     textColor: Colors.white,
                     disabledColor: Colors.grey,
-                    disabledTextColor: Colors.black,
+                    disabledTextColor: revaultBlack,
                     padding: EdgeInsets.all(8.0),
                     splashColor: Colors.greenAccent,
                     onPressed: () {
@@ -157,11 +161,12 @@ class ChangeProfileDetailState extends State<ChangeProfileDetail> {
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: SizedBox(
                   width: double.infinity,
-                  child: RaisedButton(
-                    color: Color(0xFF80F208),
+                  child: FlatButton(
+                    shape: Border(),
+                    color: revaultGreen,
                     textColor: Colors.white,
                     disabledColor: Colors.grey,
-                    disabledTextColor: Colors.black,
+                    disabledTextColor: revaultBlack,
                     padding: EdgeInsets.all(8.0),
                     splashColor: Colors.greenAccent,
                     onPressed: (selectedImage == null) ? null

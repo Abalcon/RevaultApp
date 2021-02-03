@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:revault_app/common/aux.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class Policy extends StatelessWidget {
@@ -12,6 +13,7 @@ class Policy extends StatelessWidget {
         title: Text("사업자 정보 확인"),
       ),
       body: PolicyDetail(),
+      backgroundColor: backgroundGrey,
     );
   }
 }
