@@ -258,34 +258,34 @@ class SignUpFormState extends State<SignUpForm> {
                     ),
                     children: [
                       TextSpan(
-                        text: 'By tapping to register, you agree to our ',
+                        text: '회원가입하면 ',
                       ),
                       TextSpan(
-                        text: 'Terms & Conditions',
+                        text: '이용약관',
                         style: TextStyle(
                           color: Colors.red,
                         ),
                       ),
                       TextSpan(
-                        text: ', ',
+                        text: ' 및 ',
                       ),
                       TextSpan(
-                        text: 'Privacy Policy',
+                        text: '개인정보처리방침',
                         style: TextStyle(
                           color: Colors.red,
                         ),
                       ),
+                      // TextSpan(
+                      //   text: ', and ',
+                      // ),
+                      // TextSpan(
+                      //   text: 'Revault Account Agreement',
+                      //   style: TextStyle(
+                      //     color: Colors.red,
+                      //   ),
+                      // ),
                       TextSpan(
-                        text: ', and ',
-                      ),
-                      TextSpan(
-                        text: 'Revault Account Agreement',
-                        style: TextStyle(
-                          color: Colors.red,
-                        ),
-                      ),
-                      TextSpan(
-                        text: '.',
+                        text: '에 동의하는 것으로 간주됩니다.',
                       ),
                     ]
                   ),

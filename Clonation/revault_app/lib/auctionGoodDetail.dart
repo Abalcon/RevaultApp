@@ -48,10 +48,9 @@ class AuctionGoodDetail extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
-        title: Text("REVAULT",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+        title: Image.asset(
+          'images/revault_rectangle_logo.png',
+          width: MediaQuery.of(context).size.width * 0.25,
         ),
       ),
       body: AuctionGoodDetailWithVideo(
@@ -266,7 +265,8 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                     : '${good.winner}님께서 ${putComma(good.price)}원에 낙찰되셨습니다',
                     style: TextStyle(
                       fontSize: 18, 
-                      fontWeight: FontWeight.bold
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: -1.0,
                     )
                   ),
                   FlatButton(
@@ -284,7 +284,8 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                       "경매 진행내역 보기",
                       style: TextStyle(
                         fontSize: 16.0,
-                        fontWeight: FontWeight.bold
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: -1.0,
                       ),
                     ),
                   ),
@@ -427,6 +428,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
           Text('를 비롯한 ${good.waitingCount}명의 회원들이 경매를 기다리고 있습니다',
             style: TextStyle(
               fontSize: 14,
+              letterSpacing: -1.0,
             )
           ),
         ],
@@ -468,6 +470,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
           Text('를 비롯한 ${good.waitingCount}명의 회원들이 경매를 기다리고 있습니다',
             style: TextStyle(
               fontSize: 14,
+              letterSpacing: -1.0,
             ),
           ),
         ],
@@ -521,6 +524,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
         Text('를 비롯한 ${good.waitingCount}명의 회원들이 경매를 기다리고 있습니다',
           style: TextStyle(
             fontSize: 14,
+            letterSpacing: -1.0,
           ),
         ),
       ],
@@ -605,6 +609,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
               '아직 입찰한 사람이 없습니다. 지금 입찰해보세요!',
               style: TextStyle(
                 fontSize: 16,
+                letterSpacing: -1.0,
               ),
             ),
           ),
@@ -692,6 +697,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                 "${putComma(good.autoPrice)}원 까지 자동입찰 중",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
+                  letterSpacing: -1.0,
                 ),
               )
             ]
@@ -702,7 +708,8 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
               style: TextStyle(
                 color: Color(0xFF828282),
                 fontSize: 15,
-                decoration: TextDecoration.underline
+                letterSpacing: -1.0,
+                decoration: TextDecoration.underline,
               ),
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
@@ -1267,12 +1274,20 @@ class BiddingFormState extends State<BiddingForm> {
           http.Response response = await addBidding(widget.goodID, selectedPrice);
           if (response.statusCode == 200 && response.body == "1") {
             ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text('입찰가 제출에 성공했습니다')));
+              .showSnackBar(SnackBar(content: Text('입찰가 제출에 성공했습니다')));
             this.widget.parent.setState(() {
               this.widget.parent.currentGood = fetchGood(widget.goodID);
               this.widget.parent.currentPrice = selectedPrice;
             });
             Navigator.pop(context, "Changed");
+          }
+          else if (response.statusCode == 200 && response.body == "-2") {
+            ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('경매가 마감되었습니다')));
+            this.widget.parent.setState(() {
+              this.widget.parent.currentGood = fetchGood(widget.goodID);
+            });
+            Navigator.pop(context, "Not Changed");
           }
           else {
             ScaffoldMessenger.of(context)

@@ -241,10 +241,8 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Image.asset(
-              'images/revault_square_logo.jpg',
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height / 1.5,
-              fit: BoxFit.cover,
+              'images/revault_rectangle_logo.png',
+              width: MediaQuery.of(context).size.width * 0.6,
             ),
           ],
         ),

@@ -123,85 +123,88 @@ class MyPrevRecordsDetailState extends State<MyPrevRecordsDetail> {
               itemCount: all.length,
               itemBuilder: (BuildContext _context, int i) {
                 var good = all[i];
-                return Column(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(color: Colors.grey[300]),
-                        ),
-                        color: win.contains(good.auctionID) ?
-                          Colors.transparent : Colors.grey[350],
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(10, 8, 18, 8),
-                        child: Row(
-                          children: [
-                            good.imageUrlList.length > 0 ?
-                            Image.network(
-                              good.imageUrlList[0],
-                              height: 70.0,
-                              width: 70.0, 
-                              fit: BoxFit.cover,
-                              color: win.contains(good.auctionID) ?
-                                Colors.white : Colors.grey[350],
-                              colorBlendMode: BlendMode.darken,
-                            ) :
-                            Image.asset(
-                              'images/revault_square_logo.jpg',
-                              height: 70.0,
-                              width: 70.0, 
-                              fit: BoxFit.cover,
-                              color: win.contains(good.auctionID) ?
-                                Colors.white : Colors.grey,
-                              colorBlendMode: BlendMode.darken,
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '[${good.brand}]${good.goodName}',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                    )
-                                  ),
-                                  Text('Size ${good.size}  Condition ${good.condition}',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 14,
-                                    )
-                                  ),
-                                  Text('${putComma(good.price)}원',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 14,
-                                    )
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              width: 60.0,
-                              height: 60.0,
-                              child: win.contains(good.auctionID) ?
-                                Icon(
-                                  Icons.verified,
-                                  size: 40,
-                                  color: Colors.yellow
-                                ) :
-                                Icon(
-                                  Icons.block,
-                                  size: 40,
-                                  color: Colors.grey[600],
-                                ),
-                            )
-                          ],
-                        ),
-                      ),
+                return Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: Colors.grey[300]),
                     ),
-                  ],
+                    color: win.contains(good.auctionID) ?
+                      Colors.transparent : Colors.grey[350],
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(10, 8, 18, 8),
+                    child: Row(
+                      children: [
+                        good.imageUrlList.length > 0 ?
+                        Image.network(
+                          good.imageUrlList[0],
+                          height: 70.0,
+                          width: 70.0, 
+                          fit: BoxFit.cover,
+                          color: win.contains(good.auctionID) ?
+                            Colors.white : Colors.grey[350],
+                          colorBlendMode: BlendMode.darken,
+                        ) :
+                        Image.asset(
+                          'images/revault_square_logo.jpg',
+                          height: 70.0,
+                          width: 70.0, 
+                          fit: BoxFit.cover,
+                          color: win.contains(good.auctionID) ?
+                            Colors.white : Colors.grey,
+                          colorBlendMode: BlendMode.darken,
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 5),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '[${good.brand}]${good.goodName}',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                    letterSpacing: -1.0,
+                                  )
+                                ),
+                                Text('Size ${good.size}  Condition ${good.condition}',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14,
+                                    letterSpacing: -1.0,
+                                  )
+                                ),
+                                Text('${putComma(good.price)}원',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                    letterSpacing: -1.0,
+                                  )
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: 60.0,
+                          height: 60.0,
+                          child: win.contains(good.auctionID) ?
+                            Icon(
+                              Icons.verified,
+                              size: 40,
+                              color: Colors.yellow
+                            ) :
+                            Icon(
+                              Icons.block,
+                              size: 40,
+                              color: Colors.grey[600],
+                            ),
+                        )
+                      ],
+                    ),
+                  ),
                 );
               }
             );

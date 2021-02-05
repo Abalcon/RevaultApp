@@ -40,11 +40,9 @@ class AuctionList extends StatelessWidget {
                 elevation: 0,
                 flexibleSpace: FlexibleSpaceBar(
                   centerTitle: true,
-                  title: Text(
-                    "REVAULT",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
+                  title: Image.asset(
+                    'images/revault_rectangle_logo.png',
+                    width: MediaQuery.of(context).size.width * 0.25,
                   ),
                 ),
                 actions: [
