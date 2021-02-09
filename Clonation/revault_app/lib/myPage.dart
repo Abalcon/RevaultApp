@@ -42,6 +42,7 @@ class MyPage extends StatelessWidget {
           "마이페이지",
           style: TextStyle(
             fontWeight: FontWeight.bold,
+            letterSpacing: -1.0,
           ),
         ),
       ),
@@ -114,25 +115,34 @@ class MyPageDetailsState extends State<MyPageDetails> {
                     children: [
                       Stack(
                         children: [
-                          CircleAvatar(
-                            radius: 60.0,
-                            backgroundImage:
-                              (user.profile == null || user.profile == [])
-                              ? NetworkImage('https://revault.co.kr/web/upload/NNEditor/20201210/94b9ab77d43e7672ba4d14e021235d0e.jpg')
-                              : NetworkImage(user.profile),
-                            backgroundColor: Colors.transparent,
+                          Container(
+                            width: 110.0,
+                            height: 110.0,
+                            padding: EdgeInsets.all(1),
+                            decoration: BoxDecoration(
+                              color: Color(0xFFA4A4A4),
+                              shape: BoxShape.circle,
+                            ),
+                            child: CircleAvatar(
+                              radius: 55.0,
+                              backgroundImage:
+                                (user.profile == null || user.profile == [])
+                                ? NetworkImage('https://revault.co.kr/web/upload/NNEditor/20201210/94b9ab77d43e7672ba4d14e021235d0e.jpg')
+                                : NetworkImage(user.profile),
+                              backgroundColor: Colors.transparent,
+                            ),
                           ),
                           Container(
-                            width: 120.0,
-                            height: 120.0,
+                            width: 110.0,
+                            height: 110.0,
                             alignment: Alignment.topRight,
                             child: Container(
                               decoration: BoxDecoration(
                                 border: Border.all(color: revaultBlack),
                                 shape: BoxShape.circle
                               ),
-                              width: 30.0,
-                              height: 30.0,
+                              width: 28.0,
+                              height: 28.0,
                               child: FloatingActionButton(
                                 onPressed: () => Navigator.pushNamed(
                                   context, '/changeprofile',
@@ -146,7 +156,7 @@ class MyPageDetailsState extends State<MyPageDetails> {
                               )
                             ),
                           ),
-                        ]
+                        ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -155,7 +165,8 @@ class MyPageDetailsState extends State<MyPageDetails> {
                             user.userID,
                             style: TextStyle(
                               fontSize: 20, 
-                              fontWeight: FontWeight.bold
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: -1.0,
                             )
                           ),
                           IconButton(
@@ -167,15 +178,16 @@ class MyPageDetailsState extends State<MyPageDetails> {
                         ]
                       ),
                       Padding(
-                        padding: EdgeInsets.only(bottom: 21),
+                        padding: EdgeInsets.only(bottom: 18),
                         child: Text(
                           '가입날짜 2020.10.20',
                           style: TextStyle(
-                            fontSize: 14, 
+                            fontSize: 14,
+                            letterSpacing: -1.0,
                           )
                         ),
                       ),
-                      Divider(),
+                      Divider(height: 1),
                       Container(
                         padding: EdgeInsets.only(left: 21, top: 10),
                         child: Row(
@@ -185,7 +197,8 @@ class MyPageDetailsState extends State<MyPageDetails> {
                               '낙찰 과정중인 상품',
                               style: TextStyle(
                                 fontSize: 16,
-                                fontWeight: FontWeight.bold
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: -1.0,
                               )
                             ),
                             VerticalDivider(
@@ -202,7 +215,8 @@ class MyPageDetailsState extends State<MyPageDetails> {
                                 "자세히 보기",
                                 style: TextStyle(
                                   fontSize: 14.0,
-                                  fontWeight: FontWeight.bold
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: -1.0,
                                 ),
                               ),
                             )
@@ -241,10 +255,10 @@ class MyPageDetailsState extends State<MyPageDetails> {
                               ]
                             ),
                             Padding(
-                              padding: EdgeInsets.fromLTRB(3, 0, 3, 32),
+                              padding: EdgeInsets.fromLTRB(2, 0, 2, 32),
                               child: Icon(
                                 Icons.keyboard_arrow_right,
-                                size: 48
+                                size: 40
                               ),
                             ),
                             Column(
@@ -274,10 +288,10 @@ class MyPageDetailsState extends State<MyPageDetails> {
                               ]
                             ),
                             Padding(
-                              padding: EdgeInsets.fromLTRB(3, 0, 3, 32),
+                              padding: EdgeInsets.fromLTRB(2, 0, 2, 32),
                               child: Icon(
                                 Icons.keyboard_arrow_right,
-                                size: 48
+                                size: 40
                               ),
                             ),
                             Column(
@@ -307,10 +321,10 @@ class MyPageDetailsState extends State<MyPageDetails> {
                               ]
                             ),
                             Padding(
-                              padding: EdgeInsets.fromLTRB(3, 0, 3, 32),
+                              padding: EdgeInsets.fromLTRB(2, 0, 2, 32),
                               child: Icon(
                                 Icons.keyboard_arrow_right,
-                                size: 48
+                                size: 40
                               ),
                             ),
                             Column(
@@ -340,10 +354,10 @@ class MyPageDetailsState extends State<MyPageDetails> {
                               ]
                             ),
                             Padding(
-                              padding: EdgeInsets.fromLTRB(3, 0, 3, 32),
+                              padding: EdgeInsets.fromLTRB(2, 0, 2, 32),
                               child: Icon(
                                 Icons.keyboard_arrow_right,
-                                size: 48
+                                size: 40
                               ),
                             ),
                             Column(
@@ -382,7 +396,7 @@ class MyPageDetailsState extends State<MyPageDetails> {
                           color: Colors.white,
                           border: Border(
                             top: BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
-                            bottom: BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
+                            bottom: BorderSide(color: Color(0xFFE0E0E0), width: 0.5),
                           ),
                         ),
                         child: FlatButton(
@@ -406,8 +420,8 @@ class MyPageDetailsState extends State<MyPageDetails> {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           border: Border(
-                            top: BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
-                            bottom: BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
+                            top: BorderSide(color: Color(0xFFE0E0E0), width: 0.5),
+                            bottom: BorderSide(color: Color(0xFFE0E0E0), width: 0.5),
                           ),
                         ),
                         child: FlatButton(
@@ -430,8 +444,8 @@ class MyPageDetailsState extends State<MyPageDetails> {
                         width: MediaQuery.of(context).size.width,
                         decoration: BoxDecoration(
                           border: Border(
-                            top: BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
-                            bottom: BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
+                            top: BorderSide(color: Color(0xFFE0E0E0), width: 0.5),
+                            bottom: BorderSide(color: Color(0xFFE0E0E0), width: 0.5),
                           ),
                         ),
                         child: FlatButton(
@@ -456,8 +470,8 @@ class MyPageDetailsState extends State<MyPageDetails> {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           border: Border(
-                            top: BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
-                            bottom: BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
+                            top: BorderSide(color: Color(0xFFE0E0E0), width: 0.5),
+                            bottom: BorderSide(color: Color(0xFFE0E0E0), width: 0.5),
                           ),
                         ),
                         child: FlatButton(
@@ -481,7 +495,7 @@ class MyPageDetailsState extends State<MyPageDetails> {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           border: Border(
-                            top: BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
+                            top: BorderSide(color: Color(0xFFE0E0E0), width: 0.5),
                             bottom: BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
                           ),
                         ),
@@ -549,6 +563,7 @@ class MyPageDetailsState extends State<MyPageDetails> {
                               style: TextStyle(
                                 fontSize: 18.0,
                                 fontWeight: FontWeight.bold,
+                                letterSpacing: -1.0,
                               ),
                             ),
                           ),

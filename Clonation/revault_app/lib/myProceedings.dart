@@ -34,7 +34,7 @@ class MyProceedings extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
         title: Text(
@@ -90,6 +90,7 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
                 bool isBillingRequired = (good.status == '입금대기');
                 return Container(
                   decoration: BoxDecoration(
+                    color: Colors.white,
                     border: Border(
                       bottom: BorderSide(
                         color: Color(0xFFE0E0E0),
@@ -172,11 +173,18 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
             );
           }
 
-          return Text(
-            "현재 낙찰된 상품이 없습니다",
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+          return Container(
+            height: 200,
+            color: Colors.white,
+            child: Center(
+              child: Text(
+                "현재 낙찰된 상품이 없습니다",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: -1.0,
+                ),
+              ),
             ),
           );
         }
@@ -198,13 +206,29 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
           var user = snapshot.data;
           return Container(
             padding: EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border(
+                top: BorderSide(
+                  width: 1.0,
+                  color: Color(0xFFE0E0E0),
+                ),
+                bottom: BorderSide(
+                  width: 1.0,
+                  color: Color(0xFFE0E0E0),
+                ),
+              ),
+            ),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   '배송지 정보',
+                  textAlign: TextAlign.left,
                   style: TextStyle(
                     fontSize: 16, 
-                    fontWeight: FontWeight.bold
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: -1.0,
                   )
                 ),
                 Divider(
@@ -217,7 +241,8 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
                     Text(
                       '수령인',
                       style: TextStyle(
-                        fontSize: 14, 
+                        fontSize: 14,
+                        letterSpacing: -1.0,
                       )
                     ),
                     VerticalDivider(
@@ -226,7 +251,8 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
                     Text(
                       (user.name == null) ? '미입력' : user.name,
                       style: TextStyle(
-                        fontSize: 14, 
+                        fontSize: 14,
+                        letterSpacing: -1.0,
                       )
                     )
                   ],
@@ -237,7 +263,8 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
                     Text(
                       '연락처',
                       style: TextStyle(
-                        fontSize: 14, 
+                        fontSize: 14,
+                        letterSpacing: -1.0,
                       )
                     ),
                     VerticalDivider(
@@ -246,7 +273,8 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
                     Text(
                       (user.phone == null) ? '미입력' : user.phone,
                       style: TextStyle(
-                        fontSize: 14, 
+                        fontSize: 14,
+                        letterSpacing: -1.0,
                       )
                     )
                   ],
@@ -257,7 +285,8 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
                     Text(
                       '주소',
                       style: TextStyle(
-                        fontSize: 14, 
+                        fontSize: 14,
+                        letterSpacing: -1.0,
                       )
                     ),
                     VerticalDivider(
@@ -270,7 +299,8 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
                       child: Text(
                         (user.address == null) ? '미입력' : user.address,
                         style: TextStyle(
-                          fontSize: 14, 
+                          fontSize: 14,
+                          letterSpacing: -1.0,
                         )
                       ),
                     ),

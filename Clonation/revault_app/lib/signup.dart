@@ -149,10 +149,10 @@ class SignUpFormState extends State<SignUpForm> {
                       ),
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Please enter your username';
+                          return '아이디를 입력하세요';
                         }
                         else if (usernameValidation(value)) {
-                          return 'Invalid username';
+                          return '사용할 수 없는 아이디입니다';
                         }
                         return null;
                       },
@@ -171,10 +171,10 @@ class SignUpFormState extends State<SignUpForm> {
                       ),
                       validator: (email) {
                         if (email.isEmpty) {
-                          return 'Please enter your E-mail address';
+                          return '이메일 주소를 입력하세요';
                         }
                         else if (!EmailValidator.validate(email)) {
-                          return 'Invalid E-mail address';
+                          return '이메일 주소 형식에 맞지 않습니다';
                         }
                         return null;
                       },
@@ -194,7 +194,7 @@ class SignUpFormState extends State<SignUpForm> {
                       keyboardType: TextInputType.number,
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Please enter your phone number';
+                          return '전화번호를 입력하세요';
                         }
                         return null;
                       },
@@ -214,10 +214,10 @@ class SignUpFormState extends State<SignUpForm> {
                       ),
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Please enter your password';
+                          return '비밀번호를 입력하세요';
                         }
                         else if (!passwordValidation(value)) {
-                          return 'Invalid password: 영소문자/영대문자/숫자/특수문자 중에\n3종류 이상을 포함하여 8글자 이상';
+                          return '사용할 수 없는 비밀번호: 영소문자/영대문자/숫자/특수문자 중에\n3종류 이상을 포함하여 8글자 이상';
                         }
                         return null;
                       },
@@ -236,10 +236,10 @@ class SignUpFormState extends State<SignUpForm> {
                       ),
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Please enter your password';
+                          return '비밀번호를 입력하세요';
                         }
                         else if (value != _passController.text) {
-                          return 'Password is not matching';
+                          return '비밀번호가 일치하지 않습니다';
                         }
                         return null;
                       },

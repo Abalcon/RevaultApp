@@ -63,7 +63,7 @@ class MyAuctionInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
         title: Text(
@@ -74,6 +74,7 @@ class MyAuctionInfo extends StatelessWidget {
         ),
       ),
       body: MyAuctionInfoDetails(),
+      backgroundColor: backgroundGrey,
     );
   }
 }
@@ -144,6 +145,7 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
 
           return Container(
             padding: EdgeInsets.symmetric(vertical: 30),
+            color: Colors.white,
             child: Column(
               children: [
                 Row(
@@ -197,6 +199,22 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
       future: winningList,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+          if (snapshot.data.length == 0) {
+            return Container(
+              height: 250.0,
+              child: Center(
+                child: Text(
+                  "낙찰중인 제품이 없습니다",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: -1.0,
+                  ),
+                ),
+              ),
+            );
+          }
+
           return CarouselSlider(
             options: CarouselOptions(
               height: 250.0,
@@ -471,6 +489,7 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
                 border: Border(
                   top: BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
                 ),
+                color: Colors.white,
               ),
               child: Padding(
                 padding: EdgeInsets.only(top: 38),
@@ -521,7 +540,7 @@ class MyAuctionInfoDetailsState extends State<MyAuctionInfoDetails> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(left: 48),
+                    padding: EdgeInsets.only(left: 20),
                     child: Text(
                       '최근 낙찰된 제품',
                       textAlign: TextAlign.left,

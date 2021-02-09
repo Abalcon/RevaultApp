@@ -75,6 +75,24 @@ class MySettingsBodyState extends State<MySettingsBody> {
 
   @override
   Widget build(BuildContext context) {
+    void changeAlarmSetting(val1, val2, val3) async {
+      await tryModifyUserAlarms(currUser.getSession(), val1, val2, val3);
+      // if (changeResponse.statusCode == 200 || changeResponse.statusCode == 201) {
+      //   if (changeResponse.body == "-1") {
+      //     ScaffoldMessenger.of(context)
+      //       .showSnackBar(SnackBar(content: Text('알림 설정 변경에 실패했습니다. 다시 시도해주세요')));
+      //     return;
+      //   }
+
+      //   ScaffoldMessenger.of(context)
+      //     .showSnackBar(SnackBar(content: Text('알림 설정 변경에 성공했습니다')));
+      // }
+      // else {
+      //   ScaffoldMessenger.of(context)
+      //     .showSnackBar(SnackBar(content: Text('오류가 발생했습니다. 다시 시도해주세요')));
+      // }
+    }
+
     return FutureBuilder(
       future: currInfo,
       builder: (context, snapshot) {
@@ -105,7 +123,7 @@ class MySettingsBodyState extends State<MySettingsBody> {
                       color: Colors.white,
                       border: Border(
                         top: BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
-                        bottom: BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
+                        bottom: BorderSide(color: Color(0xFFE0E0E0), width: 0.5),
                       ),
                     ),
                     child: FlatButton(
@@ -132,8 +150,8 @@ class MySettingsBodyState extends State<MySettingsBody> {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border(
-                        top: BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
-                        bottom: BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
+                        top: BorderSide(color: Color(0xFFE0E0E0), width: 0.5),
+                        bottom: BorderSide(color: Color(0xFFE0E0E0), width: 0.5),
                       ),
                     ),
                     child: FlatButton(
@@ -166,7 +184,7 @@ class MySettingsBodyState extends State<MySettingsBody> {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border(
-                        top: BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
+                        top: BorderSide(color: Color(0xFFE0E0E0), width: 0.5),
                         bottom: BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
                       ),
                     ),
@@ -196,7 +214,7 @@ class MySettingsBodyState extends State<MySettingsBody> {
                       color: Colors.white,
                       border: Border(
                         top: BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
-                        bottom: BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
+                        bottom: BorderSide(color: Color(0xFFE0E0E0), width: 0.5),
                       ),
                     ),
                     child: Row(
@@ -216,6 +234,7 @@ class MySettingsBodyState extends State<MySettingsBody> {
                             setState(() {
                               isSwitched1 = value;
                             });
+                            changeAlarmSetting(value, isSwitched2, isSwitched3);
                           },
                           activeColor: revaultGreen,
                         ),
@@ -227,8 +246,8 @@ class MySettingsBodyState extends State<MySettingsBody> {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border(
-                        top: BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
-                        bottom: BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
+                        top: BorderSide(color: Color(0xFFE0E0E0), width: 0.5),
+                        bottom: BorderSide(color: Color(0xFFE0E0E0), width: 0.5),
                       ),
                     ),
                     child: Row(
@@ -248,6 +267,7 @@ class MySettingsBodyState extends State<MySettingsBody> {
                             setState(() {
                               isSwitched2 = value;
                             });
+                            changeAlarmSetting(isSwitched1, value, isSwitched3);
                           },
                           activeColor: revaultGreen,
                         ),
@@ -259,7 +279,7 @@ class MySettingsBodyState extends State<MySettingsBody> {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border(
-                        top: BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
+                        top: BorderSide(color: Color(0xFFE0E0E0), width: 0.5),
                         bottom: BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
                       ),
                     ),
@@ -280,46 +300,11 @@ class MySettingsBodyState extends State<MySettingsBody> {
                             setState(() {
                               isSwitched3 = value;
                             });
+                            changeAlarmSetting(isSwitched1, isSwitched2, value);
                           },
                           activeColor: revaultGreen,
                         ),
                       ]
-                    ),
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: FlatButton(
-                      shape: Border(),
-                      color: revaultGreen,
-                      textColor: revaultBlack,
-                      disabledColor: Colors.grey,
-                      disabledTextColor: revaultBlack,
-                      padding: EdgeInsets.all(16.0),
-                      splashColor: Colors.greenAccent,
-                      onPressed: () async {
-                        var changeResponse = await tryModifyUserAlarms(
-                          currUser.getSession(), isSwitched1, isSwitched2, isSwitched3);
-
-                        if (changeResponse.statusCode == 200 || changeResponse.statusCode == 201) {
-                          if (changeResponse.body == "-1") {
-                            ScaffoldMessenger.of(context)
-                              .showSnackBar(SnackBar(content: Text('알림 설정 변경에 실패했습니다. 다시 시도해주세요')));
-                            return;
-                          }
-
-                          ScaffoldMessenger.of(context)
-                            .showSnackBar(SnackBar(content: Text('알림 설정 변경에 성공했습니다')));
-                          Navigator.pop(context);
-                        }
-                        else {
-                          ScaffoldMessenger.of(context)
-                            .showSnackBar(SnackBar(content: Text('오류가 발생했습니다. 다시 시도해주세요')));
-                        }
-                      },
-                      child: Text(
-                        "알림 설정 저장하기",
-                        style: TextStyle(fontSize: 20.0),
-                      ),
                     ),
                   ),
                   Container(

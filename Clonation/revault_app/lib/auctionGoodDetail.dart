@@ -313,6 +313,26 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
               mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
+                SizedBox(
+                  width: double.infinity,
+                  child: FlatButton(
+                    padding: EdgeInsets.symmetric(vertical: 0),
+                    shape: Border(
+                      //top: BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
+                      bottom: BorderSide(color: Color(0xFFE0E0E0), width: 0.5),
+                    ),
+                    color: Colors.white,
+                    textColor: revaultBlack,
+                    disabledColor: Colors.grey,
+                    disabledTextColor: Colors.white,
+                    child: Icon(
+                      Icons.keyboard_arrow_down,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
                 SingleChildScrollView(
                   child: Container(
                     height: MediaQuery.of(context).size.height * 0.7,
@@ -395,7 +415,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
               ),
             ),
           ),
-          padding: EdgeInsets.only(top: 10, bottom: 150),
+          padding: EdgeInsets.only(top: 10, bottom: 120),
           child: waitingSection(good),
         );
       case 1:
@@ -848,13 +868,26 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
     );
   }
 
+  Future<http.Response> removeAuctionAlarm(int id) async {
+    var map = new Map<String, dynamic>();
+    map['auction_id'] = id.toString();
+
+    return http.post(
+      'https://ibsoft.site/revault/delAlarmAuction',
+      headers: <String, String>{
+        'Cookie': currUser.getSession(),
+      },
+      body: map,
+    );
+  }
+
   Widget commentSection(AuctionGood good) {
     if (good.aucState == 0) {
       var isWaiting = good.waitingUserList.any((user)
         => currUser.getName() == user);
 
       return Padding(
-        padding: const EdgeInsets.only(top: 40),
+        padding: const EdgeInsets.only(top: 10),
         child: isWaiting
         ? SizedBox(
           width: double.infinity,
@@ -867,7 +900,18 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
             padding: EdgeInsets.all(18.0),
             splashColor: Colors.greenAccent,
             onPressed: () async {
-              // TODO: 알림 해제하는 API 호출
+              http.Response response = await removeAuctionAlarm(widget.goodID);
+              if (response.statusCode == 200 && response.body == "1") {
+                ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text('알림을 해제했습니다')));
+                setState(() {
+                  currentGood = fetchGood(widget.goodID);
+                });
+              }
+              else {
+                ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text('오류가 발생했습니다. 다시 시도해주세요')));
+              }
             },
             child: Text(
               "알림 해제하기",
@@ -883,7 +927,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
           child: FlatButton(
             shape: Border(),
             color: revaultGreen,
-            textColor: revaultBlack,
+            textColor: Colors.white,
             disabledColor: Colors.grey,
             disabledTextColor: Colors.white,
             padding: EdgeInsets.all(18.0),
