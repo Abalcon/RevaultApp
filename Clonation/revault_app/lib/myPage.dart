@@ -1,34 +1,12 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import "package:http/http.dart" as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:revault_app/auctionGood.dart';
 import 'package:revault_app/auctionResult.dart';
 import 'package:revault_app/common/aux.dart';
 import 'package:revault_app/userInfo.dart';
-
-List<AuctionResult> parseWinningList(String responseBody) {
-  final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
-  print(parsed);
-  return parsed.map<AuctionResult>((json) => AuctionResult.fromJson(json)).toList();
-}
-
-Future<List<AuctionResult>> fetchWinningList(String session) async {
-  final response = await http.get(
-    'https://ibsoft.site/revault/getAuctionResultList',
-    headers: <String, String>{
-      'Cookie': session,
-    },
-  );
-  if (response.statusCode == 200) {
-    if (response.body == "")
-      return [];
-    return compute(parseWinningList, response.body);
-  }
-
-  return [];
-}
 
 class MyPage extends StatelessWidget {
   @override
@@ -61,7 +39,6 @@ class MyPageDetails extends StatefulWidget {
 class MyPageDetailsState extends State<MyPageDetails> {
   SessionNamePair currUser;
   Future<UserInfo> currInfo;
-  Future<List<AuctionResult>> winningList;
 
   _checkUser() async {
     currUser = await isLogged();
@@ -74,9 +51,108 @@ class MyPageDetailsState extends State<MyPageDetails> {
     else {
       setState(() {
         currInfo = getInfo(currUser.getSession());
+        ongoingList = fetchGoodList(currUser.getSession(), 1, 'Bid');
+        recordList = fetchGoodList(currUser.getSession(), 2, '');
         winningList = fetchWinningList(currUser.getSession());
       });
     }
+  }
+
+  Future<List<AuctionGood>> ongoingList;
+  Future<List<AuctionGood>> recordList;
+  Future<List<AuctionResult>> winningList;
+  Widget _listCountText(Future future, String route) {
+    return FutureBuilder<List>(
+      future: future,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return RichText(
+            text: TextSpan(
+              text: '${snapshot.data.length}',
+              style: TextStyle(
+                fontSize: 56, 
+                fontWeight: FontWeight.bold,
+                color: revaultGreen,
+              ),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () => Navigator.pushNamed(context, route)
+            ),
+          );
+        }
+        else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+
+        return Center(child: CircularProgressIndicator());
+      }
+    );
+  }
+
+  Widget _getTotalDonation() {
+    return FutureBuilder<List<AuctionResult>>(
+      future: winningList,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          var donation = 0;
+          var list = snapshot.data;
+          list.forEach((good) => donation += (good.price * 0.1).toInt());
+
+          return Container(
+            padding: EdgeInsets.symmetric(vertical: 15),
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(color: Color(0xFFE0E0E0), width: 0.5),
+              ),
+              color: Colors.white,
+            ),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '누적 기부액  ',
+                      style: TextStyle(
+                        fontSize: 18,
+                        letterSpacing: -1.0,
+                      ),
+                    ),
+                    Text(
+                      '${putComma(donation)}원',
+                      style: TextStyle(
+                        fontSize: 18, 
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red,
+                        letterSpacing: -1.0,
+                      )
+                    )
+                  ],
+                ),
+                Divider(color: Colors.transparent, height: 8),
+                RichText(
+                  text: TextSpan(
+                    text: '자세히 보기',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.underline
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () => Navigator.pushNamed(context, '/mydonations')
+                  ),
+                ),
+              ]
+            )
+          );
+        }
+
+        else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+
+        return Center(child: CircularProgressIndicator());
+      }
+    );
   }
 
   @override
@@ -103,8 +179,6 @@ class MyPageDetailsState extends State<MyPageDetails> {
               return Text("${snapshot.error}");
             }
             var user = snapshot.data[0];
-            var list = snapshot.data[1];
-            var pending = list.where((item) => item.status == '입금대기').length;
 
             return SingleChildScrollView(
               child: Container(
@@ -175,7 +249,7 @@ class MyPageDetailsState extends State<MyPageDetails> {
                             onPressed: () => {}
                             // TODO: 사용자 정보 변경
                           )
-                        ]
+                        ],
                       ),
                       Padding(
                         padding: EdgeInsets.only(bottom: 18),
@@ -187,215 +261,84 @@ class MyPageDetailsState extends State<MyPageDetails> {
                           )
                         ),
                       ),
-                      Divider(height: 1),
                       Container(
-                        padding: EdgeInsets.only(left: 21, top: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              '낙찰 과정중인 상품',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: -1.0,
-                              )
-                            ),
-                            VerticalDivider(
-                              width: 10,
-                            ),
-                            FlatButton(
-                              shape: Border(),
-                              color: Colors.white,
-                              textColor: Colors.grey,
-                              padding: EdgeInsets.all(10.0),
-                              splashColor: Colors.grey,
-                              onPressed: () => Navigator.pushNamed(context, '/myproceedings'),
-                              child: Text(
-                                "자세히 보기",
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: -1.0,
-                                ),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            top: BorderSide(color: Color(0xFFE0E0E0), width: 0.5),
+                            bottom: BorderSide(color: Color(0xFFE0E0E0), width: 0.5),
+                          ),
+                          color: Colors.white,
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Column(
+                                children: [
+                                  Text(
+                                    '진행중인 경매',
+                                    style: TextStyle(
+                                      fontSize: 16, 
+                                      fontWeight: FontWeight.w400,
+                                      letterSpacing: -1.0,
+                                    )
+                                  ),
+                                  _listCountText(ongoingList, '/myparticipations'),
+                                ]
                               ),
-                            )
-                          ]
+                              VerticalDivider(
+                                color: Color(0xFF828282),
+                                width: 56,
+                                thickness: 5,
+                                indent: 20,
+                                endIndent: 20,
+                              ),
+                              Column(
+                                children: [
+                                  Text(
+                                    '낙찰된 경매',
+                                    style: TextStyle(
+                                      fontSize: 16, 
+                                      fontWeight: FontWeight.w400,
+                                      letterSpacing: -1.0,
+                                    ),
+                                  ),
+                                  _listCountText(winningList, '/myproceedings'),
+                                ],
+                              ),
+                              VerticalDivider(
+                                color: Color(0xFF828282),
+                                width: 56,
+                                thickness: 5,
+                                indent: 20,
+                                endIndent: 20,
+                              ),
+                              Column(
+                                children: [
+                                  Text(
+                                    '이전 참여 경매',
+                                    style: TextStyle(
+                                      fontSize: 16, 
+                                      fontWeight: FontWeight.w400,
+                                      letterSpacing: -1.0,
+                                    ),
+                                  ),
+                                  _listCountText(recordList, '/myprevrecords'),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                      Container(
-                        padding: EdgeInsets.fromLTRB(21, 10, 21, 22),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Column(
-                              children: [
-                                Text(
-                                  '입금',
-                                  style: TextStyle(
-                                    fontSize: 16, 
-                                    fontWeight: FontWeight.bold
-                                  )
-                                ),
-                                Text(
-                                  '대기',
-                                  style: TextStyle(
-                                    fontSize: 16, 
-                                    fontWeight: FontWeight.bold
-                                  )
-                                ),
-                                Text(
-                                  '$pending',
-                                  style: TextStyle(
-                                    fontSize: 26, 
-                                    fontWeight: FontWeight.bold,
-                                    color: revaultGreen,
-                                  )
-                                )
-                              ]
-                            ),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(2, 0, 2, 32),
-                              child: Icon(
-                                Icons.keyboard_arrow_right,
-                                size: 40
-                              ),
-                            ),
-                            Column(
-                              children: [
-                                Text(
-                                  '결제',
-                                  style: TextStyle(
-                                    fontSize: 16, 
-                                    fontWeight: FontWeight.bold
-                                  )
-                                ),
-                                Text(
-                                  '완료',
-                                  style: TextStyle(
-                                    fontSize: 16, 
-                                    fontWeight: FontWeight.bold
-                                  )
-                                ),
-                                Text(
-                                  '0',
-                                  style: TextStyle(
-                                    fontSize: 26, 
-                                    fontWeight: FontWeight.bold,
-                                    color: revaultGreen,
-                                  )
-                                )
-                              ]
-                            ),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(2, 0, 2, 32),
-                              child: Icon(
-                                Icons.keyboard_arrow_right,
-                                size: 40
-                              ),
-                            ),
-                            Column(
-                              children: [
-                                Text(
-                                  '배송',
-                                  style: TextStyle(
-                                    fontSize: 16, 
-                                    fontWeight: FontWeight.bold
-                                  )
-                                ),
-                                Text(
-                                  '준비',
-                                  style: TextStyle(
-                                    fontSize: 16, 
-                                    fontWeight: FontWeight.bold
-                                  )
-                                ),
-                                Text(
-                                  '2',
-                                  style: TextStyle(
-                                    fontSize: 26, 
-                                    fontWeight: FontWeight.bold,
-                                    color: revaultGreen,
-                                  )
-                                )
-                              ]
-                            ),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(2, 0, 2, 32),
-                              child: Icon(
-                                Icons.keyboard_arrow_right,
-                                size: 40
-                              ),
-                            ),
-                            Column(
-                              children: [
-                                Text(
-                                  '배송',
-                                  style: TextStyle(
-                                    fontSize: 16, 
-                                    fontWeight: FontWeight.bold
-                                  )
-                                ),
-                                Text(
-                                  '진행',
-                                  style: TextStyle(
-                                    fontSize: 16, 
-                                    fontWeight: FontWeight.bold
-                                  )
-                                ),
-                                Text(
-                                  '1',
-                                  style: TextStyle(
-                                    fontSize: 26, 
-                                    fontWeight: FontWeight.bold,
-                                    color: revaultGreen,
-                                  )
-                                )
-                              ]
-                            ),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(2, 0, 2, 32),
-                              child: Icon(
-                                Icons.keyboard_arrow_right,
-                                size: 40
-                              ),
-                            ),
-                            Column(
-                              children: [
-                                Text(
-                                  '배송',
-                                  style: TextStyle(
-                                    fontSize: 16, 
-                                    fontWeight: FontWeight.bold
-                                  )
-                                ),
-                                Text(
-                                  '완료',
-                                  style: TextStyle(
-                                    fontSize: 16, 
-                                    fontWeight: FontWeight.bold
-                                  )
-                                ),
-                                Text(
-                                  '1',
-                                  style: TextStyle(
-                                    fontSize: 26, 
-                                    fontWeight: FontWeight.bold,
-                                    color: revaultGreen,
-                                  )
-                                )
-                              ]
-                            ),
-                          ],
-                        ),
-                      ),
-                      Divider(thickness: 16, color: backgroundGrey),
+                      _getTotalDonation(),
+                      // Divider(thickness: 16, color: backgroundGrey),
                       Container(
                         width: MediaQuery.of(context).size.width,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           border: Border(
-                            top: BorderSide(color: Color(0xFFE0E0E0), width: 1.0),
+                            top: BorderSide(color: Color(0xFFE0E0E0), width: 0.5),
                             bottom: BorderSide(color: Color(0xFFE0E0E0), width: 0.5),
                           ),
                         ),
@@ -403,13 +346,14 @@ class MyPageDetailsState extends State<MyPageDetails> {
                           shape: Border(),
                           padding: EdgeInsets.fromLTRB(21, 10, 0, 10),
                           textColor: Colors.grey[600],
-                          onPressed: () => Navigator.pushNamed(context, '/myauctioninfo'),
+                          onPressed: () => Navigator.pushNamed(context, '/myproceedings'),
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              "나의 경매정보",
+                              "낙찰 과정중인 상품",
                               style: TextStyle(
                                 fontSize: 14.0,
+                                letterSpacing: -1.0,
                               ),
                             ),
                           ),
@@ -435,6 +379,7 @@ class MyPageDetailsState extends State<MyPageDetails> {
                               "배송조회",
                               style: TextStyle(
                                 fontSize: 14.0,
+                                letterSpacing: -1.0,
                               ),
                             ),
                           ),
@@ -460,6 +405,7 @@ class MyPageDetailsState extends State<MyPageDetails> {
                               "환경설정",
                               style: TextStyle(
                                 fontSize: 14.0,
+                                letterSpacing: -1.0,
                               ),
                             ),
                           ),
@@ -485,6 +431,7 @@ class MyPageDetailsState extends State<MyPageDetails> {
                               "고객센터",
                               style: TextStyle(
                                 fontSize: 14.0,
+                                letterSpacing: -1.0,
                               ),
                             ),
                           ),
@@ -510,6 +457,7 @@ class MyPageDetailsState extends State<MyPageDetails> {
                               "사업자 정보 확인",
                               style: TextStyle(
                                 fontSize: 14.0,
+                                letterSpacing: -1.0,
                               ),
                             ),
                           ),
@@ -517,7 +465,7 @@ class MyPageDetailsState extends State<MyPageDetails> {
                       ),
                       Container(
                         color: backgroundGrey,
-                        padding: EdgeInsets.only(top: 12),
+                        padding: EdgeInsets.only(top: 8),
                         child: SizedBox(
                           width: double.infinity,
                           child: FlatButton(

@@ -33,7 +33,6 @@ import 'package:revault_app/userIdentifyResult.dart';
 import 'auctionGoodDetail.dart';
 import 'login.dart';
 import 'myPage.dart';
-import 'myAuctionInfo.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -110,7 +109,6 @@ class MyApp extends StatelessWidget {
             '/auctionlist': (context) => AuctionList(),
             '/auctiongooddetail': (context) => AuctionGoodDetail(),
             '/mypage': (context) => MyPage(),
-            '/myauctioninfo': (context) => MyAuctionInfo(),
             '/myproceedings': (context) => MyProceedings(),
             '/myparticipations': (context) => MyParticipations(),
             '/myprevrecords': (context) => MyPrevRecords(),

@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:revault_app/auctionGood.dart';
+import 'package:revault_app/auctionResult.dart';
 import 'package:revault_app/userInfo.dart';
 
 class SessionNamePair {
@@ -554,3 +556,50 @@ final ButtonStyle autoBiddingButtonStyle = TextButton.styleFrom(
   ),
 );
 
+List<AuctionGood> parseGoodList(String responseBody) {
+  final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+  print(parsed);
+  return parsed.map<AuctionGood>((json) => AuctionGood.fromJson(json)).toList();
+}
+
+Future<List<AuctionGood>> fetchGoodList(String session, int status, String type) async {
+  final String typeParam = (type == '') ? '' : '&is$type=1';
+  final response = await http.get(
+    'https://ibsoft.site/revault/getAuctionList?status=$status$typeParam',
+    headers: <String, String>{
+      'Cookie': session,
+    },
+  );
+  if (response.statusCode == 200) {
+    if (response.body == "")
+      return [];
+    print("Now Parsing!");
+    return compute(parseGoodList, response.body);
+  }
+  else {
+    // throw Exception('상품 정보를 불러오지 못했습니다');
+    return [];
+  }
+}
+
+List<AuctionResult> parseWinningList(String responseBody) {
+  final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+  print(parsed);
+  return parsed.map<AuctionResult>((json) => AuctionResult.fromJson(json)).toList();
+}
+
+Future<List<AuctionResult>> fetchWinningList(String session) async {
+  final response = await http.get(
+    'https://ibsoft.site/revault/getAuctionResultList',
+    headers: <String, String>{
+      'Cookie': session,
+    },
+  );
+  if (response.statusCode == 200) {
+    if (response.body == "")
+      return [];
+    return compute(parseWinningList, response.body);
+  }
+
+  return [];
+}
