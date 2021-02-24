@@ -124,7 +124,7 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
                       style: TextStyle(
                         fontSize: 16, 
                         fontWeight: FontWeight.bold
-                      )
+                      ),
                     ),
                     Text(
                       '$billed',
@@ -660,6 +660,7 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
           var user = snapshot.data;
           return Container(
             padding: EdgeInsets.all(20),
+            margin: EdgeInsets.only(bottom: 40),
             decoration: BoxDecoration(
               color: Colors.white,
               border: Border(
@@ -711,6 +712,10 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
                     )
                   ],
                 ),
+                Divider(
+                  color: Colors.white,
+                  height: 8,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -733,6 +738,10 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
                     )
                   ],
                 ),
+                Divider(
+                  color: Colors.white,
+                  height: 8,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -744,9 +753,9 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
                       )
                     ),
                     VerticalDivider(
-                      width: 33
+                      width: 30.5
                     ),
-                    new Container(
+                    Container(
                       constraints: new BoxConstraints(
                         maxWidth: MediaQuery.of(context).size.width * 2 / 3
                       ),

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -315,6 +316,39 @@ Widget remainingTimeDisplay(DateTime deadline, int entries) {
       )
     ],
   );
+}
+
+class BubblePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final bubbleSize = Size(size.width, size.height * 0.8);
+    final fillet = bubbleSize.width * 0.1;
+
+    final bubblePath = Path()
+      ..moveTo(0, fillet)
+      ..lineTo(0, bubbleSize.height - fillet)
+      ..quadraticBezierTo(0, bubbleSize.height, fillet, bubbleSize.height)
+      ..lineTo(bubbleSize.width * 0.4, bubbleSize.height)
+      ..lineTo(bubbleSize.width * 0.5, size.height * 0.95)
+      ..lineTo(bubbleSize.width * 0.6, bubbleSize.height)
+      ..lineTo(bubbleSize.width - fillet, bubbleSize.height)
+      ..quadraticBezierTo(bubbleSize.width, bubbleSize.height, bubbleSize.width,
+      bubbleSize.height - fillet)
+      ..lineTo(bubbleSize.width, fillet)
+      ..quadraticBezierTo(bubbleSize.width, 0, bubbleSize.width - fillet, 0)
+      ..lineTo(fillet, 0)
+      ..quadraticBezierTo(0, 0, 0, fillet);
+
+    final paint = Paint()
+      ..color = Color(0xFFBDBDBD)
+      ..strokeWidth = 1.5
+      ..style = PaintingStyle.stroke;
+
+    canvas.drawPath(bubblePath, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
 class TriangleClipper extends CustomClipper<Path> {

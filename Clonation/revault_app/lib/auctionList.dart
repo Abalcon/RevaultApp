@@ -571,27 +571,13 @@ class _AuctionGoodsState extends State<AuctionGoods> {
                     letterSpacing: -1.0,
                   ),
                 ),
-                Row(
-                  children: [
-                    Text(
-                      good.price != null ? '${putComma(good.price)}원' : 'priceless',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        letterSpacing: -1.0,
-                      )
-                    ),
-                    VerticalDivider(width: 8),
-                    Text(
-                      '10% 기부',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.red,
-                        letterSpacing: -1.0,
-                      ),
-                    ),
-                  ],
+                Text(
+                  good.price != null ? '${putComma(good.price)}원' : 'priceless',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    letterSpacing: -1.0,
+                  )
                 ),
               ],
             ),

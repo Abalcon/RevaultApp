@@ -153,12 +153,12 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                 ),
                 Divider(color: Colors.transparent),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 55),
+                  padding: EdgeInsets.symmetric(horizontal: 50),
                   child: RichText(
                     text: TextSpan(
                       style: TextStyle(
                         color: Color(0xFF828282),
-                        fontSize : 13,
+                        fontSize : 12,
                         letterSpacing: -1.0,
                       ),
                       children: [
@@ -210,16 +210,23 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                       fontWeight: FontWeight.bold
                     )
                   ),
-                  CircleAvatar(
-                    radius: 80.0,
-                    backgroundImage:
-                      AssetImage(
-                        'images/revault_square_logo.jpg',
-                      ),
-                      // NetworkImage(
-                      //   'https://revault.co.kr/web/upload/NNEditor/20201210/94b9ab77d43e7672ba4d14e021235d0e.jpg'
-                      // ),
-                    backgroundColor: Colors.transparent
+                  Container(
+                    padding: EdgeInsets.all(1),
+                    decoration: BoxDecoration(
+                      color: Color(0xFFA4A4A4),
+                      shape: BoxShape.circle,
+                    ),
+                    child: CircleAvatar(
+                      radius: 80.0,
+                      backgroundImage:
+                        AssetImage(
+                          'images/revault_square_logo.jpg',
+                        ),
+                        // NetworkImage(
+                        //   'https://revault.co.kr/web/upload/NNEditor/20201210/94b9ab77d43e7672ba4d14e021235d0e.jpg'
+                        // ),
+                      backgroundColor: Colors.transparent
+                    ),
                   ),
                   Text(
                     '${good.biddingList[0].username}님 축하드립니다.',
@@ -234,29 +241,6 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                     style: TextStyle(
                       fontSize: 18, 
                       fontWeight: FontWeight.bold
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(bottom: 50),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          '총 기부금액 ',
-                          style: TextStyle(
-                            fontSize: 18, 
-                            fontWeight: FontWeight.bold
-                          ),
-                        ),
-                        Text(
-                          '115,000원',
-                          style: TextStyle(
-                            fontSize: 18, 
-                            fontWeight: FontWeight.bold,
-                            color: Colors.red,
-                          ),
-                        )
-                      ],
                     ),
                   ),
                   Text(
@@ -346,8 +330,13 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                           children: [
                             Row(
                               children: [
-                                Padding(
-                                  padding: EdgeInsets.only(left: 21.0, right: 5.0),
+                                Container(
+                                  margin: EdgeInsets.only(left: 21.0, right: 5.0),
+                                  padding: EdgeInsets.all(1),
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFFA4A4A4),
+                                    shape: BoxShape.circle,
+                                  ),
                                   child: CircleAvatar(
                                     radius: 16.0,
                                     backgroundImage: (comments[i].profile != null)
@@ -437,13 +426,20 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircleAvatar(
-            radius: 16.0,
-            backgroundImage:
-              NetworkImage(
-                good.waitingProfileList[0],
-              ),
-            backgroundColor: Colors.transparent,
+          Container(
+            padding: EdgeInsets.all(1),
+            decoration: BoxDecoration(
+              color: Color(0xFFA4A4A4),
+              shape: BoxShape.circle,
+            ),
+            child: CircleAvatar(
+              radius: 16.0,
+              backgroundImage:
+                NetworkImage(
+                  good.waitingProfileList[0],
+                ),
+              backgroundColor: Colors.transparent,
+            ),
           ),
           Text('를 비롯한 ${good.waitingCount}명의 회원들이 경매를 기다리고 있습니다',
             style: TextStyle(
@@ -464,6 +460,11 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                 width: 52.0,
                 height: 32.0,
                 alignment: Alignment.centerLeft,
+                padding: EdgeInsets.all(1),
+                decoration: BoxDecoration(
+                  color: Color(0xFFA4A4A4),
+                  shape: BoxShape.circle,
+                ),
                 child: CircleAvatar(
                   radius: 16.0,
                   backgroundImage:
@@ -477,6 +478,11 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                 width: 52.0,
                 height: 32.0,
                 alignment: Alignment.centerRight,
+                padding: EdgeInsets.all(1),
+                decoration: BoxDecoration(
+                  color: Color(0xFFA4A4A4),
+                  shape: BoxShape.circle,
+                ),
                 child: CircleAvatar(
                   radius: 16.0,
                   backgroundImage: (good.waitingProfileList.length > 1) ?
@@ -506,6 +512,11 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
               width: 70.0,
               height: 32.0,
               alignment: Alignment.centerLeft,
+              padding: EdgeInsets.all(1),
+              decoration: BoxDecoration(
+                color: Color(0xFFA4A4A4),
+                shape: BoxShape.circle,
+              ),
               child: CircleAvatar(
                 radius: 16.0,
                 backgroundImage:
@@ -519,6 +530,11 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
               width: 70.0,
               height: 32.0,
               alignment: Alignment.center,
+              padding: EdgeInsets.all(1),
+              decoration: BoxDecoration(
+                color: Color(0xFFA4A4A4),
+                shape: BoxShape.circle,
+              ),
               child: CircleAvatar(
                 radius: 16.0,
                 backgroundImage: (good.waitingProfileList.length > 1) ?
@@ -531,6 +547,11 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
               width: 70.0,
               height: 32.0,
               alignment: Alignment.centerRight,
+              padding: EdgeInsets.all(1),
+              decoration: BoxDecoration(
+                color: Color(0xFFA4A4A4),
+                shape: BoxShape.circle,
+              ),
               child: CircleAvatar(
                 radius: 16.0,
                 backgroundImage: (good.waitingProfileList.length > 2) ?
@@ -592,15 +613,23 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
             initValue: putComma(good.price),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 10, bottom: 12,),
+            padding: EdgeInsets.only(top: 10, bottom: 10,),
             child: good.biddingList.length > 0 ?
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CircleAvatar(
-                  radius: 16.0,
-                  backgroundImage: NetworkImage(
-                    good.biddingList[0].profile,
+                Container(
+                  padding: EdgeInsets.all(1),
+                  decoration: BoxDecoration(
+                    color: Color(0xFFA4A4A4),
+                    shape: BoxShape.circle,
+                  ),
+                  margin: EdgeInsets.only(right: 5),
+                  child: CircleAvatar(
+                    radius: 16.0,
+                    backgroundImage: NetworkImage(
+                      good.biddingList[0].profile,
+                    ),
                   ),
                 ),
                 RichText(
@@ -633,38 +662,43 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
               ),
             ),
           ),
-          Container(
-            width: 80.0,
-            height: 32.0,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(
-                color: Color(0xFFBDBDBD),
-                width: 2,
-              ),
-              borderRadius: BorderRadius.all(
-                Radius.circular(8),
-              ),
-            ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 6, vertical: 5),
-              child: Text(
-                '₩${putComma(good.unitPrice)}',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: revaultBlack,
-                  fontSize: 16,
+          Stack(
+            children: [
+              Container(
+                width: 76.0,
+                height: 36.0,
+                margin: EdgeInsets.only(bottom: 2),
+                child: CustomPaint(
+                  painter: BubblePainter(),
                 ),
               ),
-            ),
-          ),
-          ClipPath(
-            clipper: TriangleClipper(),
-            child: Container(
-              color: Color(0xFFBDBDBD),
-              height: 6,
-              width: 12,
-            ),
+              Container(
+                width: 76.0,
+                height: 36.0,
+                // decoration: BoxDecoration(
+                //   color: Colors.white,
+                //   border: Border.all(
+                //     color: Color(0xFFBDBDBD),
+                //     width: 2,
+                //   ),
+                //   borderRadius: BorderRadius.all(
+                //     Radius.circular(8),
+                //   ),
+                // ),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 6, vertical: 5),
+                  child: Text(
+                    '₩${putComma(good.unitPrice)}',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: revaultBlack,
+                      fontSize: 15,
+                      letterSpacing: -1.0,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8),
@@ -677,7 +711,9 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
               disabledColor: Colors.grey,
               disabledTextColor: Colors.grey[600],
               padding: EdgeInsets.symmetric(vertical: 14.0, horizontal: 90.0),
-              onPressed: () async {
+              onPressed: (good.biddingList.length > 0 && good.biddingList[0].username == currUser.name)
+                ? null
+                : () async {
                 var isVerified = await checkVerify(currUser.getSession());
                 if (isVerified) {
                   if (currentPrice > 0)
@@ -738,7 +774,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                     builder: (BuildContext context) {
                       return Container(
                         height: 250,//MediaQuery.of(context).size.height * 3 / 5,
-                        child: AutoBiddingForm(goodID: widget.goodID, price: good.price,
+                        child: AutoBiddingForm(goodID: widget.goodID, price: (currentPrice > 0) ? currentPrice : good.price,
                           unit: good.unitPrice, session: currUser.getSession(), parent: this),
                       );
                     }
@@ -751,7 +787,12 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
       );
     }
 
-    return CircularProgressIndicator();
+    return Container(
+      margin: EdgeInsets.only(top: 10,),
+      child: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
   }
 
   Widget recordSection(List<Bidding> bidRecord) {
@@ -787,14 +828,21 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                           Expanded(
                             child: Row(
                               children: [
-                                CircleAvatar(
-                                  radius: 14.0,
-                                  backgroundImage: NetworkImage(
-                                    bidRecord[i].profile,
+                                Container(
+                                  padding: EdgeInsets.all(1),
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFFA4A4A4),
+                                    shape: BoxShape.circle,
                                   ),
-                                  backgroundColor: Colors.transparent,
+                                  margin: EdgeInsets.only(right: 12),
+                                  child: CircleAvatar(
+                                    radius: 14.0,
+                                    backgroundImage: NetworkImage(
+                                      bidRecord[i].profile,
+                                    ),
+                                    backgroundColor: Colors.transparent,
+                                  ),
                                 ),
-                                VerticalDivider(),
                                 Text(
                                   bidRecord[i].username,
                                   style: TextStyle(
@@ -994,10 +1042,15 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
             },
             child: Row(
               children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 10.0, right: 5.0),
+                Container(
+                  margin: EdgeInsets.only(left: 10.0, right: 7.0),
+                  padding: EdgeInsets.all(1),
+                  decoration: BoxDecoration(
+                    color: Color(0xFFA4A4A4),
+                    shape: BoxShape.circle,
+                  ),
                   child: CircleAvatar(
-                    radius: 20.0,
+                    radius: 18.0,
                     backgroundImage: good.commentList.length > 0
                       ? NetworkImage(good.commentList[0].profile)
                       : NetworkImage('https://ibsoft.site/profile/default_profile.jpg'),
@@ -1250,7 +1303,12 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                 return Text("${snapshot.error}");
               }
 
-              return CircularProgressIndicator();
+              return Container(
+                margin: EdgeInsets.only(top: 10, bottom: 10,),
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
             },
           ),
         ),
@@ -1551,7 +1609,7 @@ class CommentFormState extends State<CommentForm> {
                   border: inputBorder,
                   enabledBorder: inputBorder,
                   focusedBorder: inputBorder,
-                  contentPadding: EdgeInsets.fromLTRB(5, 4, 0, 4),
+                  contentPadding: EdgeInsets.fromLTRB(5, 5, 0, 5),
                 ),
                 validator: (value) {
                   if (value.isEmpty) {
@@ -1567,7 +1625,7 @@ class CommentFormState extends State<CommentForm> {
               textColor: Colors.white,
               disabledColor: Colors.grey,
               disabledTextColor: revaultBlack,
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 14),
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 15),
               splashColor: Colors.transparent,
               onPressed: () async {
                 if (_formKey.currentState.validate()) {

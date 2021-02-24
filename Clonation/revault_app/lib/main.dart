@@ -20,7 +20,6 @@ import 'package:revault_app/models/cart.dart';
 import 'package:revault_app/models/catalog.dart';
 import 'package:revault_app/models/user.dart';
 import 'package:revault_app/myFailures.dart';
-import 'package:revault_app/myDonations.dart';
 import 'package:revault_app/myParticipations.dart';
 import 'package:revault_app/myPrevRecords.dart';
 import 'package:revault_app/myProceedings.dart';
@@ -114,7 +113,6 @@ class MyApp extends StatelessWidget {
             '/myprevrecords': (context) => MyPrevRecords(),
             '/mysettings': (context) => MySettings(),
             '/myfailures': (context) => MyFailures(),
-            '/mydonations': (context) => MyDonations(),
             '/helpdesk': (context) => HelpDesk(),
             '/changeaddress': (context) => ChangeAddress(),
             '/changepassword': (context) => ChangePassword(),

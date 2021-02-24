@@ -80,80 +80,82 @@ class MyPageDetailsState extends State<MyPageDetails> {
           );
         }
         else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
-        }
-
-        return Center(child: CircularProgressIndicator());
-      }
-    );
-  }
-
-  Widget _getTotalDonation() {
-    return FutureBuilder<List<AuctionResult>>(
-      future: winningList,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          var donation = 0;
-          var list = snapshot.data;
-          list.forEach((good) => donation += (good.price * 0.1).toInt());
-
-          return Container(
-            padding: EdgeInsets.symmetric(vertical: 15),
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(color: Color(0xFFE0E0E0), width: 0.5),
-              ),
-              color: Colors.white,
-            ),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '누적 기부액  ',
-                      style: TextStyle(
-                        fontSize: 18,
-                        letterSpacing: -1.0,
-                      ),
-                    ),
-                    Text(
-                      '${putComma(donation)}원',
-                      style: TextStyle(
-                        fontSize: 18, 
-                        fontWeight: FontWeight.bold,
-                        color: Colors.red,
-                        letterSpacing: -1.0,
-                      )
-                    )
-                  ],
-                ),
-                Divider(color: Colors.transparent, height: 8),
-                RichText(
-                  text: TextSpan(
-                    text: '자세히 보기',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontWeight: FontWeight.bold,
-                      decoration: TextDecoration.underline
-                    ),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () => Navigator.pushNamed(context, '/mydonations')
-                  ),
-                ),
-              ]
-            )
+          return Text(
+            "${snapshot.error}",
           );
         }
 
-        else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
-        }
-
         return Center(child: CircularProgressIndicator());
       }
     );
   }
+
+  // Widget _getTotalDonation() {
+  //   return FutureBuilder<List<AuctionResult>>(
+  //     future: winningList,
+  //     builder: (context, snapshot) {
+  //       if (snapshot.hasData) {
+  //         var donation = 0;
+  //         var list = snapshot.data;
+  //         list.forEach((good) => donation += (good.price * 0.1).toInt());
+
+  //         return Container(
+  //           padding: EdgeInsets.symmetric(vertical: 15),
+  //           decoration: BoxDecoration(
+  //             border: Border(
+  //               bottom: BorderSide(color: Color(0xFFE0E0E0), width: 0.5),
+  //             ),
+  //             color: Colors.white,
+  //           ),
+  //           child: Column(
+  //             children: [
+  //               Row(
+  //                 mainAxisAlignment: MainAxisAlignment.center,
+  //                 children: [
+  //                   Text(
+  //                     '누적 기부액  ',
+  //                     style: TextStyle(
+  //                       fontSize: 18,
+  //                       letterSpacing: -1.0,
+  //                     ),
+  //                   ),
+  //                   Text(
+  //                     '${putComma(donation)}원',
+  //                     style: TextStyle(
+  //                       fontSize: 18, 
+  //                       fontWeight: FontWeight.bold,
+  //                       color: Colors.red,
+  //                       letterSpacing: -1.0,
+  //                     )
+  //                   )
+  //                 ],
+  //               ),
+  //               Divider(color: Colors.transparent, height: 8),
+  //               RichText(
+  //                 text: TextSpan(
+  //                   text: '자세히 보기',
+  //                   style: TextStyle(
+  //                     color: Colors.grey,
+  //                     fontWeight: FontWeight.bold,
+  //                     decoration: TextDecoration.underline
+  //                   ),
+  //                   recognizer: TapGestureRecognizer()
+  //                     ..onTap = () => Navigator.pushNamed(context, '/mydonations')
+  //                 ),
+  //               ),
+  //             ]
+  //           )
+  //         );
+  //       }
+
+  //       else if (snapshot.hasError) {
+  //         return Text("${snapshot.error}");
+  //       }
+
+  //       return Center(child: CircularProgressIndicator());
+  //     }
+  //   );
+  // }
 
   @override
   void initState() {
@@ -176,7 +178,12 @@ class MyPageDetailsState extends State<MyPageDetails> {
           default:
             if (snapshot.hasError) {
               debugPrint("${snapshot.error}");
-              return Text("${snapshot.error}");
+              return Text(
+                "${snapshot.error}",
+                style: TextStyle(
+                  color: Colors.transparent,
+                ),
+              );
             }
             var user = snapshot.data[0];
 
@@ -331,8 +338,7 @@ class MyPageDetailsState extends State<MyPageDetails> {
                           ),
                         ),
                       ),
-                      _getTotalDonation(),
-                      // Divider(thickness: 16, color: backgroundGrey),
+                      //_getTotalDonation(),
                       Container(
                         width: MediaQuery.of(context).size.width,
                         decoration: BoxDecoration(

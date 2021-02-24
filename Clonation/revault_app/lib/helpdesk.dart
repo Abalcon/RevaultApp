@@ -165,6 +165,7 @@ class RequestForm extends StatefulWidget {
 class RequestFormState extends State<RequestForm> {
   final _formKey = GlobalKey<FormState>();
   List<bool> _selections = List.generate(6, (_) => false);
+  final List<String> typeList = ['상품', '결제', '배송', '교환', '환불', '기타'];
 
   Future<http.Response> addQuestion(String content) async {
     final int category = _selections.indexOf(true) + 1;
@@ -186,8 +187,12 @@ class RequestFormState extends State<RequestForm> {
     var size = MediaQuery.of(context).size;
     final double itemWidth = size.width / 3;
     final double itemHeight = size.width * 4 / 27;
-    final double textLength = 22;
     var counter = 0;
+    // final TextStyle typeStyle = TextStyle(
+    //   fontSize: 15,
+    //   fontWeight: FontWeight.bold,
+    //   letterSpacing: -1.0,
+    // );
 
     return Form(
       key: _formKey,
@@ -198,78 +203,96 @@ class RequestFormState extends State<RequestForm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(bottom: 1),
+              padding: EdgeInsets.only(bottom: 5),
               child: Text(
                 '문의 유형',
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
+                  letterSpacing: -1.0,
                 )
               ),
             ),
-            GridView.count(
-              shrinkWrap: true,
-              crossAxisCount: 3,
-              childAspectRatio: (itemWidth / itemHeight),
-              children: [
-                Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(horizontal: itemWidth / 2 - textLength),
-                  child: Text('상품', style: TextStyle(fontSize: 16),),
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: 0.5,
+                  color: Color(0xFFE0E0E0),
                 ),
-                Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(horizontal: itemWidth / 2 - textLength),
-                  child: Text('결제', style: TextStyle(fontSize: 16),),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(horizontal: itemWidth / 2 - textLength),
-                  child: Text('배송', style: TextStyle(fontSize: 16),),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(horizontal: itemWidth / 2 - textLength),
-                  child: Text('교환', style: TextStyle(fontSize: 16),),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(horizontal: itemWidth / 2 - textLength),
-                  child: Text('환불', style: TextStyle(fontSize: 16),),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(horizontal: itemWidth / 2 - textLength),
-                  child: Text('기타', style: TextStyle(fontSize: 16),),
-                ),
-              ].map((widget) {
-                final index = ++counter - 1;
-                
-                return ToggleButtons(
-                  children: [widget],
-                  isSelected: [_selections[index]],
-                  onPressed: (_) {
-                    setState(() {
-                      for (int btnIndex = 0; btnIndex < _selections.length; btnIndex++) {
-                        if (btnIndex == index)
-                          _selections[btnIndex] = true;
-                        else
-                          _selections[btnIndex] = false;
-                      }
-                    });
-                  },
-                  fillColor: revaultGreen,
-                  selectedColor: revaultBlack,
-                );
-              }).toList(),
+              ),
+              alignment: Alignment.topCenter,
+              padding: EdgeInsets.all(0),
+              child: GridView.count(
+                padding: EdgeInsets.all(0),
+                shrinkWrap: true,
+                crossAxisCount: 3,
+                childAspectRatio: (itemWidth / itemHeight),
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    width: itemWidth - 14.7,
+                    child: Text(
+                      '상품',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    width: itemWidth - 14.7,
+                    height: itemHeight,
+                    child: Text('결제', style: TextStyle(fontSize: 16),),
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    width: itemWidth - 14.7,
+                    child: Text('배송', style: TextStyle(fontSize: 16),),
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    width: itemWidth - 14.7,
+                    child: Text('교환', style: TextStyle(fontSize: 16),),
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    width: itemWidth - 14.7,
+                    child: Text('환불', style: TextStyle(fontSize: 16),),
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    width: itemWidth - 14.7,
+                    child: Text('기타', style: TextStyle(fontSize: 16),),
+                  ),
+                ].map((widget) {
+                  final index = ++counter - 1;
+                  
+                  return ToggleButtons(
+                    borderWidth: 0.5,
+                    children: [widget],
+                    isSelected: [_selections[index]],
+                    onPressed: (_) {
+                      setState(() {
+                        for (int btnIndex = 0; btnIndex < _selections.length; btnIndex++) {
+                          if (btnIndex == index)
+                            _selections[btnIndex] = true;
+                          else
+                            _selections[btnIndex] = false;
+                        }
+                      });
+                    },
+                    fillColor: revaultGreen,
+                    selectedColor: revaultBlack,
+                  );
+                }).toList(),
+              ),
             ),
-            Divider(),
+            Divider(color: Colors.transparent),
             Padding(
               padding: EdgeInsets.only(bottom: 8),
               child: Text(
                 '문의 내용',
                 style: TextStyle(
-                  fontWeight: FontWeight.bold
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: -1.0,
                 )
               ),
             ),
