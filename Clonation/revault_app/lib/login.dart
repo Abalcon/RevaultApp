@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:kakao_flutter_sdk/auth.dart';
 import 'package:kakao_flutter_sdk/user.dart';
-import 'package:revault_app/common/aux.dart';
+import 'package:revault_app/common/common.dart';
 
 // Login
 class Login extends StatelessWidget {

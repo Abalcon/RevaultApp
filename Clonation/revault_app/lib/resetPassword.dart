@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:revault_app/common/aux.dart';
+import 'package:revault_app/common/common.dart';
 
 // Reset Password - After Verification
 class ResetPassword extends StatelessWidget {

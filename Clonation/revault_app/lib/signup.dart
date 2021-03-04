@@ -5,7 +5,7 @@ import 'dart:typed_data';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:revault_app/common/aux.dart';
+import 'package:revault_app/common/common.dart';
 
 usernameValidation(String value) {
   RegExp regexp = RegExp(r"[^A-Za-z0-9.-_]");
@@ -76,8 +76,8 @@ class SignUpFormState extends State<SignUpForm> {
           }
         },
         child: Container(
-          width: 110.0,
-          height: 110.0,
+          width: 104.0,
+          height: 104.0,
           decoration: BoxDecoration(
             color: Colors.transparent,
             shape: BoxShape.circle,
@@ -87,11 +87,9 @@ class SignUpFormState extends State<SignUpForm> {
             ),
           ),
           child: CircleAvatar(
-            radius: 55.0,
-            child: Icon(
-              Icons.camera_alt_outlined,
-              size: 50.0,
-              color: revaultGreen,
+            radius: 52.0,
+            child: Image.asset(
+              'images/icon/photo_large.png',
             ),
             backgroundColor: Colors.white,
             //foregroundColor: revaultGreen,

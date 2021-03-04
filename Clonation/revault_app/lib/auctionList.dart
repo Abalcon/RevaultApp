@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:revault_app/common/aux.dart';
+import 'package:revault_app/common/common.dart';
 import 'auctionGood.dart';
 
 List<AuctionGood> parseGoodList(String responseBody) {
@@ -34,12 +34,13 @@ class AuctionList extends StatelessWidget {
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
               SliverAppBar(
-                expandedHeight: 20.0,
+                expandedHeight: 15.0,
                 floating: false,
                 pinned: true,
                 elevation: 0,
                 flexibleSpace: FlexibleSpaceBar(
                   centerTitle: true,
+                  titlePadding: EdgeInsets.only(bottom: 20),
                   title: Image.asset(
                     'images/revault_rectangle_logo.png',
                     width: MediaQuery.of(context).size.width * 0.25,
@@ -49,19 +50,45 @@ class AuctionList extends StatelessWidget {
                   Expanded(
                     child: Row(
                       children: [
-                        IconButton(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          icon: Icon(Icons.info_outline),
-                          onPressed: () => Navigator.pushNamed(context, '/mysettings'),
+                        Container(
+                          width: 60,
+                          child: FlatButton(
+                            padding: EdgeInsets.symmetric(horizontal: 15),
+                            onPressed: () => Navigator.pushNamed(context, '/mysettings'),
+                            child: Image.asset(
+                              'images/icon/Information_large.png',
+                              width: 25,
+                              height: 25,
+                              color: revaultBlack,
+                            ),
+                          ),
                         ),
+                        // IconButton(
+                        //   padding: EdgeInsets.symmetric(horizontal: 10),
+                        //   icon: Icon(Icons.info_outline),
+                        //   onPressed: () => Navigator.pushNamed(context, '/mysettings'),
+                        // ),
                         Text('a', style: TextStyle(color: Colors.white))
                       ]
                     )
                   ),
-                  IconButton(
-                    icon: Icon(Icons.person_outline_outlined),
-                    onPressed: () => Navigator.pushNamed(context, '/mypage'),
+                  Container(
+                    width: 60,
+                    child: FlatButton(
+                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      onPressed: () => Navigator.pushNamed(context, '/mypage'),
+                      child: Image.asset(
+                        'images/icon/MyPage_large.png',
+                        width: 25,
+                        height: 25,
+                        color: revaultBlack,
+                      ),
+                    ),
                   ),
+                  // IconButton(
+                  //   icon: Icon(Icons.person_outline_outlined),
+                  //   onPressed: () => Navigator.pushNamed(context, '/mypage'),
+                  // ),
                 ],
               ),
               SliverPersistentHeader(
@@ -202,7 +229,14 @@ class _AuctionGoodsState extends State<AuctionGoods> {
           Expanded(
             child: Row(
               children: [
-                Icon(Icons.person_outline_outlined, size: 18),
+                Padding(
+                  padding: EdgeInsets.only(right: 2),
+                  child: Image.asset(
+                    'images/icon/User.png',
+                    height: 16,
+                    color: revaultBlack,
+                  ),
+                ),
                 Text(
                   good.seller,
                   style: TextStyle(
@@ -215,7 +249,14 @@ class _AuctionGoodsState extends State<AuctionGoods> {
               ],
             ),
           ),
-          Icon(Icons.verified_outlined, size: 18),
+          Padding(
+            padding: EdgeInsets.only(right: 2),
+            child: Image.asset(
+              'images/icon/badge.png',
+              height: 16,
+              color: revaultBlack,
+            ),
+          ),
           Text(
             good.condition != null ? good.condition: 'F',
             style: TextStyle(
@@ -226,7 +267,14 @@ class _AuctionGoodsState extends State<AuctionGoods> {
             ),
           ),
           VerticalDivider(width: 10),
-          Icon(Icons.checkroom_outlined, size: 18),
+          Padding(
+            padding: EdgeInsets.only(right: 2),
+            child: Image.asset(
+              'images/icon/size.png',
+              height: 16,
+              color: revaultBlack,
+            ),
+          ),
           Text(good.size != null ? good.size: 'Free',
             style: TextStyle(
               fontSize: 15,
@@ -369,10 +417,13 @@ class _AuctionGoodsState extends State<AuctionGoods> {
                     padding: EdgeInsets.fromLTRB(10, 9, 0, 9),
                     child: Row(
                       children: [
-                        Icon(
-                          Icons.schedule,
-                          color: Colors.white,
-                          size: 18,
+                        Padding(
+                          padding: EdgeInsets.only(right: 2),
+                          child: Icon(
+                            Icons.schedule,
+                            color: Colors.white,
+                            size: 16,
+                          ),
                         ),
                         Text(
                           remainingTimeTextFromDuration(rt),

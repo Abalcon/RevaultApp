@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'common/aux.dart';
+import 'common/common.dart';
 
 class UserIdentify extends StatelessWidget {
   @override

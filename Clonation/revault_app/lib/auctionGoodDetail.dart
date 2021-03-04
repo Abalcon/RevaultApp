@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:intl/intl.dart';
 import 'package:revault_app/auctionGood.dart';
-import 'package:revault_app/common/aux.dart';
+import 'package:revault_app/common/common.dart';
 import 'package:video_player/video_player.dart';
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
@@ -84,16 +84,22 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
         return Container(
           height: MediaQuery.of(context).size.height * 0.8,
           padding: EdgeInsets.only(
-            top: 20
+            top: 30
           ),
           child: Center(
             child: Column(
               children: [
-                Icon(
-                  Icons.verified_outlined,
-                  size: 120,
+                Image.asset(
+                  'images/icon/Group.png',
+                  width: 110,
+                  height: 110,
                   color: revaultGreen,
                 ),
+                // Icon(
+                //   Icons.verified_outlined,
+                //   size: 120,
+                //   color: revaultGreen,
+                // ),
                 Divider(color: Colors.transparent),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -171,7 +177,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                           text: '\n\n3. 경매에 낙찰이 되지 않았을 시, 입찰가는 결제되지 않습니다.',
                         ),
                         TextSpan(
-                          text: '\n\n4. 경매 낙찰 이후, 낙찰가를 결제하지 않으면, 위약금이 부과됩니다.',
+                          text: '\n\n4. 경매 낙찰 이후, 24시간 이내 미결제시 2위 낙찰자에게 양도됩니다.',
                         ),
                         TextSpan(
                           text: '\n\n5. 경매제품 특성상, 교환과 반품은 불가능합니다.',
@@ -211,7 +217,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                     )
                   ),
                   Container(
-                    padding: EdgeInsets.all(1),
+                    padding: profileBorder,
                     decoration: BoxDecoration(
                       color: Color(0xFFA4A4A4),
                       shape: BoxShape.circle,
@@ -332,7 +338,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                               children: [
                                 Container(
                                   margin: EdgeInsets.only(left: 21.0, right: 5.0),
-                                  padding: EdgeInsets.all(1),
+                                  padding: profileBorder,
                                   decoration: BoxDecoration(
                                     color: Color(0xFFA4A4A4),
                                     shape: BoxShape.circle,
@@ -427,7 +433,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            padding: EdgeInsets.all(1),
+            padding: profileBorder,
             decoration: BoxDecoration(
               color: Color(0xFFA4A4A4),
               shape: BoxShape.circle,
@@ -456,29 +462,32 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
         children: [
           Stack(
             children: [
-              Container(
-                width: 52.0,
-                height: 32.0,
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.all(1),
-                decoration: BoxDecoration(
-                  color: Color(0xFFA4A4A4),
-                  shape: BoxShape.circle,
-                ),
-                child: CircleAvatar(
-                  radius: 16.0,
-                  backgroundImage:
-                    NetworkImage(
-                      good.waitingProfileList[0],
-                    ),
-                  backgroundColor: Colors.transparent,
+              Positioned(
+                top: 0,
+                right: 12,
+                child: Container(
+                  width: 60.0,
+                  height: 34.0,
+                  alignment: Alignment.center,
+                  padding: profileBorder,
+                  decoration: BoxDecoration(
+                    color: Color(0xFFA4A4A4),
+                    shape: BoxShape.circle,
+                  ),
+                  child: CircleAvatar(
+                    radius: 16.0,
+                    backgroundImage:
+                      NetworkImage(
+                        good.waitingProfileList[0],
+                      ),
+                  ),
                 ),
               ),
               Container(
-                width: 52.0,
-                height: 32.0,
-                alignment: Alignment.centerRight,
-                padding: EdgeInsets.all(1),
+                width: 60.0,
+                height: 34.0,
+                alignment: Alignment.center,
+                padding: profileBorder,
                 decoration: BoxDecoration(
                   color: Color(0xFFA4A4A4),
                   shape: BoxShape.circle,
@@ -488,7 +497,6 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                   backgroundImage: (good.waitingProfileList.length > 1) ?
                     NetworkImage(good.waitingProfileList[1],) :
                     AssetImage('images/revault_square_logo.jpg',),
-                  backgroundColor: Colors.transparent,
                 ),
               ),
             ],
@@ -508,29 +516,30 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
       children: [
         Stack(
           children: [
-            Container(
-              width: 70.0,
-              height: 32.0,
-              alignment: Alignment.centerLeft,
-              padding: EdgeInsets.all(1),
-              decoration: BoxDecoration(
-                color: Color(0xFFA4A4A4),
-                shape: BoxShape.circle,
-              ),
-              child: CircleAvatar(
-                radius: 16.0,
-                backgroundImage:
-                  NetworkImage(
-                    good.waitingProfileList[0],
-                  ),
-                backgroundColor: Colors.transparent,
+            Positioned(
+              top: 0,
+              right: 17,
+              child: Container(
+                width: 70.0,
+                height: 34.0,
+                alignment: Alignment.center,
+                padding: profileBorder,
+                decoration: BoxDecoration(
+                  color: Color(0xFFA4A4A4),
+                  shape: BoxShape.circle,
+                ),
+                child: CircleAvatar(
+                  radius: 16.0,
+                  backgroundImage:
+                    NetworkImage(good.waitingProfileList[0],),
+                ),
               ),
             ),
             Container(
               width: 70.0,
-              height: 32.0,
+              height: 34.0,
               alignment: Alignment.center,
-              padding: EdgeInsets.all(1),
+              padding: profileBorder,
               decoration: BoxDecoration(
                 color: Color(0xFFA4A4A4),
                 shape: BoxShape.circle,
@@ -540,24 +549,26 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                 backgroundImage: (good.waitingProfileList.length > 1) ?
                   NetworkImage(good.waitingProfileList[1],) :
                   AssetImage('images/revault_square_logo.jpg',),
-                backgroundColor: Colors.transparent,
               ),
             ),
-            Container(
-              width: 70.0,
-              height: 32.0,
-              alignment: Alignment.centerRight,
-              padding: EdgeInsets.all(1),
-              decoration: BoxDecoration(
-                color: Color(0xFFA4A4A4),
-                shape: BoxShape.circle,
-              ),
-              child: CircleAvatar(
-                radius: 16.0,
-                backgroundImage: (good.waitingProfileList.length > 2) ?
-                  NetworkImage(good.waitingProfileList[2],) :
-                  AssetImage('images/revault_square_logo.jpg',),
-                backgroundColor: Colors.transparent,
+            Positioned(
+              top: 0,
+              left: 17,
+              child: Container(
+                width: 70.0,
+                height: 34.0,
+                alignment: Alignment.center,
+                padding: profileBorder,
+                decoration: BoxDecoration(
+                  color: Color(0xFFA4A4A4),
+                  shape: BoxShape.circle,
+                ),
+                child: CircleAvatar(
+                  radius: 16.0,
+                  backgroundImage: (good.waitingProfileList.length > 2) ?
+                    NetworkImage(good.waitingProfileList[2],) :
+                    AssetImage('images/revault_square_logo.jpg',),
+                ),
               ),
             ),
           ],
@@ -619,7 +630,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  padding: EdgeInsets.all(1),
+                  padding: profileBorder,
                   decoration: BoxDecoration(
                     color: Color(0xFFA4A4A4),
                     shape: BoxShape.circle,
@@ -829,7 +840,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                             child: Row(
                               children: [
                                 Container(
-                                  padding: EdgeInsets.all(1),
+                                  padding: profileBorder,
                                   decoration: BoxDecoration(
                                     color: Color(0xFFA4A4A4),
                                     shape: BoxShape.circle,
@@ -843,19 +854,22 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
                                     backgroundColor: Colors.transparent,
                                   ),
                                 ),
-                                Text(
-                                  bidRecord[i].username,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15,
+                                Container(
+                                  width: 80,
+                                  child: Text(
+                                    '${bidRecord[i].username.substring(0, 4)}****',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                    ),
                                   ),
                                 ),
-                                VerticalDivider(),
                                 Text(
                                   '|  ${DateFormat('yyyy.MM.dd HH:mm').format(bidRecord[i].date)}',
                                   style: TextStyle(
                                     fontSize: 15,
                                     color: Colors.grey,
+                                    letterSpacing: -1.0,
                                   ),
                                 ),
                               ]
@@ -951,7 +965,38 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
               http.Response response = await removeAuctionAlarm(widget.goodID);
               if (response.statusCode == 200 && response.body == "1") {
                 ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text('알림을 해제했습니다')));
+                  .showSnackBar(SnackBar(
+                    margin: EdgeInsets.all(0),
+                    padding: EdgeInsets.all(0),
+                    content: Container(
+                      decoration: BoxDecoration(
+                        color: revaultBlack,
+                        border: Border.all(
+                          width: 1.0,
+                          color: revaultBlack,
+                        ),
+                      ),
+                      margin: EdgeInsets.only(
+                        left: MediaQuery.of(context).size.width / 4,
+                        right: MediaQuery.of(context).size.width / 4,
+                        bottom: MediaQuery.of(context).size.height / 2 - 55,
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(20.0),
+                        child: Text(
+                          '알림을 해제했습니다',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    backgroundColor: Colors.transparent,
+                    elevation: 1000,
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
                 setState(() {
                   currentGood = fetchGood(widget.goodID);
                 });
@@ -984,7 +1029,38 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
               http.Response response = await setAuctionAlarm(widget.goodID);
               if (response.statusCode == 200 && response.body == "1") {
                 ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text('알림을 설정했습니다. 낙찰을 기원합니다')));
+                  .showSnackBar(SnackBar(
+                    margin: EdgeInsets.all(0),
+                    padding: EdgeInsets.all(0),
+                    content: Container(
+                      decoration: BoxDecoration(
+                        color: revaultBlack,
+                        border: Border.all(
+                          width: 1.0,
+                          color: revaultBlack,
+                        ),
+                      ),
+                      margin: EdgeInsets.only(
+                        left: MediaQuery.of(context).size.width / 4,
+                        right: MediaQuery.of(context).size.width / 4,
+                        bottom: MediaQuery.of(context).size.height / 2 - 55,
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(20.0),
+                        child: Text(
+                          '알림을 설정했습니다.\n낙찰을 기원합니다',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    backgroundColor: Colors.transparent,
+                    elevation: 1000,
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
                 setState(() {
                   currentGood = fetchGood(widget.goodID);
                 });
@@ -1044,7 +1120,7 @@ class _AGDWithVideoState extends State<AuctionGoodDetailWithVideo> {
               children: [
                 Container(
                   margin: EdgeInsets.only(left: 10.0, right: 7.0),
-                  padding: EdgeInsets.all(1),
+                  padding: profileBorder,
                   decoration: BoxDecoration(
                     color: Color(0xFFA4A4A4),
                     shape: BoxShape.circle,

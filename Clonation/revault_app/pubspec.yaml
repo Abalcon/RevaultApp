@@ -81,6 +81,7 @@ flutter:
     - images/nike_black_hoodie3.jpeg
     - images/facebook_login_icon.png
     - images/kakao_login_icon.png
+    - images/icon/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

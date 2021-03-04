@@ -6,7 +6,7 @@ import 'package:bootpay_api/model/item.dart';
 import 'package:bootpay_api/model/payload.dart';
 import 'package:bootpay_api/model/user.dart';
 import 'package:flutter/material.dart';
-import 'package:revault_app/common/aux.dart';
+import 'package:revault_app/common/common.dart';
 import 'package:revault_app/userInfo.dart';
 
 class PurchaseWindow extends StatelessWidget {

@@ -12,7 +12,7 @@ import 'package:revault_app/auctionList.dart';
 import 'package:revault_app/changeAddress.dart';
 import 'package:revault_app/changePassword.dart';
 import 'package:revault_app/changeProfile.dart';
-import 'package:revault_app/common/aux.dart';
+import 'package:revault_app/common/common.dart';
 import 'package:revault_app/emailVerify.dart';
 import 'package:revault_app/helpdesk.dart';
 import 'package:revault_app/languageSelect.dart';

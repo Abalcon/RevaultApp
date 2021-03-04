@@ -5,7 +5,7 @@ import "package:http/http.dart" as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:revault_app/auctionGood.dart';
 import 'package:revault_app/auctionResult.dart';
-import 'package:revault_app/common/aux.dart';
+import 'package:revault_app/common/common.dart';
 import 'package:revault_app/userInfo.dart';
 
 class MyPage extends StatelessWidget {
@@ -199,7 +199,7 @@ class MyPageDetailsState extends State<MyPageDetails> {
                           Container(
                             width: 110.0,
                             height: 110.0,
-                            padding: EdgeInsets.all(1),
+                            padding: profileBorder,
                             decoration: BoxDecoration(
                               color: Color(0xFFA4A4A4),
                               shape: BoxShape.circle,
@@ -233,8 +233,13 @@ class MyPageDetailsState extends State<MyPageDetails> {
                                   )
                                 ),
                                 backgroundColor: revaultBlack,
-                                child: Icon(Icons.photo_camera_outlined)
-                              )
+                                child: Image.asset(
+                                  'images/icon/photo.png',
+                                  width: 21,
+                                  height: 21,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
                           ),
                         ],

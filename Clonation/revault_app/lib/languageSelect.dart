@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:customtogglebuttons/customtogglebuttons.dart';
-import 'package:revault_app/common/aux.dart';
+import 'package:revault_app/common/common.dart';
 
 class LanguageSelect extends StatelessWidget {
   @override

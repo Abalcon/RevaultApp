@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:revault_app/common/aux.dart';
+import 'package:revault_app/common/common.dart';
 import 'customerRequest.dart';
 
 class HelpDesk extends StatelessWidget {
@@ -280,7 +280,12 @@ class RequestFormState extends State<RequestForm> {
                       });
                     },
                     fillColor: revaultGreen,
-                    selectedColor: revaultBlack,
+                    selectedColor: Colors.white,
+                    textStyle: TextStyle(
+                      fontWeight: _selections[index]
+                        ? FontWeight.bold
+                        : FontWeight.normal,
+                    ),
                   );
                 }).toList(),
               ),

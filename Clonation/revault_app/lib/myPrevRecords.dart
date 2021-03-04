@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import "package:http/http.dart" as http;
 import 'auctionGood.dart';
-import 'package:revault_app/common/aux.dart';
+import 'package:revault_app/common/common.dart';
 
 List<AuctionGood> parseGoodList(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
@@ -98,11 +98,21 @@ class MyPrevRecordsDetailState extends State<MyPrevRecordsDetail> {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
           case ConnectionState.waiting:
-            return Center(child: CircularProgressIndicator());
+            return Padding(
+              padding: EdgeInsets.symmetric(vertical: 10,),
+              child: Center(
+                child: CircularProgressIndicator()
+              ),
+            );
           default:
             if (snapshot.hasError) {
               debugPrint("${snapshot.error}");
-              return Text("${snapshot.error}");
+              return Text(
+                "${snapshot.error}",
+                style: TextStyle(
+                  color: Colors.transparent,
+                ),
+              );
             }
             var win = snapshot.data[0].map((good) => good.auctionID).toList();
             var all = snapshot.data[1];

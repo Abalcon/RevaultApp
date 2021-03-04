@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:revault_app/common/aux.dart';
+import 'package:revault_app/common/common.dart';
 
 class UserIdentifyResult extends StatelessWidget {
   @override

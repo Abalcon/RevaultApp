@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import "package:http/http.dart" as http;
 import 'auctionGood.dart';
-import 'package:revault_app/common/aux.dart';
+import 'package:revault_app/common/common.dart';
 
 List<AuctionGood> parseGoodList(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();

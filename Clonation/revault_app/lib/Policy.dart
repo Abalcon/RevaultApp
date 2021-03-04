@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:revault_app/common/aux.dart';
+import 'package:revault_app/common/common.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class Policy extends StatelessWidget {

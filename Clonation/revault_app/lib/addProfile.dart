@@ -4,7 +4,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'common/aux.dart';
+import 'common/common.dart';
 
 class AddProfile extends StatelessWidget {
   @override

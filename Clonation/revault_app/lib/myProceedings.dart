@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:revault_app/auctionResult.dart';
-import 'package:revault_app/common/aux.dart';
+import 'package:revault_app/common/common.dart';
 import 'package:revault_app/userInfo.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -243,7 +243,12 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
           return Text("${snapshot.error}");
         }
 
-        return Center(child: CircularProgressIndicator());
+        return Padding(
+          padding: EdgeInsets.symmetric(vertical: 10,),
+          child: Center(
+            child: CircularProgressIndicator()
+          ),
+        );
       },
     );
   }
@@ -365,7 +370,12 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
           return Text("${snapshot.error}");
         }
 
-        return Center(child: CircularProgressIndicator());
+        return Padding(
+          padding: EdgeInsets.symmetric(vertical: 10,),
+          child: Center(
+            child: CircularProgressIndicator()
+          ),
+        );
       },
     );
   }
@@ -646,7 +656,12 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
           return Text("${snapshot.error}");
         }
 
-        return Center(child: CircularProgressIndicator());
+        return Padding(
+          padding: EdgeInsets.symmetric(vertical: 10,),
+          child: Center(
+            child: CircularProgressIndicator()
+          ),
+        );
       }
     );
   }
@@ -777,7 +792,12 @@ class MyProceedingsDetailState extends State<MyProceedingsDetail> {
           return Text("${snapshot.error}");
         }
 
-        return Center(child: CircularProgressIndicator());
+        return Padding(
+          padding: EdgeInsets.symmetric(vertical: 10,),
+          child: Center(
+            child: CircularProgressIndicator()
+          ),
+        );
       }
     );
   }

@@ -637,3 +637,6 @@ Future<List<AuctionResult>> fetchWinningList(String session) async {
 
   return [];
 }
+
+EdgeInsets profileBorder = EdgeInsets.all(0.5);
+EdgeInsets profileBorder2 = EdgeInsets.all(5);
